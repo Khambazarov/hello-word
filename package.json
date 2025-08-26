@@ -1,0 +1,21 @@
+{
+  "name": "hello-word",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm -ws install",
+    "build": "npm -ws run build",
+    "dev": "concurrently -k -n BE,FE \"npm -w backend run dev\" \"npm -w frontend run dev\"",
+    "seed": "npm -w backend run seed",
+    "build:fe": "npm -w frontend run build",
+    "build:be": "npm -w backend run build",
+    "dev:fe": "npm -w frontend run dev",
+    "dev:be": "npm -w backend run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
