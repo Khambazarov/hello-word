@@ -1,0 +1,249 @@
+{
+  "menu": {
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "aboutUs": "Über uns",
+    "privacy": "Datenschutz",
+    "logout": "Abmelden"
+  },
+
+  "profile": {
+    "dateNotAvailable": "Datum nicht verfügbar",
+    "loading": "Lädt...",
+    "username": "Nutzername",
+    "email": "E-Mail",
+    "registered": "Registriert"
+  },
+
+  "settings": {
+    "loadingSettings": "Lädt Einstellungen...",
+    "selectLangTitle": "Sprache auswählen",
+    "lang": {
+      "en": "EN",
+      "de": "DE"
+    },
+    "volumeTitle": "Audio-Lautstärke",
+    "volume": {
+      "silent": "Stumm",
+      "middle": "Mittel",
+      "loud": "Laut"
+    },
+    "changePwTitle": "Passwort ändern",
+    "currentPwTitle": "Aktuelles Passwort",
+    "currentPwPlaceholder": "Aktuelles Passwort",
+    "newPwTitle": "Neues Passwort",
+    "newPwPlaceholder": "Neues Passwort",
+    "changePwBtn": "Passwort ändern",
+    "deleteAccountTitle": "Nutzerkonto löschen",
+    "deleteBtn": "Löschen",
+    "prompt": {
+      "title": "Nutzerkonto löschen?",
+      "deleteBtn": "Löschen",
+      "cancelBtn": "Abbrechen"
+    }
+  },
+
+  "aboutUs": {
+    "title": "Über uns",
+    "introDev": "Wir, Olivia und Renat, sind leidenschaftliche Entwickler, die sich der Herausforderung gestellt haben, eine leistungsstarke und benutzerfreundliche Echtzeit-Chat-Anwendung zu erstellen. Mit unserer Erfahrung in der Web- und Softwareentwicklung haben wir dieses Projekt erfolgreich von der Konzeption bis zur Umsetzung gebracht. Unser Ziel war es, eine moderne, schnelle und sichere Kommunikationsplattform zu schaffen.",
+    "appDevTitle": "App-Entwicklung",
+    "appDev": "Unsere Echtzeit-Chat-Anwendung basiert auf dem MERN-Stack (MongoDB, Express, React, Node.js). Durch die Nutzung modernster Technologien und Best Practices haben wir eine robuste und skalierbare Architektur entwickelt.",
+    "usedTechTitle": "Verwendete Technologien",
+    "usedTechFrontend": "Frontend: React mit Vite für eine optimierte Entwicklungsumgebung, Zustand für das State-Management und Tailwind CSS/React-hot-toast für ein ansprechendes UI-Design.",
+    "usedTechBackend": "Backend: Express.js als Web-Framework für Node.js, MongoDB als NoSQL-Datenbank, bcrypt für die Passwortverschlüsselung und Express-session für eine sichere Authentifizierung.",
+    "usedTechSocket": "Echtzeit-Kommunikation: Socket.io ermöglicht reibungsloses Messaging in Echtzeit.",
+    "usedTechClaudinary": "Cloud-Integration: Cloudinary wird für die Speicherung und Verwaltung von Bildern verwendet.",
+    "featuresTitle": "App-Funktionen",
+    "featuresRegister": "Unsere Anwendung ermöglicht es Benutzern, sich zu registrieren, anzumelden und in Echtzeit zu kommunizieren.",
+    "featuresIncludeTitle": "Hauptfunktionen:",
+    "featuresUI": "Modernes Benutzerinterface, optimiert für Desktop- und Mobilgeräte",
+    "featuresAuth": "Benutzerregistrierung und Anmeldung mit sicherer Authentifizierung",
+    "featuresUpload": "Bild-Uploads und Medienunterstützung",
+    "featuresMessaging": "Echtzeit-Messaging mit Socket.io",
+    "projectTitle": "Projektlinks",
+    "sourceCode": "Quellcode:",
+    "ourContacts": "Unsere Kontakte",
+    "feedback": "Wir freuen uns über Feedback und Vorschläge und laden Entwickler herzlich ein, zur Weiterentwicklung der App beizutragen!"
+  },
+
+  "privacy": {
+    "loading": "Lädt...",
+    "title": "Datenschutzerklärung",
+    "dataController": "1. Verantwortliche Stelle",
+    "dataDescription": "Diese Real-Time-Chat-App ist ein Ausbildungsprojekt, das zu Lernzwecken entwickelt wurde. Verantwortlich für die Datenverarbeitung im Rahmen dieser App sind die Entwickler*innen des Ausbildungsprojekts.",
+    "dataTypes": "2. Art der verarbeiteten Daten",
+    "dataTypesDescription": "Im Rahmen der Nutzung unserer Chat-App erheben und verarbeiten wir folgende personenbezogene Daten:",
+    "dataTypesList": [
+      "✉️ Nachrichteninhalte (Textnachrichten)",
+      "🖼️ Hochgeladene Bilder (werden über Cloudinary gespeichert und versendet)",
+      "👤 Benutzername oder Anzeigename (falls angegeben)",
+      "🕒 Zeitstempel der Nachrichten"
+    ],
+    "purpose": "3. Zweck der Datenverarbeitung",
+    "purposeDescription": "Die erhobenen Daten dienen ausschließlich dem Betrieb der Chat-Funktion, um die Kommunikation zwischen den Nutzer*innen in Echtzeit zu ermöglichen. Es erfolgt keine kommerzielle Nutzung oder Weitergabe der Daten an Dritte.",
+    "security": "4. Sicherheit und Verschlüsselung",
+    "securityDescription": "Bitte beachten Sie, dass alle Nachrichten und Bilder unverschlüsselt übertragen werden. Dadurch besteht das Risiko, dass Dritte auf die übermittelten Inhalte zugreifen können. Wir empfehlen, keine sensiblen oder vertraulichen Informationen über diese App zu teilen. Passwörter werden jedoch mit bcrypt verschlüsselt gespeichert, um die Sicherheit der Nutzerkonten zu gewährleisten.",
+    "userRights": "5. Rechte der Nutzer*innen",
+    "userRightsDescription": "Als Nutzer*in der Chat-App haben Sie folgende Rechte:",
+    "userRightsList": [
+      "📄 Auskunft über die gespeicherten personenbezogenen Daten",
+      "✏️ Berichtigung unrichtiger oder unvollständiger Daten",
+      "🗑️ Löschung Ihrer Daten",
+      "⏸️ Einschränkung der Verarbeitung Ihrer Daten"
+    ],
+    "disclaimer": "6. Haftungsausschluss",
+    "disclaimerDescription": "Diese App befindet sich in der Entwicklungsphase und wird zu Ausbildungszwecken betrieben. Wir übernehmen keine Haftung für mögliche Datenverluste oder unbefugten Zugriff auf die übermittelten Inhalte.",
+    "contact": "7. Kontakt",
+    "contactDescription": "Bei Fragen zur Datenverarbeitung oder zur Wahrnehmung Ihrer Rechte können Sie uns über die auf der Über uns Seite angegebenen Kontaktmöglichkeiten erreichen.",
+    "lastUpdated": "Stand: März 2025"
+  },
+
+  "toast": {
+    "settings": {
+      "loading": "Lädt...",
+      "successUpdate": "Erfolgreich geändert!",
+      "successAccountDelete": "Nutzerkonto gelöscht!",
+      "errorAccountDelete": "Fehler beim Löschen, erneut versuchen!",
+      "errorFailedChange": "Fehler bei Änderung aufgetreten!"
+    },
+    "register": {
+      "success": "Erfolgreich registriert!",
+      "errorAlreadyTaken": "Registratierung fehlgeschlagen. Nutzername oder E-mail bereits vergeben",
+      "errorServer": "Registrierung fehlgeschlagen. Interner Serverfehler"
+    },
+    "verify": {
+      "loading": "Lädt...",
+      "success": "Erfolgreich verifiziert!",
+      "errorAlreadyVerified": "Verifizierung fehlgeschlagen. Deine E-mail ist bereits verifiziert.",
+      "errorNoMatch": "Verifizierung fehlgeschlagen. Schlüssel und E-mail passen nicht zusammen",
+      "errorServer": "Verifizierung fehlgeschlagen. Interner Serverfehler"
+    },
+    "login": {
+      "waiting": "Warten...",
+      "success": "Erfolgreich angemeldet.",
+      "errorLoginVerify": "Anmeldung fehlgeschlagen. Du musst deine E-Mail verifizieren.",
+      "errorUsernameOrPw": "Anmeldung fehlgeschlagen. Benutzername oder Passwort ist falsch.",
+      "errorFailedLogin": "Anmeldung fehlgeschlagen."
+    },
+    "forgotPw": {
+      "waiting": "Warten...",
+      "success": "E-Mail mit neuem Passwort gesendet!",
+      "errorNotFound": "Kein Benutzer mit dieser E-Mail gefunden!",
+      "errorKeyNotCorrect": "Der Code ist nicht korrekt, bitte versuche es erneut!",
+      "errorFailed": "Fortschritt fehlgeschlagen!"
+    },
+    "newPw": {
+      "waiting": "Warten...",
+      "success": "Passwort erfolgreich geändert!",
+      "errorNotFound": "Kein Benutzer mit dieser E-Mail gefunden!",
+      "errorKeyNotCorrect": "Der Code ist nicht korrekt, bitte versuche es erneut!",
+      "error": "Fehlgeschlagen, bitte versuche es erneut!"
+    },
+    "existChatroom": {
+      "alreadyChatted": "Du hast bereits geschrieben mit ",
+      "errorUserNotFound": "Benutzername nicht gefunden.",
+      "errorSearchYourself": "Du kannst dich nicht selbst suchen.",
+      "errorFailedToFind": "Benutzer konnte nicht gefunden werden.",
+      "errorNameRequired": "Du musst einen Benutzernamen eingeben.",
+      "errorDeletedUser": "Du kannst keine Nachrichten an einen gelöschten Benutzer senden!",
+      "errorServer": "Interner Serverfehler!"
+    },
+    "chatroom": {
+      "audioNotSupported": "Audioaufnahme wird auf diesem Gerät nicht unterstützt."
+    }
+  },
+
+  "register": {
+    "title": "Registrieren",
+    "emailTitle": "E-Mail",
+    "emailPlaceholder": "max-mustermann@mail.de",
+    "usernameTitle": "Benutzername",
+    "usernamePlaceholder": "Max-Mustermann",
+    "pwTitle": "Passwort",
+    "pwPlaceholder": "z.B.  a-z  A-Z  0-9",
+    "haveRead": "Ich habe die",
+    "privacy": " Datenschutz",
+    "onlyGermanPrivacy": " gelesen",
+    "submitBtn": "Registrieren",
+    "alreadyRegistered": "Bereits registriert?"
+  },
+
+  "verify": {
+    "title": "Verifiziere deine E-Mail",
+    "description": "Du bekommst einen 6-stelligen Verifizierungscode per Mail, bitte nutze diesen, um dich zu verifizieren",
+    "emailTitle": "E-Mail",
+    "emailPlaceholder": "max-mustermann@mail.de",
+    "key": "Wiederherstellungscode",
+    "submitBtn": "Verifiziere dein Nutzerkonto",
+    "backToLogin": "Zurück zum Login? "
+  },
+
+  "login": {
+    "title": "Anmelden",
+    "emailTitle": "E-Mail",
+    "emailPlaceholder": "E-Mail",
+    "pwTitle": "Passwort",
+    "pwPlaceholder": "Passwort",
+    "forgotPw": "Passwort vergessen?",
+    "loginBtn": "Anmelden",
+    "notYetRegistered": "Noch nicht registriert?",
+    "notYetVerified": "Noch nicht verifiziert?"
+  },
+
+  "forgotPw": {
+    "title": "Setze dein Passwort zurück",
+    "emailTitle": "E-Mail",
+    "emailPlaceholder": "E-Mail",
+    "sendEmailBtn": "E-Mail senden",
+    "backToLogin": "Zurück zur Anmeldung?"
+  },
+
+  "newPw": {
+    "title": "Neues Passwort",
+    "emailTitle": "E-Mail",
+    "emailPlaceholder": "E-Mail",
+    "resetKeyTitle": "Wiederherstellungscode",
+    "resetKeyPlaceholder": "Wiederherstellungscode",
+    "pwTitle": "Neues Passwort",
+    "pwPlaceholder": "Neues Passwort",
+    "setBtn": "Neues Passwort festlegen",
+    "backToLogin": "Zurück zur Anmeldung?"
+  },
+
+  "existChatroom": {
+    "loading": "Lädt...",
+    "searchUserTitle": "Suche nach Benutzer",
+    "placeholder": "Max-Mustermann",
+    "createChatroomBtn": "Neuen Chat erstellen"
+  },
+
+  "newChatroom": {
+    "loading": "Lädt...",
+    "firstMessage": "Sende deine erste Nachricht",
+    "to": "an: "
+  },
+
+  "chatArea": {
+    "loading": "Lädt...",
+    "sentImage": "Bild gesendet",
+    "sentAudioMessage": "Audionachricht gesendet",
+    "noUsername": "Kein Benutzername",
+    "deletedAccount": "Gelöschtes Konto",
+    "noMessages": "Keine Nachrichten",
+    "errorLoadingChatrooms": "Fehler beim Laden der Chatrooms"
+  },
+
+  "chatroom": {
+    "loading": "Lädt...",
+    "unreadMessage": "Nachricht. Tippen, um zu sehen. ↓",
+    "unreadMessages": "Nachrichten. Tippen, um zu sehen. ↓",
+    "timestampUpdateText": "Bearbeitet",
+    "failedToFindUser": "Fehler beim Finden des Benutzernamens"
+  },
+
+  "deletedAccount": {
+    "title": "Gelöschtes Konto"
+  },
+
+  "pageNotFound": "NICHT GEFUNDEN"
+}

@@ -1,0 +1,249 @@
+{
+  "menu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "aboutUs": "About us",
+    "privacy": "Privacy",
+    "logout": "Logout"
+  },
+
+  "profile": {
+    "dateNotAvailable": "Date not available",
+    "loading": "Loading...",
+    "username": "Username",
+    "email": "Email",
+    "registered": "Registered"
+  },
+
+  "settings": {
+    "loadingSettings": "Loading settings...",
+    "selectLangTitle": "Select language",
+    "lang": {
+      "en": "EN",
+      "de": "DE"
+    },
+    "volumeTitle": "Audio volume",
+    "volume": {
+      "silent": "Silent",
+      "middle": "Middle",
+      "loud": "Loud"
+    },
+    "changePwTitle": "Change password",
+    "currentPwTitle": "Current password",
+    "currentPwPlaceholder": "Current password",
+    "newPwTitle": "New password",
+    "newPwPlaceholder": "New password",
+    "changePwBtn": "Change password",
+    "deleteAccountTitle": "Delete your account",
+    "deleteBtn": "Delete",
+    "prompt": {
+      "title": "Delete your account?",
+      "deleteBtn": "Delete",
+      "cancelBtn": "Cancel"
+    }
+  },
+
+  "aboutUs": {
+    "title": "About Us",
+    "introDev": "We, Olivia and Renat, are passionate developers who took on the challenge of creating a powerful and user-friendly real-time chat application. With our experience in web and software development, we successfully brought this project from concept to implementation. Our goal was to build a modern, fast, and secure communication platform.",
+    "appDevTitle": "App Development",
+    "appDev": "Our real-time chat application is built on the MERN stack (MongoDB, Express, React, Node.js). By utilizing cutting-edge technologies and best practices, we developed a robust and scalable architecture.",
+    "usedTechTitle": "Technologies Used",
+    "usedTechFrontend": "Frontend: React with Vite for an optimized development environment, Zustand for state management, and Tailwind CSS/React-hot-toast for an appealing UI design.",
+    "usedTechBackend": "Backend: Express.js as the web framework for Node.js, MongoDB as the NoSQL database, bcrypt for password encryption, and Express-session for secure authentication.",
+    "usedTechSocket": "Real-time Communication: Socket.io enables smooth real-time messaging.",
+    "usedTechClaudinary": "Cloud Integration: Cloudinary is used for storing and managing images.",
+    "featuresTitle": "App Features",
+    "featuresRegister": "Our application allows users to register, log in, and communicate in real-time.",
+    "featuresIncludeTitle": "Key features include:",
+    "featuresUI": "Modern user interface, optimized for both desktop and mobile devices",
+    "featuresAuth": "User registration and login with secure authentication",
+    "featuresUpload": "Image uploads and media support",
+    "featuresMessaging": "Real-time messaging powered by Socket.io",
+    "projectTitle": "Project Links",
+    "sourceCode": "Source Code:",
+    "ourContacts": "Our Contacts",
+    "feedback": "We appreciate feedback and suggestions and warmly invite developers to contribute to the further development of the app!"
+  },
+
+  "privacy": {
+    "loading": "Loading...",
+    "title": "Privacy policy",
+    "dataController": "1. Data Controller",
+    "dataDescription": "This real-time chat app is a training project developed for educational purposes. The developers of this training project are responsible for data processing within this app.",
+    "dataTypes": "2. Types of Processed Data",
+    "dataTypesDescription": "When using our chat app, we collect and process the following personal data:",
+    "dataTypesList": [
+      "✉️ Message content (text messages)",
+      "🖼️ Uploaded images (stored and sent via Cloudinary)",
+      "👤 Username or display name (if provided)",
+      "🕒 Timestamp of messages"
+    ],
+    "purpose": "3. Purpose of Data Processing",
+    "purposeDescription": "The collected data is used solely for operating the chat function, enabling real-time communication between users. There is no commercial use or transfer of data to third parties.",
+    "security": "4. Security and Encryption",
+    "securityDescription": "Please note that all messages and images are transmitted and stored unencrypted. This poses a risk that third parties may access transmitted content. We recommend not sharing sensitive or confidential information via this app. However, passwords are securely stored using bcrypt encryption to ensure user account security.",
+    "userRights": "5. User Rights",
+    "userRightsDescription": "As a user of the chat app, you have the following rights:",
+    "userRightsList": [
+      "📄 Access to stored personal data",
+      "✏️ Correction of incorrect or incomplete data",
+      "🗑️ Deletion of your data",
+      "⏸️ Restriction of data processing"
+    ],
+    "disclaimer": "6. Disclaimer",
+    "disclaimerDescription": "This app is in the development phase and is operated for educational purposes. We assume no liability for potential data loss or unauthorized access to transmitted content.",
+    "contact": "7. Contact",
+    "contactDescription": "If you have any questions regarding data processing or wish to exercise your rights, you can reach us via the contact information provided on the About Us page.",
+    "lastUpdated": "Last updated: March 2025"
+  },
+
+  "toast": {
+    "settings": {
+      "loading": "Loading...",
+      "successUpdate": "Updated successfully!",
+      "successAccountDelete": "Account deleted!",
+      "errorAccountDelete": "Failed to delete account. Please try again!",
+      "errorFailedChange": "Failed to change!"
+    },
+    "register": {
+      "success": "Registered successfully!",
+      "errorAlreadyTaken": "Registration Failed. Username or Email already taken",
+      "errorServer": "Registration Failed. Internal server error"
+    },
+    "verify": {
+      "loading": "Loading...",
+      "success": "Verified Successfully.",
+      "errorAlreadyVerified": "Verification failed. Your email is already verified",
+      "errorNoMatch": "Verification failed. Key and email don't match",
+      "errorServer": "Verification failed. Internal server error"
+    },
+    "login": {
+      "waiting": "Waiting...",
+      "success": "Logged in Successfully.",
+      "errorLoginVerify": "Login failed. You need to verify your email.",
+      "errorUsernameOrPw": "Login failed. Username or password is wrong.",
+      "errorFailedLogin": "Login Failed."
+    },
+    "forgotPw": {
+      "waiting": "Waiting...",
+      "success": "Email sent with new password!",
+      "errorNotFound": "No user found with this email!",
+      "errorKeyNotCorrect": "Key is not correct, please try again!",
+      "errorFailed": "Progress failed!"
+    },
+    "newPw": {
+      "waiting": "Waiting...",
+      "success": "Password successfully changed!",
+      "errorNotFound": "No user found with this email!",
+      "errorKeyNotCorrect": "Key is not correct, please try again!",
+      "error": "Failed, please try again!"
+    },
+    "existChatroom": {
+      "alreadyChatted": "You have already chatted with ",
+      "errorUserNotFound": "username not found.",
+      "errorSearchYourself": "You can't search yourself.",
+      "errorFailedToFind": "Failed to find the user.",
+      "errorNameRequired": "you have to type a username.",
+      "errorDeletedUser": "You cannot send messages to a deleted user!",
+      "errorServer": "Internal Server Error!"
+    },
+    "chatroom": {
+      "audioNotSupported": "Audio recording is not supported on this device."
+    }
+  },
+
+  "register": {
+    "title": "Register",
+    "emailTitle": "Email",
+    "emailPlaceholder": "john-doe@mail.com",
+    "usernameTitle": "Username",
+    "usernamePlaceholder": "John-Doe",
+    "pwTitle": "Password",
+    "pwPlaceholder": "e.g.  a-z  A-Z  0-9",
+    "haveRead": "I have read the",
+    "privacy": " Privacy",
+    "onlyGermanPrivacy": "",
+    "submitBtn": "Register",
+    "alreadyRegistered": "Already registered?"
+  },
+
+  "verify": {
+    "title": "Verify your email",
+    "description": "You will receive an email with a 6-digit key, please use it to verify your email address",
+    "emailTitle": "Email",
+    "emailPlaceholder": "john-doe@mail.com",
+    "key": "Reset key",
+    "submitBtn": "Verify your account",
+    "backToLogin": "Back to login? "
+  },
+
+  "login": {
+    "title": "Login",
+    "emailTitle": "Email",
+    "emailPlaceholder": "Email",
+    "pwTitle": "Password",
+    "pwPlaceholder": "Password",
+    "forgotPw": "Forgot Password?",
+    "loginBtn": "Login",
+    "notYetRegistered": "Not yet registered?",
+    "notYetVerified": "Not yet verified?"
+  },
+
+  "forgotPw": {
+    "title": "Reset your Password",
+    "emailTitle": "Email",
+    "emailPlaceholder": "Email",
+    "sendEmailBtn": "Send Email",
+    "backToLogin": "Back to login?"
+  },
+
+  "newPw": {
+    "title": "New Password",
+    "emailTitle": "Email",
+    "emailPlaceholder": "Email",
+    "resetKeyTitle": "Reset key",
+    "resetKeyPlaceholder": "Reset key",
+    "pwTitle": "New Password",
+    "pwPlaceholder": "New Password",
+    "setBtn": "Set new Password",
+    "backToLogin": "Back to login?"
+  },
+
+  "existChatroom": {
+    "loading": "Loading...",
+    "searchUserTitle": "Search for a User",
+    "placeholder": "John-Doe",
+    "createChatroomBtn": "Create new chatroom"
+  },
+
+  "newChatroom": {
+    "loading": "Loading...",
+    "firstMessage": "Send your first message",
+    "to": "to: "
+  },
+
+  "chatArea": {
+    "loading": "Loading...",
+    "sentImage": "Sent image",
+    "sentAudioMessage": "Sent audio message",
+    "noUsername": "No Username",
+    "deletedAccount": "Deleted account",
+    "noMessages": "No messages",
+    "errorLoadingChatrooms": "Error loading chatrooms"
+  },
+
+  "chatroom": {
+    "loading": "Loading...",
+    "unreadMessage": "message. Tap to see. ↓",
+    "unreadMessages": "messages. Tap to see. ↓",
+    "timestampUpdateText": "Updated",
+    "failedToFindUser": "Failed to find the user."
+  },
+
+  "deletedAccount": {
+    "title": "Deleted account"
+  },
+
+  "pageNotFound": "NOT FOUND"
+}

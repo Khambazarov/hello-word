@@ -1,0 +1,22 @@
+{
+  "name": "Realtime-Chat – Hello, Word!",
+  "short_name": "Hello, Word!",
+  "theme_color": "#364153",
+  "background_color": "#364153",
+  "display": "fullScreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/robot.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/robot.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
