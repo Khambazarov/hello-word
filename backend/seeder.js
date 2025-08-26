@@ -16,7 +16,7 @@ const seedDatabase = async () => {
   const hashedPassword = await bcrypt.hash("123456", 12);
 
   const users = [];
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 5; i++) {
     const user = new User({
       email: `user${i}@mail.com`,
       username: `user${i}`,
