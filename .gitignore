@@ -1,10 +1,10 @@
 # Do not track workspace-specific lock files (we only use the root lock file)
-frontend/package-lock.json
-backend/package-lock.json
+# frontend/package-lock.json
+# backend/package-lock.json
 
 # Optional but useful:
-**/coverage/
-.eslintcache
+# **/coverage/
+# .eslintcache
 
 # -------------------------
 # Logs
