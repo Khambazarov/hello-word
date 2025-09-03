@@ -680,7 +680,7 @@ export const Chatroom = () => {
           </div>
         )}
 
-        <div className="flex items-center py-4 rounded bg-gray-700">
+        <div className="flex items-center py-2 rounded bg-gray-700">
           {window.innerWidth >= 1024 && (
             <label className="my-auto cursor-pointer text-gray-400 ml-2 hover:text-white hover:scale-120 duration-300">
               <img
