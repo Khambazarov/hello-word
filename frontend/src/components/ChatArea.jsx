@@ -316,11 +316,11 @@ export const ChatArea = () => {
                                 forward
                               </span>
                               {isImageUrl(chatroom.lastMessage.content) ? (
-                                <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                                <span className="text-xs xl:text-xl w-fit border border-amber-400 rounded-xl px-2 py-1">
                                   {translations.chatArea.sentImage}
                                 </span>
                               ) : isAudioUrl(chatroom.lastMessage.content) ? (
-                                <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                                <span className="text-xs xl:text-xl w-fit border border-amber-400 rounded-xl px-2 py-1">
                                   {translations.chatArea.sentAudioMessage}
                                 </span>
                               ) : (
@@ -333,11 +333,11 @@ export const ChatArea = () => {
                               )}
                             </div>
                           ) : isImageUrl(chatroom.lastMessage.content) ? (
-                            <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                            <span className="text-xs xl:text-xl w-fit border border-amber-400 rounded-xl px-2 py-1">
                               {translations.chatArea.sentImage}
                             </span>
                           ) : isAudioUrl(chatroom.lastMessage.content) ? (
-                            <span className="text-xs xl:text-xl text-nowrap border-2 border-amber-400 rounded-xl px-2">
+                            <span className="text-xs xl:text-xl w-fit border border-amber-400 rounded-xl px-2 py-1">
                               {translations.chatArea.sentAudioMessage}
                             </span>
                           ) : (
@@ -375,15 +375,16 @@ export const ChatArea = () => {
               ))}
             </ul>
             {/* Fixed Buttons - Bottom Right */}
-            <div className="fixed bottom-2 right-2 flex flex-col space-y-2">
+            <div className="fixed bottom-2 right-2 flex flex-row space-x-2">
               {/* Create Group Chat Button */}
               <button
-                className="xl:h-20 xl:w-30 justify-center cursor-pointer flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                className="xl:h-20 xl:w-30 justify-center cursor-pointer flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
                 onClick={() => navigate("/chatarea/groups/create")}
+                title="Create Group Chat"
               >
                 <span
                   className="material-symbols-outlined text-white"
-                  style={{ fontSize: "36px" }}
+                  style={{ fontSize: "32px" }}
                 >
                   group_add
                 </span>
@@ -391,12 +392,13 @@ export const ChatArea = () => {
 
               {/* Add Person Button */}
               <button
-                className="xl:h-20 xl:w-30 justify-center cursor-pointer flex items-center px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                className="xl:h-20 xl:w-30 justify-center cursor-pointer flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                 onClick={() => navigate("/chatarea/exist")}
+                title="Add Person"
               >
                 <span
-                  className="material-symbols-outlined text-gray-200"
-                  style={{ fontSize: "36px" }}
+                  className="material-symbols-outlined text-white"
+                  style={{ fontSize: "32px" }}
                 >
                   person_add
                 </span>

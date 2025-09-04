@@ -203,18 +203,16 @@ export const GroupSettings = () => {
 
   return (
     <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
-      <header className="xl:h-25 z-10 h-16 flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
-        <div className="flex items-center">
-          <button
-            onClick={() => navigate(`/chatarea/chats/${groupId}`)}
-            className="cursor-pointer pr-4"
-          >
-            <BackButtonIcon />
-          </button>
-          <h1 className="md:text-base xl:text-2xl text-white tracking-widest font-bold">
-            Group Settings
-          </h1>
-        </div>
+      <header className="xl:h-25 z-10 h-16 flex justify-center items-center sticky top-0 bg-gray-700">
+        <h1 className="md:text-base xl:text-2xl text-white tracking-widest font-bold">
+          Group Settings
+        </h1>
+        <button
+          onClick={() => navigate(`/chatarea/chats/${groupId}`)}
+          className="cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"
+        >
+          <BackButtonIcon />
+        </button>
       </header>
 
       <div className="flex-grow p-6 max-w-4xl mx-auto w-full">
