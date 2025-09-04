@@ -53,6 +53,7 @@ pnpm-debug.log*
 # Optional / Project-specific
 # -------------------------
 temp.md
+GROUPCHAT_FEATURES.md
 app_spec.yaml
 *.local
 
