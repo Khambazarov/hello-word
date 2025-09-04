@@ -9,6 +9,7 @@ import cors from "cors";
 import userRouter from "./routes/userRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 import chatroomRouter from "./routes/chatroomRouter.js";
+import groupChatRouter from "./routes/groupChatRouter.js";
 import uploadRouter from "./routes/uploadRouter.js";
 import { connectDB } from "./db.js";
 import Chatroom from "./models/chatroomSchema.js";
@@ -96,6 +97,7 @@ io.on("connection", async (socket) => {
 app.use("/api/users", userRouter(io));
 app.use("/api/messages", messageRouter(io));
 app.use("/api/chatrooms", chatroomRouter(io));
+app.use("/api/groupchats", groupChatRouter(io));
 app.use("/api/upload", uploadRouter);
 
 const baseUrl = process.env.BASE_URL || "http://localhost";

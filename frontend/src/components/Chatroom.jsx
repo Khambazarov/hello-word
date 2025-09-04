@@ -101,6 +101,13 @@ export const Chatroom = () => {
   const partnerName = data?.partnerName;
   const unreadMessagesCount = data?.unreadMessagesCount;
 
+  // Gruppenchat-spezifische Daten
+  const isGroupChat = data?.isGroupChat || false;
+  const groupInfo = data?.groupInfo;
+  const members = data?.members || [];
+  const admins = data?.admins || [];
+  const userPermissions = data?.userPermissions || {};
+
   const { mutate: markAsRead } = useMutation({
     mutationFn: async () => {
       const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
@@ -354,7 +361,11 @@ export const Chatroom = () => {
       .join("\n");
     if (userInput.trim() === "") return null;
 
-    if (partnerName === "deletedUser" || partnerName === undefined) {
+    // Für normale Chats: Prüfen ob Partner gelöscht wurde
+    if (
+      !isGroupChat &&
+      (partnerName === "deletedUser" || partnerName === undefined)
+    ) {
       e.target.textarea.value = "";
       toast.dismiss();
       toast.error(translations.toast.existChatroom.errorDeletedUser, {
@@ -562,31 +573,61 @@ export const Chatroom = () => {
 
   return (
     <div className="min-h-svh flex flex-col dark:bg-[#1d232a] dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
-      <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
-        <div className="relative aspect-square h-12 border-2 border-gray-100 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-10">
-          <img
-            className={cn(
-              "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
-              isLoading && "opacity-0"
+      <header className="xl:h-25 z-10 h-16 flex justify-between items-center pl-2 sticky top-0 bg-gray-700">
+        <div className="flex items-center">
+          <div className="relative aspect-square h-12 border-2 border-gray-100 bg-gray-400 rounded-full mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-10">
+            <img
+              className={cn(
+                "transition-all absolute inset-0 w-full h-full object-cover transform duration-300 hover:scale-170 z-50",
+                isLoading && "opacity-0"
+              )}
+              src={
+                isGroupChat
+                  ? groupInfo?.image ||
+                    `https://robohash.org/${groupInfo?.name}`
+                  : partnerName === "deletedUser" || !partnerName
+                    ? robot
+                    : `https://robohash.org/${partnerName}`
+              }
+              alt="avatar"
+            />
+          </div>
+          <div className="flex flex-col">
+            <h1 className="md:text-base xl:text-2xl text-white tracking-widest font-bold">
+              {isGroupChat ? groupInfo?.name : partnerName}
+            </h1>
+            {isGroupChat && (
+              <p className="text-xs text-gray-300">{members?.length} members</p>
             )}
-            src={
-              partnerName === "deletedUser" || !partnerName
-                ? robot
-                : `https://robohash.org/${partnerName}`
-            }
-            alt="avatar"
-          />
+          </div>
         </div>
-        <h1 className="md:text-base xl:text-3xl text-white tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
-          {partnerName}
-        </h1>
 
-        <button
-          onClick={() => navigate("/chatarea")}
-          className="cursor-pointer pr-4 scr"
-        >
-          <BackButtonIcon />
-        </button>
+        <div className="flex items-center space-x-2">
+          {isGroupChat && userPermissions?.canInvite && (
+            <button
+              onClick={() => navigate(`/chatarea/groups/${id}/invite`)}
+              className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+            >
+              Invite
+            </button>
+          )}
+
+          {isGroupChat && (
+            <button
+              onClick={() => navigate(`/chatarea/groups/${id}/settings`)}
+              className="material-symbols-outlined text-white hover:text-blue-300"
+            >
+              settings
+            </button>
+          )}
+
+          <button
+            onClick={() => navigate("/chatarea")}
+            className="cursor-pointer pr-4"
+          >
+            <BackButtonIcon />
+          </button>
+        </div>
       </header>
       <div className="flex flex-col h-full flex-grow ">
         {unreadMessagesCount > 0 && (
@@ -602,64 +643,88 @@ export const Chatroom = () => {
           </button>
         )}
         {Array.isArray(chatroomMessages) &&
-          chatroomMessages.map((message, index) => (
-            <div
-              className={cn(
-                "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%] dark:text-gray-100 text-gray-900  dark:bg-transparent",
-                isAudioUrl(message.content) &&
-                  message.sender.username === currentUsername
-                  ? "ml-auto"
-                  : isAudioUrl(message.content) &&
-                      message.sender.username !== currentUsername
-                    ? ""
-                    : message.sender.username === currentUsername
-                      ? "border-2 border-blue-400  bg-blue-50 rounded-br-none ml-auto"
-                      : "border-2 border-amber-400  bg-amber-50 rounded-bl-none"
-              )}
-              key={message._id}
-              ref={
-                index === chatroomMessages.length - 1 ? lastMessageRef : null
-              }
-            >
-              {isAudioUrl(message.content) ? (
-                <audio controls className="border-0">
-                  <source
-                    src={message.content}
-                    type={getMimeType(message.content)}
-                  />
-                  Your browser does not support the audio element.
-                </audio>
-              ) : isImageUrl(message.content) ? (
-                <img src={message.content} alt="uploaded" />
-              ) : (
-                <p className="break-words whitespace-pre-line min-w-40">
-                  {message.content}
-                </p>
-              )}
-              <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
-                {message.createdAt !== message.updatedAt
-                  ? `( ${translations.chatroom.timestampUpdateText} ) ${formatTimestamp(message.createdAt, language)}`
-                  : `${formatTimestamp(message.createdAt, language)}`}
-              </span>
-              {message.sender.username === currentUsername && (
-                <div className="relative">
-                  <button
-                    onClick={() => handleEditMessage(message)}
-                    className="absolute -left-3 top-1 dark:text-gray-400 text-gray-700"
-                  >
-                    {!isImageUrl(message.content) &&
-                      !isAudioUrl(message.content) && <EditMessageIcon />}
-                  </button>
-                  <button
-                    onClick={() => handleDeleteMessage(message)}
-                    className="absolute top-1 -right-3 dark:text-gray-400 text-gray-700"
-                  >
-                    <DeleteMessageIcon />
-                  </button>
+          chatroomMessages.map((message, index) => {
+            // System-Nachrichten anders darstellen
+            if (message.isSystemMessage) {
+              return (
+                <div key={message._id} className="flex justify-center my-4">
+                  <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-gray-300 max-w-[80%] text-center">
+                    {message.content}
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {formatTimestamp(message.createdAt, language)}
+                    </div>
+                  </div>
                 </div>
-              )}
-            </div>
-          ))}
+              );
+            }
+
+            return (
+              <div
+                className={cn(
+                  "px-4 pt-2 mx-2 my-6 rounded-xl w-fit max-w-[75%] dark:text-gray-100 text-gray-900 dark:bg-transparent",
+                  isAudioUrl(message.content) &&
+                    message.sender.username === currentUsername
+                    ? "ml-auto"
+                    : isAudioUrl(message.content) &&
+                        message.sender.username !== currentUsername
+                      ? ""
+                      : message.sender.username === currentUsername
+                        ? "border-2 border-blue-400 bg-blue-50 rounded-br-none ml-auto"
+                        : "border-2 border-amber-400 bg-amber-50 rounded-bl-none"
+                )}
+                key={message._id}
+                ref={
+                  index === chatroomMessages.length - 1 ? lastMessageRef : null
+                }
+              >
+                {/* Für Gruppenchats: Sender-Name anzeigen */}
+                {isGroupChat && message.sender.username !== currentUsername && (
+                  <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                    {message.sender.username}
+                  </div>
+                )}
+
+                {isAudioUrl(message.content) ? (
+                  <audio controls className="border-0">
+                    <source
+                      src={message.content}
+                      type={getMimeType(message.content)}
+                    />
+                    Your browser does not support the audio element.
+                  </audio>
+                ) : isImageUrl(message.content) ? (
+                  <img src={message.content} alt="uploaded" />
+                ) : (
+                  <p className="break-words whitespace-pre-line min-w-40">
+                    {message.content}
+                  </p>
+                )}
+                <span className="pt-1 flex justify-end text-[12px] dark:text-gray-400 text-gray-600">
+                  {message.createdAt !== message.updatedAt
+                    ? `( ${translations.chatroom.timestampUpdateText} ) ${formatTimestamp(message.createdAt, language)}`
+                    : `${formatTimestamp(message.createdAt, language)}`}
+                </span>
+                {message.sender.username === currentUsername && (
+                  <div className="relative">
+                    <button
+                      onClick={() => handleEditMessage(message)}
+                      className="absolute -left-3 top-1 dark:text-gray-400 text-gray-700"
+                    >
+                      {!isImageUrl(message.content) &&
+                        !isAudioUrl(message.content) &&
+                        !message.isSystemMessage && <EditMessageIcon />}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteMessage(message)}
+                      className="absolute top-1 -right-3 dark:text-gray-400 text-gray-700"
+                    >
+                      <DeleteMessageIcon />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         <div ref={messagesEndRef} />
       </div>
       <Toaster />

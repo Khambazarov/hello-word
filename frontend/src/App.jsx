@@ -15,6 +15,9 @@ import { ChatArea } from "./components/ChatArea.jsx";
 import { ExistChatroom } from "./components/ExistChatroom.jsx";
 import { Chatroom } from "./components/Chatroom.jsx";
 import { NewChatroom } from "./components/NewChatroom.jsx";
+import { CreateGroupChat } from "./components/CreateGroupChat.jsx";
+import { InviteToGroup } from "./components/InviteToGroup.jsx";
+import { GroupSettings } from "./components/GroupSettings.jsx";
 import { PageNotFound } from "./components/PageNotFound.jsx";
 
 import { PreventZoom } from "./utils/PreventZoom.js";
@@ -45,6 +48,17 @@ function App() {
           <Route
             path="/chatarea/chats/new-chatroom/:username"
             element={<NewChatroom />}
+          />
+
+          {/* Group Chat Routes */}
+          <Route path="/chatarea/groups/create" element={<CreateGroupChat />} />
+          <Route
+            path="/chatarea/groups/:groupId/invite"
+            element={<InviteToGroup />}
+          />
+          <Route
+            path="/chatarea/groups/:groupId/settings"
+            element={<GroupSettings />}
           />
 
           <Route path="*" element={<PageNotFound />} />

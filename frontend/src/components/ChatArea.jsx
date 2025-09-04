@@ -256,9 +256,9 @@ export const ChatArea = () => {
       </header>
       <main className="min-h-screen">
         {isLoading ? (
-          <p>{translations.chatArea.loading}</p>
+          <p className="p-4">{translations.chatArea.loading}</p>
         ) : chatroomsError ? (
-          <p>{translations.chatArea.errorLoadingChatrooms}</p>
+          <p className="p-4">{translations.chatArea.errorLoadingChatrooms}</p>
         ) : (
           <>
             <ul>
@@ -268,22 +268,41 @@ export const ChatArea = () => {
                   to={`/chatarea/chats/${chatroom.chatId}`}
                 >
                   <li className="flex p-2 py-4 border-t-1 dark:hover:bg-gray-600 hover:bg-gray-200 duration-300">
-                    <div className="relative aspect-square h-12 xl:h-20 border-2 dark:bg-gray-700 bg-gray-400 rounded-full overflow-hidden  ">
+                    <div className="relative aspect-square h-12 xl:h-20 border-2 dark:bg-gray-700 bg-gray-400 rounded-full overflow-hidden">
                       <img
                         className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-300 hover:scale-150"
                         src={
-                          chatroom.usernames.join(", ")
-                            ? `https://robohash.org/${chatroom.usernames.join(", ")}`
-                            : robot
+                          chatroom.isGroupChat
+                            ? chatroom.groupImage ||
+                              `https://robohash.org/${chatroom.groupName}`
+                            : chatroom.usernames?.join(", ")
+                              ? `https://robohash.org/${chatroom.usernames.join(", ")}`
+                              : robot
                         }
                         alt="avatar"
                       />
+                      {chatroom.isGroupChat && (
+                        <div className="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full p-1">
+                          <span className="material-symbols-outlined text-xs">
+                            group
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex flex-col pl-4">
-                      <span className="font-bold">
-                        {chatroom.usernames.join(", ") ??
-                          translations.chatArea.noUsername}
-                      </span>
+                    <div className="flex flex-col pl-4 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold">
+                          {chatroom.isGroupChat
+                            ? chatroom.groupName
+                            : (chatroom.usernames?.join(", ") ??
+                              translations.chatArea.noUsername)}
+                        </span>
+                        {chatroom.isGroupChat && (
+                          <span className="text-xs text-gray-500 ml-2">
+                            {chatroom.memberCount} members
+                          </span>
+                        )}
+                      </div>
                       {chatroom.isDeletedAccount ? (
                         <span className="text-xs xl:text-xl text-red-500">
                           {translations.chatArea.deletedAccount}
@@ -355,17 +374,34 @@ export const ChatArea = () => {
                 </Link>
               ))}
             </ul>
-            <button
-              className="xl:h-20 xl:w-30 xl:bottom-4 xl:right-4 justify-center cursor-pointer fixed bottom-2 right-2 flex items-center px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-              onClick={() => navigate("/chatarea/exist")}
-            >
-              <span
-                className="material-symbols-outlined text-gray-200"
-                style={{ fontSize: "36px" }}
+            {/* Fixed Buttons - Bottom Right */}
+            <div className="fixed bottom-2 right-2 flex flex-col space-y-2">
+              {/* Create Group Chat Button */}
+              <button
+                className="xl:h-20 xl:w-30 justify-center cursor-pointer flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                onClick={() => navigate("/chatarea/groups/create")}
               >
-                person_add
-              </span>
-            </button>
+                <span
+                  className="material-symbols-outlined text-white"
+                  style={{ fontSize: "36px" }}
+                >
+                  group_add
+                </span>
+              </button>
+
+              {/* Add Person Button */}
+              <button
+                className="xl:h-20 xl:w-30 justify-center cursor-pointer flex items-center px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                onClick={() => navigate("/chatarea/exist")}
+              >
+                <span
+                  className="material-symbols-outlined text-gray-200"
+                  style={{ fontSize: "36px" }}
+                >
+                  person_add
+                </span>
+              </button>
+            </div>
           </>
         )}
       </main>

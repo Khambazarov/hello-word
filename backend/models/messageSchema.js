@@ -6,6 +6,15 @@ const messageSchema = new Schema(
     chatroom: { type: Schema.Types.ObjectId, ref: "Chatroom" },
     content: { type: String, required: true },
     image: String,
+    isSystemMessage: {
+      type: Boolean,
+      default: false,
+    },
+    messageType: {
+      type: String,
+      enum: ["text", "image", "audio", "system"],
+      default: "text",
+    },
   },
   { timestamps: true }
 );
