@@ -175,7 +175,7 @@ export const GroupSettings = () => {
 
   const deleteGroupMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch(`/api/groupchats/${groupId}`, {
+      const response = await fetch(`/api/chatrooms/groupchats/${groupId}`, {
         method: "DELETE",
       });
 
