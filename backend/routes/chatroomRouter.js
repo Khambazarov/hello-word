@@ -657,5 +657,83 @@ export default (io) => {
     }
   });
 
+  // DELETE GROUP CHAT
+  router.delete("/groupchats/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const currentUserId = req.session.user.id;
+
+      const chatroom = await Chatroom.findById(id);
+      if (!chatroom) {
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
+
+      if (!chatroom.isGroupChat) {
+        return res.status(400).json({ errorMessage: "Not a group chat" });
+      }
+
+      // Only creator can delete the group
+      const isCreator = chatroom.creator.toString() === currentUserId;
+      if (!isCreator) {
+        return res.status(403).json({
+          errorMessage: "Only the group creator can delete this group",
+        });
+      }
+
+      // Delete all messages in the group
+      await Message.deleteMany({ chatroom: id });
+      
+      // Delete the group
+      await Chatroom.findByIdAndDelete(id);
+
+      res.json({
+        success: true,
+        message: "Group chat deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting group chat:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  // DELETE DIRECT CHAT
+  router.delete("/chats/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const currentUserId = req.session.user.id;
+
+      const chatroom = await Chatroom.findById(id);
+      if (!chatroom) {
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
+
+      if (chatroom.isGroupChat) {
+        return res.status(400).json({ errorMessage: "Use group chat deletion endpoint for group chats" });
+      }
+
+      // Check if user is a participant in this chat
+      const isParticipant = chatroom.users.some(
+        (userId) => userId.toString() === currentUserId
+      );
+      if (!isParticipant) {
+        return res.status(403).json({ errorMessage: "Access denied" });
+      }
+
+      // Delete all messages in the chat
+      await Message.deleteMany({ chatroom: id });
+      
+      // Delete the chat
+      await Chatroom.findByIdAndDelete(id);
+
+      res.json({
+        success: true,
+        message: "Chat deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting chat:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
   return router;
 };
