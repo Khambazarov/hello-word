@@ -275,9 +275,9 @@ export default (io) => {
         return res.status(403).json({ errorMessage: "Access denied" });
       }
 
-      const chatroomMessages = await Message.find({ chatroom: id }).populate(
-        "sender"
-      );
+      const chatroomMessages = await Message.find({ chatroom: id })
+        .populate("sender")
+        .populate("editSeenBy", "username"); // Populate users who have seen edits
 
       const timestamps = await Message.find({ chatroom: id })
         .sort({ createdAt: -1 })
@@ -303,6 +303,7 @@ export default (io) => {
         return res.json({
           chatroomMessages,
           currentUsername,
+          currentUserId,
           unreadMessagesCount,
           volume,
           isGroupChat: true,
@@ -351,6 +352,7 @@ export default (io) => {
         return res.json({
           chatroomMessages,
           currentUsername,
+          currentUserId,
           partnerName,
           unreadMessagesCount,
           volume,
@@ -363,6 +365,7 @@ export default (io) => {
       res.json({
         chatroomMessages,
         currentUsername,
+        currentUserId,
         partnerName,
         unreadMessagesCount,
         volume,
