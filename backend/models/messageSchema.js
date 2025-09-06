@@ -15,6 +15,10 @@ const messageSchema = new Schema(
       enum: ["text", "image", "audio", "system"],
       default: "text",
     },
+    // Fields to track who has seen edited messages
+    editSeenBy: [{ type: Schema.Types.ObjectId, ref: "User" }], // For group chats
+    editSeenByOwner: { type: Boolean, default: false }, // For 1-to-1 chats (owner of message)
+    editSeenByPartner: { type: Boolean, default: false }, // For 1-to-1 chats (other person)
   },
   { timestamps: true }
 );

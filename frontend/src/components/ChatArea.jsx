@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { io } from "socket.io-client";
+import socketManager from "../utils/socketManager.js";
 
 import { cn } from "../utils/cn.js";
 import { fetchUserLanguage } from "../utils/api.js";
@@ -108,32 +108,55 @@ export const ChatArea = () => {
   });
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
-      transports: ["websocket"],
-      withCredentials: true,
-    });
+    // Nur Socket-Verbindung herstellen wenn Chatrooms-Daten verfügbar sind
+    if (isLoading || !chatroomsData?.chatrooms) {
+      return;
+    }
 
-    socket.on("message", () => {
-      queryClient.invalidateQueries(["chatrooms"]);
-      if (audioReceiveRef.current) {
-        audioReceiveRef.current.play().catch((error) => {
-          console.error("Audio playback failed:", error);
-        });
-      }
-    });
+    console.log("Setting up socket listeners in ChatArea");
 
-    socket.on("message-update", () => {
-      queryClient.invalidateQueries(["chatroom"]);
-    });
+    // Socket verbinden oder wiederverwenden
+    socketManager.connect().then(() => {
+      // Event-Listener für ChatArea registrieren
+      const handleMessage = () => {
+        queryClient.invalidateQueries(["chatrooms"]);
+        if (audioReceiveRef.current) {
+          audioReceiveRef.current.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+        }
+      };
 
-    socket.on("message-delete", () => {
-      queryClient.invalidateQueries(["chatrooms"]);
+      const handleMessageUpdate = () => {
+        queryClient.invalidateQueries(["chatroom"]);
+      };
+
+      const handleMessageDelete = () => {
+        queryClient.invalidateQueries(["chatrooms"]);
+      };
+
+      // Listener mit eindeutiger Component-ID registrieren
+      socketManager.addListener("message", handleMessage, "ChatArea");
+      socketManager.addListener("message-update", handleMessageUpdate, "ChatArea");
+      socketManager.addListener("message-delete", handleMessageDelete, "ChatArea");
+    }).catch((error) => {
+      console.error("Failed to connect socket in ChatArea:", error);
     });
 
     return () => {
-      socket.disconnect();
+      console.log("Removing socket listeners in ChatArea");
+      // Nur die Listener dieser Komponente entfernen
+      socketManager.removeAllListeners("ChatArea");
     };
-  }, [queryClient]);
+  }, [queryClient, isLoading, chatroomsData]);
+
+  // Cleanup beim Verlassen der Komponente
+  useEffect(() => {
+    return () => {
+      console.log("Component unmounting - removing ChatArea listeners");
+      socketManager.removeAllListeners("ChatArea");
+    };
+  }, []);
 
   useEffect(() => {
     const updateMaxLength = () => {

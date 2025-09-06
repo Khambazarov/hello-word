@@ -35,7 +35,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, ".", "");
+  const env = loadEnv(mode, ".", "VITE_");
 
   return {
     plugins: [react(), tailwindcss()],
@@ -50,7 +50,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      "process.env": env,
+      // Nur NODE_ENV definieren, VITE_ Variablen sind automatisch verfügbar
+      "process.env.NODE_ENV": JSON.stringify(mode),
     },
   };
 });
