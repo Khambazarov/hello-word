@@ -154,18 +154,18 @@
   },
 
   "register": {
-    "title": "Registrieren",
-    "emailTitle": "E-Mail",
-    "emailPlaceholder": "max-mustermann@mail.de",
+    "title": "Konto erstellen",
+    "emailTitle": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
     "usernameTitle": "Benutzername",
-    "usernamePlaceholder": "Max-Mustermann",
+    "usernamePlaceholder": "Wählen Sie einen eindeutigen Benutzernamen",
     "pwTitle": "Passwort",
-    "pwPlaceholder": "z.B.  a-z  A-Z  0-9",
+    "pwPlaceholder": "Erstellen Sie ein sicheres Passwort",
     "haveRead": "Ich habe die",
-    "privacy": " Datenschutz",
-    "onlyGermanPrivacy": " gelesen",
-    "submitBtn": "Registrieren",
-    "alreadyRegistered": "Bereits registriert?"
+    "privacy": " Datenschutzerklärung",
+    "onlyGermanPrivacy": " gelesen und stimme zu",
+    "submitBtn": "Konto erstellen",
+    "alreadyRegistered": "Bereits ein Konto vorhanden?"
   },
 
   "verify": {
@@ -179,15 +179,15 @@
   },
 
   "login": {
-    "title": "Anmelden",
-    "emailTitle": "E-Mail",
-    "emailPlaceholder": "E-Mail",
+    "title": "Willkommen zurück",
+    "emailTitle": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
     "pwTitle": "Passwort",
-    "pwPlaceholder": "Passwort",
+    "pwPlaceholder": "Geben Sie Ihr Passwort ein",
     "forgotPw": "Passwort vergessen?",
     "loginBtn": "Anmelden",
-    "notYetRegistered": "Noch nicht registriert?",
-    "notYetVerified": "Noch nicht verifiziert?"
+    "notYetRegistered": "Noch kein Konto vorhanden?",
+    "notYetVerified": "E-Mail noch nicht verifiziert?"
   },
 
   "forgotPw": {

@@ -154,18 +154,18 @@
   },
 
   "register": {
-    "title": "Register",
-    "emailTitle": "Email",
-    "emailPlaceholder": "john-doe@mail.com",
+    "title": "Create Account",
+    "emailTitle": "Email Address",
+    "emailPlaceholder": "Enter your email address",
     "usernameTitle": "Username",
-    "usernamePlaceholder": "John-Doe",
+    "usernamePlaceholder": "Choose a unique username",
     "pwTitle": "Password",
-    "pwPlaceholder": "e.g.  a-z  A-Z  0-9",
-    "haveRead": "I have read the",
-    "privacy": " Privacy",
+    "pwPlaceholder": "Create a secure password",
+    "haveRead": "I have read and agree to the",
+    "privacy": " Privacy Policy",
     "onlyGermanPrivacy": "",
-    "submitBtn": "Register",
-    "alreadyRegistered": "Already registered?"
+    "submitBtn": "Create Account",
+    "alreadyRegistered": "Already have an account?"
   },
 
   "verify": {
@@ -179,15 +179,15 @@
   },
 
   "login": {
-    "title": "Login",
-    "emailTitle": "Email",
-    "emailPlaceholder": "Email",
+    "title": "Welcome Back",
+    "emailTitle": "Email Address",
+    "emailPlaceholder": "Enter your email address",
     "pwTitle": "Password",
-    "pwPlaceholder": "Password",
+    "pwPlaceholder": "Enter your password",
     "forgotPw": "Forgot Password?",
-    "loginBtn": "Login",
-    "notYetRegistered": "Not yet registered?",
-    "notYetVerified": "Not yet verified?"
+    "loginBtn": "Sign In",
+    "notYetRegistered": "Don't have an account?",
+    "notYetVerified": "Need to verify your email?"
   },
 
   "forgotPw": {

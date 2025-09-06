@@ -208,11 +208,9 @@ export default (io) => {
 
       // Nur Creator kann Admins ernennen
       if (groupChat.creator.toString() !== currentUserId) {
-        return res
-          .status(403)
-          .json({
-            errorMessage: "Only the creator can promote members to admin",
-          });
+        return res.status(403).json({
+          errorMessage: "Only the creator can promote members to admin",
+        });
       }
 
       const userToPromote = await User.findOne({ username });
@@ -260,6 +258,88 @@ export default (io) => {
       });
     } catch (error) {
       console.error("Error promoting user to admin:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  /** ADMIN ZU MITGLIED DEGRADIEREN */
+  router.patch("/:groupId/demote", async (req, res) => {
+    try {
+      const { groupId } = req.params;
+      const { username } = req.body;
+      const currentUserId = req.session.user.id;
+
+      console.log("Demoting admin:", username, "in group:", groupId);
+
+      if (!username) {
+        return res.status(400).json({ errorMessage: "Username is required" });
+      }
+
+      const groupChat = await Chatroom.findById(groupId);
+      if (!groupChat || !groupChat.isGroupChat) {
+        return res.status(404).json({ errorMessage: "Group chat not found" });
+      }
+
+      // Nur Creator kann Admins degradieren
+      const isCreator = groupChat.creator.toString() === currentUserId;
+      if (!isCreator) {
+        return res.status(403).json({
+          errorMessage: "Only the group creator can demote admins",
+        });
+      }
+
+      const userToDemote = await User.findOne({ username });
+      if (!userToDemote) {
+        return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      // Prüfen ob User ein Admin ist
+      const isAdmin = groupChat.admins.some(
+        (adminId) => adminId.toString() === userToDemote._id.toString()
+      );
+      if (!isAdmin) {
+        return res.status(400).json({
+          errorMessage: "User is not an admin",
+        });
+      }
+
+      // Creator kann sich nicht selbst degradieren
+      if (userToDemote._id.toString() === groupChat.creator.toString()) {
+        return res.status(400).json({
+          errorMessage: "Cannot demote the group creator",
+        });
+      }
+
+      // User aus Admins entfernen
+      groupChat.admins = groupChat.admins.filter(
+        (adminId) => adminId.toString() !== userToDemote._id.toString()
+      );
+      await groupChat.save();
+
+      // System-Nachricht erstellen
+      const systemMessage = await Message.create({
+        content: `${userToDemote.username} has been demoted to member by ${req.session.user.username}`,
+        sender: null,
+        chatroom: groupId,
+        isSystemMessage: true,
+        timestamp: new Date(),
+      });
+
+      io.to(groupId).emit("message", systemMessage);
+      io.to(groupId).emit("admin-demoted", {
+        groupId,
+        demotedUser: userToDemote.username,
+        demotedBy: req.session.user.username,
+      });
+
+      console.log("Admin demoted successfully:", username);
+
+      res.json({
+        message: "Admin demoted to member successfully",
+        demotedAdmin: userToDemote.username,
+      });
+    } catch (error) {
+      console.error("Error demoting admin:", error);
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
@@ -437,11 +517,9 @@ export default (io) => {
         groupDescription.trim() !== groupChat.groupDescription
       ) {
         if (groupDescription.length > 200) {
-          return res
-            .status(400)
-            .json({
-              errorMessage: "Group description too long (max 200 characters)",
-            });
+          return res.status(400).json({
+            errorMessage: "Group description too long (max 200 characters)",
+          });
         }
         updates.groupDescription = groupDescription.trim();
         if (changeMessage) changeMessage += ", ";

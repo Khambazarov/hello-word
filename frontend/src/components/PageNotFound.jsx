@@ -17,22 +17,27 @@ export function PageNotFound() {
   );
 
   return (
-    <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
-      <header className="flex justify-between items-center sticky top-0 z-50 bg-gray-700 xl:p-2 xl:h-25 h-16">
-        <h1 className=" flex items-center tracking-widest text-sm md:text-base xl:text-3xl ml-2 text-gray-100">
-          Hello, Word!
-        </h1>
-        <img
-          className="h-12 absolute left-1/2 transform -translate-x-1/2 xl:h-16"
-          src={robot}
-          alt="robot"
-        />
-        <button
-          onClick={() => navigate(-1)}
-          className="cursor-pointer pr-4 scr"
-        >
-          <BackButtonIcon />
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <header className="sticky top-0 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center justify-between h-16 px-4 max-w-6xl mx-auto">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-wider">
+            Hello, Word!
+          </h1>
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <img
+              className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-1"
+              src={robot}
+              alt="robot"
+            />
+          </div>
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            title="Go Back"
+          >
+            <BackButtonIcon />
+          </button>
+        </div>
       </header>
       <div className="main_wrapper">
         <div className="main">

@@ -45,55 +45,137 @@ export const ForgotPw = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  p-6 dark:bg-[#1D232A] dark:bg-none bg-gradient-to-r  from-amber-200 to-blue-300">
-      <header className="flex items-center justify-between w-full max-w-md bg-gray-700 text-white p-4 rounded-lg shadow-lg">
-        <h1 className="text-xl font-bold tracking-wide">Hello, Word!</h1>
-        <img className="h-12" src={robot} alt="robot" />
-      </header>
-
-      <form
-        onSubmit={handleResetPw}
-        className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
-      >
-        <h1 className="text-2xl font-bold text-center mb-4 dark:text-white text-black">
-          {translations.forgotPw.title}
-        </h1>
-        <label
-          htmlFor="email"
-          className="block dark:text-gray-300 text-gray-600 font-semibold"
-        >
-          {translations.forgotPw.emailTitle}
-        </label>
-        <div className="relative mb-4">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <EmailIcon />
+    <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
+      <div className="flex items-center justify-center min-h-screen px-4">
+        <div className="w-full max-w-md">
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-700 rounded-full mb-4">
+              <img className="h-12 w-12" src={robot} alt="robot" />
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              Reset Password
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              Enter your email to receive a password reset link
+            </p>
           </div>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder={translations.forgotPw.emailPlaceholder}
-            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            required
-            autoFocus
-          />
+
+          {/* Reset Password Form */}
+          <form
+            onSubmit={handleResetPw}
+            className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-8 space-y-6"
+          >
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                {translations.forgotPw.title}
+              </h2>
+            </div>
+
+            {/* Info Box */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <div className="flex items-start space-x-3">
+                <svg
+                  className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div className="text-sm">
+                  <p className="text-blue-800 dark:text-blue-200 font-medium mb-1">
+                    How it works:
+                  </p>
+                  <ul className="text-blue-700 dark:text-blue-300 space-y-1">
+                    <li>
+                      • Enter the email address associated with your account
+                    </li>
+                    <li>• Check your inbox for a password reset email</li>
+                    <li>
+                      • Follow the instructions in the email to reset your
+                      password
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Input */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+              >
+                {translations.forgotPw.emailTitle}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <EmailIcon />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  autoComplete="email"
+                  placeholder={translations.forgotPw.emailPlaceholder}
+                  className="w-full pl-10 pr-4 py-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  required
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            {/* Send Email Button */}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+              <span>{translations.forgotPw.sendEmailBtn}</span>
+            </button>
+          </form>
+
+          {/* Back to Login Link */}
+          <div className="mt-6 text-center">
+            <Link
+              to="/"
+              className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center justify-center space-x-2"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              <span>{translations.forgotPw.backToLogin}</span>
+            </Link>
+          </div>
         </div>
-        <button
-          type="submit"
-          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
-        >
-          {translations.forgotPw.sendEmailBtn}
-        </button>
-        <Toaster />
-      </form>
-      <div className="flex justify-end items-center gap-2 mt-4">
-        <Link
-          to="/"
-          className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
-        >
-          {translations.forgotPw.backToLogin}
-        </Link>
       </div>
+      <Toaster position="bottom-center" />
     </div>
   );
 };

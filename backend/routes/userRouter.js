@@ -191,6 +191,7 @@ export default (io) => {
         dateOfRegistration: user.createdAt,
         volume: user.volume,
         language: user?.language,
+        avatar: user?.avatar,
       });
     } catch (error) {
       console.error("Error fetching current user:", error);

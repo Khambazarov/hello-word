@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const messageSchema = new Schema(
   {
-    sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    sender: { type: Schema.Types.ObjectId, ref: "User", required: false },
     chatroom: { type: Schema.Types.ObjectId, ref: "Chatroom" },
     content: { type: String, required: true },
     image: String,

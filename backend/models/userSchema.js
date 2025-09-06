@@ -5,6 +5,7 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    avatar: { type: String }, // URL für das Benutzer-Avatar
     isVerified: { type: Boolean, required: true, default: false },
     verificationKey: {
       type: String,
@@ -33,7 +34,14 @@ const userSchema = new Schema(
 // Method for whitelisting fields in the JSON output
 userSchema.methods.toJSON = function () {
   const user = this.toObject();
-  const allowedFields = ["_id", "email", "username", "createdAt", "updatedAt"];
+  const allowedFields = [
+    "_id",
+    "email",
+    "username",
+    "avatar",
+    "createdAt",
+    "updatedAt",
+  ];
   const filteredUser = {};
 
   allowedFields.forEach((field) => {

@@ -99,13 +99,19 @@ export default (io) => {
       }
 
       const volume = currentUser.volume || "middle";
+      const currentUserAvatar = currentUser.avatar;
       const allChats = await Chatroom.find({ users: currentUserId })
-        .populate("users")
-        .populate("creator", "username")
-        .populate("admins", "username");
+        .populate("users", "username email avatar")
+        .populate("creator", "username avatar")
+        .populate("admins", "username avatar");
 
       if (!allChats || allChats.length === 0) {
-        return res.json({ chatrooms: [], currentUsername, volume });
+        return res.json({
+          chatrooms: [],
+          currentUsername,
+          currentUserAvatar,
+          volume,
+        });
       }
 
       // TODO: IMPLEMENT AS MONGODB QUERY
@@ -214,7 +220,12 @@ export default (io) => {
         return 0;
       });
 
-      res.json({ chatrooms: sortedChatrooms, currentUsername, volume });
+      res.json({
+        chatrooms: sortedChatrooms,
+        currentUsername,
+        currentUserAvatar,
+        volume,
+      });
     } catch (error) {
       res.status(500).json({ errorMessage: "Internal server error" });
     }
@@ -245,9 +256,9 @@ export default (io) => {
       const volume = currentUser.volume;
 
       const chatroom = await Chatroom.findOne({ _id: id })
-        .populate("users", "username email")
-        .populate("creator", "username")
-        .populate("admins", "username");
+        .populate("users", "username email avatar")
+        .populate("creator", "username avatar")
+        .populate("admins", "username avatar");
 
       if (!chatroom) {
         return res.status(404).json({ errorMessage: "Chatroom not found" });
@@ -355,6 +366,290 @@ export default (io) => {
         isGroupChat: false,
       });
     } catch (error) {
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  // INVITE USERS TO GROUP
+  router.post("/groupchats/:id/invite", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { usernames } = req.body;
+      const currentUserId = req.session.user.id;
+
+      if (!usernames || !Array.isArray(usernames) || usernames.length === 0) {
+        return res
+          .status(400)
+          .json({ errorMessage: "Invalid usernames provided" });
+      }
+
+      const chatroom = await Chatroom.findById(id)
+        .populate("users", "username")
+        .populate("admins", "username");
+
+      if (!chatroom) {
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
+
+      if (!chatroom.isGroupChat) {
+        return res.status(400).json({ errorMessage: "Not a group chat" });
+      }
+
+      // Check if user has permission to invite (is admin or creator)
+      const isCreator = chatroom.creator.toString() === currentUserId;
+      const isAdmin = chatroom.admins.some(
+        (admin) => admin._id.toString() === currentUserId
+      );
+
+      if (!isCreator && !isAdmin) {
+        return res.status(403).json({
+          errorMessage: "No permission to invite users",
+        });
+      }
+
+      const usersToInvite = await User.find({
+        username: { $in: usernames },
+      });
+
+      if (usersToInvite.length === 0) {
+        return res.status(404).json({ errorMessage: "No valid users found" });
+      }
+
+      const existingMemberIds = chatroom.users.map((user) =>
+        user._id.toString()
+      );
+      const newMembers = usersToInvite.filter(
+        (user) => !existingMemberIds.includes(user._id.toString())
+      );
+
+      if (newMembers.length === 0) {
+        return res.status(400).json({
+          errorMessage: "All users are already members of this group",
+        });
+      }
+
+      // Add new members to the group
+      chatroom.users.push(...newMembers.map((user) => user._id));
+      await chatroom.save();
+
+      const invitedUsers = newMembers.map((user) => user.username);
+
+      res.json({
+        success: true,
+        message: `Successfully invited ${invitedUsers.length} user(s)`,
+        invitedUsers,
+        newMemberCount: chatroom.users.length,
+      });
+    } catch (error) {
+      console.error("Error inviting users to group:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  // GET GROUP MEMBERS
+  router.get("/groupchats/:id/members", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const currentUserId = req.session.user.id;
+
+      const chatroom = await Chatroom.findById(id)
+        .populate("users", "username email avatar")
+        .populate("creator", "username avatar")
+        .populate("admins", "username avatar");
+
+      if (!chatroom) {
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
+
+      if (!chatroom.isGroupChat) {
+        return res.status(400).json({ errorMessage: "Not a group chat" });
+      }
+
+      // Check if user is a member
+      const isMember = chatroom.users.some(
+        (user) => user._id.toString() === currentUserId
+      );
+      if (!isMember) {
+        return res.status(403).json({ errorMessage: "Access denied" });
+      }
+
+      const isCreator = chatroom.creator._id.toString() === currentUserId;
+      const isAdmin = chatroom.admins.some(
+        (admin) => admin._id.toString() === currentUserId
+      );
+
+      res.json({
+        groupInfo: {
+          id: chatroom._id,
+          name: chatroom.groupName,
+          description: chatroom.groupDescription,
+          image: chatroom.groupImage,
+          creator: chatroom.creator,
+          memberCount: chatroom.users.length,
+        },
+        members: chatroom.users,
+        admins: chatroom.admins,
+        userPermissions: {
+          isAdmin,
+          isCreator,
+          canInvite: isAdmin,
+          canRemoveMembers: isAdmin,
+          canEditGroup: isAdmin,
+          canPromoteMembers: isCreator,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching group members:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  // UPDATE GROUP DESCRIPTION
+  router.patch("/groups/:id/description", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { description } = req.body;
+      const currentUserId = req.session.user.id;
+
+      console.log("Updating group description for chatroom:", id);
+      console.log("New description:", description);
+      console.log("Current user ID:", currentUserId);
+
+      // Find the chatroom and check if it's a group chat
+      const chatroom = await Chatroom.findById(id);
+      if (!chatroom) {
+        console.log("Chatroom not found:", id);
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
+
+      console.log(
+        "Chatroom found:",
+        chatroom.groupName,
+        "isGroupChat:",
+        chatroom.isGroupChat
+      );
+
+      if (!chatroom.isGroupChat) {
+        console.log("Not a group chat");
+        return res.status(400).json({ errorMessage: "Not a group chat" });
+      }
+
+      // Check if user has permission to edit (is admin or creator)
+      const isCreator =
+        chatroom.creator && chatroom.creator.toString() === currentUserId;
+      const isAdmin =
+        chatroom.admins && chatroom.admins.includes(currentUserId);
+
+      console.log(
+        "Permission check - isCreator:",
+        isCreator,
+        "isAdmin:",
+        isAdmin
+      );
+
+      if (!isCreator && !isAdmin) {
+        console.log("No permission to edit");
+        return res.status(403).json({
+          errorMessage: "No permission to edit group description",
+        });
+      }
+
+      // Update the group description
+      chatroom.groupDescription = description.trim();
+      await chatroom.save();
+
+      console.log("Group description updated successfully");
+
+      res.json({
+        success: true,
+        message: "Group description updated successfully",
+        description: chatroom.groupDescription,
+      });
+    } catch (error) {
+      console.error("Error updating group description:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  // PROMOTE USER TO ADMIN
+  router.patch("/groupchats/:id/promote", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { username } = req.body;
+      const currentUserId = req.session.user.id;
+
+      console.log("Promoting user:", username, "in chatroom:", id);
+
+      if (!username) {
+        return res.status(400).json({ errorMessage: "Username is required" });
+      }
+
+      const chatroom = await Chatroom.findById(id)
+        .populate("users", "username")
+        .populate("admins", "username");
+
+      if (!chatroom) {
+        return res.status(404).json({ errorMessage: "Chatroom not found" });
+      }
+
+      if (!chatroom.isGroupChat) {
+        return res.status(400).json({ errorMessage: "Not a group chat" });
+      }
+
+      // Only creator can promote users
+      const isCreator = chatroom.creator.toString() === currentUserId;
+      if (!isCreator) {
+        return res.status(403).json({
+          errorMessage: "Only the group creator can promote users",
+        });
+      }
+
+      // Find the user to promote
+      const userToPromote = await User.findOne({ username });
+      if (!userToPromote) {
+        return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      // Check if user is a member of the group
+      const isMember = chatroom.users.some(
+        (user) => user._id.toString() === userToPromote._id.toString()
+      );
+      if (!isMember) {
+        return res.status(400).json({
+          errorMessage: "User is not a member of this group",
+        });
+      }
+
+      // Check if user is already an admin
+      const isAlreadyAdmin = chatroom.admins.some(
+        (admin) => admin._id.toString() === userToPromote._id.toString()
+      );
+      if (isAlreadyAdmin) {
+        return res.status(400).json({
+          errorMessage: "User is already an admin",
+        });
+      }
+
+      // Check if trying to promote the creator
+      if (userToPromote._id.toString() === chatroom.creator.toString()) {
+        return res.status(400).json({
+          errorMessage: "Cannot promote the group creator",
+        });
+      }
+
+      // Promote the user
+      chatroom.admins.push(userToPromote._id);
+      await chatroom.save();
+
+      console.log("User promoted successfully:", username);
+
+      res.json({
+        success: true,
+        message: "User promoted to admin successfully",
+        newAdmin: username,
+      });
+    } catch (error) {
+      console.error("Error promoting user:", error);
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });

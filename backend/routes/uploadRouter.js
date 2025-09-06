@@ -4,6 +4,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../cloudinary.js";
 import Chatroom from "../models/chatroomSchema.js";
 import Message from "../models/messageSchema.js";
+import User from "../models/userSchema.js";
 
 const router = express.Router();
 
@@ -127,5 +128,58 @@ router.post("/audio", uploadAudio.single("audio"), async (req, res) => {
     res.status(500).json({ error: "Failed to upload audio" });
   }
 });
+
+// Cloudinary Storage für User-Avatare
+const storageUserAvatar = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "user-avatars",
+    public_id: (req, file) => `user-${req.session.user?.id}-${Date.now()}`,
+    transformation: [
+      { quality: "auto", fetch_format: "auto" },
+      { width: 200, height: 200, crop: "fill", gravity: "center" },
+    ],
+  },
+});
+
+const uploadUserAvatar = multer({ storage: storageUserAvatar });
+
+router.post(
+  "/user-avatar",
+  uploadUserAvatar.single("avatar"),
+  async (req, res) => {
+    try {
+      const currentUserId = req.session.user?.id;
+
+      if (!currentUserId) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      if (!req.file) {
+        return res.status(400).json({ error: "No avatar file provided" });
+      }
+
+      // Update user's avatar in database
+      const updatedUser = await User.findByIdAndUpdate(
+        currentUserId,
+        { avatar: req.file.path },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.json({
+        message: "Avatar updated successfully",
+        avatarUrl: req.file.path,
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error("Error uploading user avatar:", error);
+      res.status(500).json({ error: "Failed to upload avatar" });
+    }
+  }
+);
 
 export default router;

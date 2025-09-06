@@ -60,102 +60,191 @@ export const NewPassword = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  p-6 dark:bg-[#1D232A] dark:bg-none bg-gradient-to-r  from-amber-200 to-blue-300">
-      <header className="flex items-center justify-between w-full max-w-md bg-gray-700 text-white p-4 rounded-lg shadow-lg">
-        <h1 className="text-xl font-bold tracking-wide">Hello, Word!</h1>
-        <img className="h-12" src={robot} alt="robot" />
-      </header>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full p-1 mb-4">
+            <img
+              className="w-full h-full rounded-full bg-white p-2"
+              src={robot}
+              alt="robot"
+            />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-wide">
+            Hello, Word!
+          </h1>
+        </div>
 
-      <form
-        onSubmit={handleNewPw}
-        className="mt-[2%] mx-auto w-full max-w-md bg-white/25 shadow-lg shadow-blue-900/30 backdrop-blur-md rounded-xl border border-white/20 p-6"
-      >
-        <h1 className="text-2xl font-bold text-center mb-4 text-black dark:text-white">
-          {translations.newPw.title}
-        </h1>
-        <label
-          htmlFor="email"
-          className="block dark:text-gray-300 text-gray-600 font-semibold"
-        >
-          {translations.newPw.emailTitle}
-        </label>
-        <div className="relative mb-4">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <EmailIcon />
-          </div>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder={translations.newPw.emailPlaceholder}
-            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            required
-            autoFocus
-          />
-        </div>
-        <label
-          htmlFor="key"
-          className="block text-gray-600 dark:text-gray-300 font-semibold"
-        >
-          {translations.newPw.resetKeyTitle}
-        </label>
-        <div className="relative mb-4">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <KeyIcon />
-          </div>
-          <input
-            type="text"
-            name="key"
-            id="key"
-            placeholder={translations.newPw.resetKeyPlaceholder}
-            minLength={8}
-            maxLength={8}
-            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            required
-          />
-        </div>
-        <label
-          htmlFor="newPw"
-          className="block text-gray-600 dark:text-gray-300 font-semibold"
-        >
-          {translations.newPw.pwTitle}
-        </label>
-        <div className="relative mb-4">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <PasswordIcon />
-          </div>
-          <input
-            type={showPassword ? "text" : "password"}
-            name="newPw"
-            id="newPw"
-            placeholder={translations.newPw.pwPlaceholder}
-            className="bg-white/10 dark:text-white text-gray-600 border border-gray-500 rounded-lg w-full p-2 ps-10 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-            required
-            minLength={6}
-            autoComplete="new-password"
-          />
-          <div
-            className="absolute inset-y-0 end-0 flex items-center pe-3.5 cursor-pointer"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? <EyeOpenedIcon /> : <EyeClosedIcon />}
+        {/* Info Card */}
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0">
+              <svg
+                className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
+                Reset Your Password
+              </h3>
+              <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
+                Enter your email, the 8-character reset key from your email, and
+                your new password.
+              </p>
+            </div>
           </div>
         </div>
-        <button
-          type="submit"
-          className="cursor-pointer w-full bg-blue-600 text-white p-2 rounded-lg font-bold hover:bg-blue-700"
-        >
-          {translations.newPw.setBtn}
-        </button>
-        <Toaster />
-      </form>
-      <div className="flex justify-end items-center gap-2 mt-4">
-        <Link
-          to="/"
-          className="dark:text-white text-gray-600 text-sm  tracking-wider border-b hover:border-b-neutral transition duration-500"
-        >
-          {translations.newPw.backToLogin}
-        </Link>
+
+        {/* Main Form Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {translations.newPw.title}
+            </h2>
+          </div>
+
+          <form onSubmit={handleNewPw} className="space-y-6">
+            {/* Email Field */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                {translations.newPw.emailTitle}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <EmailIcon />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  autoComplete="email"
+                  placeholder={translations.newPw.emailPlaceholder}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  required
+                  autoFocus
+                />
+              </div>
+            </div>
+
+            {/* Reset Key Field */}
+            <div>
+              <label
+                htmlFor="key"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                {translations.newPw.resetKeyTitle}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <KeyIcon />
+                </div>
+                <input
+                  type="text"
+                  name="key"
+                  id="key"
+                  placeholder={translations.newPw.resetKeyPlaceholder}
+                  minLength={8}
+                  maxLength={8}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono"
+                  required
+                />
+              </div>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                8 characters exactly as received in your email
+              </p>
+            </div>
+
+            {/* New Password Field */}
+            <div>
+              <label
+                htmlFor="newPw"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              >
+                {translations.newPw.pwTitle}
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <PasswordIcon />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="newPw"
+                  id="newPw"
+                  placeholder={translations.newPw.pwPlaceholder}
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  required
+                  minLength={6}
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOpenedIcon /> : <EyeClosedIcon />}
+                </button>
+              </div>
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                Minimum 6 characters
+              </p>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            >
+              {translations.newPw.setBtn}
+            </button>
+          </form>
+
+          {/* Back to Login Link */}
+          <div className="mt-6 text-center">
+            <Link
+              to="/"
+              className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              {translations.newPw.backToLogin}
+            </Link>
+          </div>
+        </div>
+
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: "#363636",
+              color: "#fff",
+            },
+          }}
+        />
       </div>
     </div>
   );
