@@ -35,8 +35,11 @@ export default (io) => {
         return res.status(401).json({ errorMessage: "Not allowed" });
       }
 
+      // Suche nur nach direkten 1-zu-1 Chats (nicht nach Gruppenchats)
       const chatroomExists = await Chatroom.findOne({
         users: { $all: [user._id, currentUserId] },
+        $expr: { $eq: [{ $size: "$users" }, 2] }, // Nur Chats mit genau 2 Benutzern
+        isGroupChat: { $ne: true } // Explizit ausschließen von Gruppenchats
       });
 
       if (chatroomExists) {
