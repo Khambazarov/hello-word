@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      // Nur NODE_ENV definieren, VITE_ Variablen sind automatisch verfügbar
+      // Nur NODE_ENV definieren, VITE_ Variablen sind automatisch verfügbar.
       "process.env.NODE_ENV": JSON.stringify(mode),
     },
   };
