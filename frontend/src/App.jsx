@@ -14,6 +14,7 @@ import { AboutUs } from "./components/AboutUs.jsx";
 import { ChatArea } from "./components/ChatArea.jsx";
 import { ExistChatroom } from "./components/ExistChatroom.jsx";
 import { Chatroom } from "./components/Chatroom.jsx";
+import { ChatSettings } from "./components/ChatSettings.jsx";
 import { NewChatroom } from "./components/NewChatroom.jsx";
 import { CreateGroupChat } from "./components/CreateGroupChat.jsx";
 import { InviteToGroup } from "./components/InviteToGroup.jsx";
@@ -45,6 +46,7 @@ function App() {
           <Route path="/chatarea" element={<ChatArea />} />
           <Route path="/chatarea/exist" element={<ExistChatroom />} />
           <Route path="/chatarea/chats/:id" element={<Chatroom />} />
+          <Route path="/chatarea/chats/:id/settings" element={<ChatSettings />} />
           <Route
             path="/chatarea/chats/new-chatroom/:username"
             element={<NewChatroom />}
