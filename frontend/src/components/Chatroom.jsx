@@ -271,8 +271,9 @@ export const Chatroom = () => {
   });
 
   const getMimeType = (extension) => {
-    if (typeof extension !== "string") {
-      console.error("Ungültige Dateiendung:", extension);
+    // Handle invalid inputs (like event objects)
+    if (typeof extension !== "string" || !extension) {
+      console.warn("Invalid extension provided, using default .webm:", extension);
       return "audio/webm";
     }
 
@@ -1247,7 +1248,7 @@ export const Chatroom = () => {
               {/* Voice Recording */}
               <button
                 type="button"
-                onClick={isRecording ? stopRecording : startRecording}
+                onClick={isRecording ? stopRecording : () => startRecording(".webm")}
                 className={cn(
                   "flex-shrink-0 p-2 rounded-xl transition-all",
                   isRecording

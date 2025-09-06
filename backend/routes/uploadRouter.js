@@ -8,6 +8,22 @@ import User from "../models/userSchema.js";
 
 const router = express.Router();
 
+// Middleware to check Cloudinary configuration
+const checkCloudinaryConfig = (req, res, next) => {
+  if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_API_SECRET) {
+    console.error("Missing Cloudinary configuration:", {
+      CLOUD_NAME: !!process.env.CLOUD_NAME,
+      CLOUD_API_KEY: !!process.env.CLOUD_API_KEY,
+      CLOUD_API_SECRET: !!process.env.CLOUD_API_SECRET,
+    });
+    return res.status(500).json({ error: "Server configuration error: Cloudinary not configured" });
+  }
+  next();
+};
+
+// Apply middleware to all upload routes
+router.use(checkCloudinaryConfig);
+
 // Cloudinary Storage
 const storageImage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -25,10 +41,21 @@ const uploadImage = multer({ storage: storageImage });
 
 router.post("/image", uploadImage.single("image"), async (req, res) => {
   try {
+    if (!req.file) {
+      console.error("No image file provided in request");
+      return res.status(400).json({ error: "No image file provided" });
+    }
+    
+    console.log("Image upload successful:", req.file.path);
     res.json({ url: req.file.path });
   } catch (error) {
     console.error("Error uploading image:", error);
-    res.status(500).json({ error: "Failed to upload image" });
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      file: req.file,
+    });
+    res.status(500).json({ error: "Failed to upload image", details: error.message });
   }
 });
 
@@ -122,10 +149,21 @@ const uploadAudio = multer({
 
 router.post("/audio", uploadAudio.single("audio"), async (req, res) => {
   try {
+    if (!req.file) {
+      console.error("No audio file provided in request");
+      return res.status(400).json({ error: "No audio file provided" });
+    }
+    
+    console.log("Audio upload successful:", req.file.path);
     res.json({ url: req.file.path });
   } catch (error) {
     console.error("Error uploading audio:", error);
-    res.status(500).json({ error: "Failed to upload audio" });
+    console.error("Error details:", {
+      message: error.message,
+      stack: error.stack,
+      file: req.file,
+    });
+    res.status(500).json({ error: "Failed to upload audio", details: error.message });
   }
 });
 
@@ -152,12 +190,16 @@ router.post(
       const currentUserId = req.session.user?.id;
 
       if (!currentUserId) {
+        console.error("User not authenticated for avatar upload");
         return res.status(401).json({ error: "Not authenticated" });
       }
 
       if (!req.file) {
+        console.error("No avatar file provided in request");
         return res.status(400).json({ error: "No avatar file provided" });
       }
+
+      console.log("Avatar upload successful for user:", currentUserId);
 
       // Update user's avatar in database
       const updatedUser = await User.findByIdAndUpdate(
@@ -167,6 +209,7 @@ router.post(
       );
 
       if (!updatedUser) {
+        console.error("User not found in database:", currentUserId);
         return res.status(404).json({ error: "User not found" });
       }
 
@@ -177,7 +220,13 @@ router.post(
       });
     } catch (error) {
       console.error("Error uploading user avatar:", error);
-      res.status(500).json({ error: "Failed to upload avatar" });
+      console.error("Error details:", {
+        message: error.message,
+        stack: error.stack,
+        userId: req.session.user?.id,
+        file: req.file,
+      });
+      res.status(500).json({ error: "Failed to upload avatar", details: error.message });
     }
   }
 );
