@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
@@ -8,7 +8,7 @@ import { fetchUserLanguage } from "../utils/api.js";
 
 import EmojiPicker from "emoji-picker-react";
 
-import { io } from "socket.io-client";
+import socketManager from "../utils/socketManager.js";
 
 import { cn } from "../utils/cn.js";
 import { formatTimestamp } from "../utils/formatTimestamp.js";
@@ -64,6 +64,7 @@ export const Chatroom = () => {
   const textareaRef = useRef(null);
   const lastMessageRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const processedEditMessagesRef = useRef(new Set());
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -100,6 +101,7 @@ export const Chatroom = () => {
 
   const chatroomMessages = data?.chatroomMessages;
   const currentUsername = data?.currentUsername;
+  const currentUserId = data?.currentUserId;
   const partnerName = data?.partnerName;
   const unreadMessagesCount = data?.unreadMessagesCount;
 
@@ -448,74 +450,95 @@ export const Chatroom = () => {
     chatroomMessages?.length > 0 ? chatroomMessages.at(-1)._id : null;
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_REACT_APP_SOCKET_URL, {
-      transports: ["websocket"],
-      withCredentials: true,
-    });
+    // Nur Socket erstellen wenn Chatroom-ID verfügbar ist
+    if (!id) return;
 
-    socket.on("message", (message) => {
-      if (message.chatroom !== id) return;
+    console.log("Setting up socket listeners in Chatroom for", id);
 
-      queryClient.setQueryData(["chatroom", id], (prevData) => {
-        if (!prevData) {
-          return { chatroomMessages: [message] };
-        }
+    // Socket verbinden oder wiederverwenden
+    socketManager.connect().then(() => {
+      // Event-Listener für Chatroom registrieren
+      const handleMessage = (message) => {
+        if (message.chatroom !== id) return;
 
-        const updatedData = {
-          ...prevData,
-          unreadMessagesCount: nearBottom
-            ? 0
-            : prevData.unreadMessagesCount + 1,
-          chatroomMessages: [...prevData.chatroomMessages, message],
-        };
+        queryClient.setQueryData(["chatroom", id], (prevData) => {
+          if (!prevData) {
+            return { chatroomMessages: [message] };
+          }
 
-        if (!nearBottom) {
-          playAudio(audioReceive);
-        }
-        return updatedData;
-      });
-    });
+          // Prüfen ob Nachricht bereits existiert (verhindert Duplikate)
+          const messageExists = prevData.chatroomMessages?.some(
+            (existing) => existing._id === message._id
+          );
+          
+          if (messageExists) {
+            return prevData; // Keine Änderung wenn Nachricht bereits existiert
+          }
 
-    socket.on("message-update", ({ updatedMessage }) => {
-      if (updatedMessage.chatroom.toString() !== id) return;
+          const updatedData = {
+            ...prevData,
+            unreadMessagesCount: nearBottom
+              ? 0
+              : prevData.unreadMessagesCount + 1,
+            chatroomMessages: [...(prevData.chatroomMessages || []), message],
+          };
 
-      queryClient.setQueryData(["chatroom", id], (prevData) => {
-        if (!prevData) return prevData;
+          if (!nearBottom) {
+            playAudio(audioReceive);
+          }
+          return updatedData;
+        });
+      };
 
-        const updatedMessages = prevData.chatroomMessages.map((message) =>
-          message._id === updatedMessage._id ? updatedMessage : message
-        );
+      const handleMessageUpdate = ({ updatedMessage }) => {
+        if (updatedMessage.chatroom.toString() !== id) return;
 
-        return {
-          ...prevData,
-          chatroomMessages: updatedMessages,
-        };
-      });
-    });
+        queryClient.setQueryData(["chatroom", id], (prevData) => {
+          if (!prevData) return prevData;
 
-    socket.on("message-delete", ({ deletedMessage }) => {
-      if (deletedMessage.chatroom.toString() !== id) return;
+          const updatedMessages = prevData.chatroomMessages.map((message) =>
+            message._id === updatedMessage._id ? updatedMessage : message
+          );
 
-      queryClient.setQueryData(["chatroom", id], (prevData) => {
-        if (!prevData) return prevData;
+          return {
+            ...prevData,
+            chatroomMessages: updatedMessages,
+          };
+        });
+      };
 
-        const deletedMessages = prevData.chatroomMessages.filter(
-          (message) => message._id !== deletedMessage._id
-        );
+      const handleMessageDelete = ({ deletedMessage }) => {
+        if (deletedMessage.chatroom.toString() !== id) return;
 
-        return {
-          ...prevData,
-          chatroomMessages: deletedMessages,
-        };
-      });
+        queryClient.setQueryData(["chatroom", id], (prevData) => {
+          if (!prevData) return prevData;
+
+          const deletedMessages = prevData.chatroomMessages.filter(
+            (message) => message._id !== deletedMessage._id
+          );
+
+          return {
+            ...prevData,
+            chatroomMessages: deletedMessages,
+          };
+        });
+      };
+
+      // Listener mit eindeutiger Component-ID registrieren (einmal pro Chat)
+      const componentId = `Chatroom-${id}`;
+      socketManager.addListener("message", handleMessage, componentId);
+      socketManager.addListener("message-update", handleMessageUpdate, componentId);
+      socketManager.addListener("message-delete", handleMessageDelete, componentId);
+    }).catch((error) => {
+      console.error("Failed to connect socket in Chatroom:", error);
     });
 
     return () => {
-      socket.off("message");
-      socket.off("message-update");
-      socket.off("message-delete");
+      const componentId = `Chatroom-${id}`;
+      console.log("Removing socket listeners in Chatroom for", id);
+      socketManager.removeAllListeners(componentId);
     };
-  }, [id, queryClient, nearBottom, partnerName]);
+  }, [id, queryClient, nearBottom]);
 
   useEffect(() => {
     if (messagesEndRef.current && nearBottom) {
@@ -550,6 +573,69 @@ export const Chatroom = () => {
       });
     }
   }, [nearBottom, latestMessageId, markAsRead, queryClient, id]);
+
+  // Mark edited messages as seen - optimized approach
+  const markEditAsSeen = useCallback(async (messageId) => {
+    if (processedEditMessagesRef.current.has(messageId)) return;
+    
+    processedEditMessagesRef.current.add(messageId);
+    
+    try {
+      const response = await fetch(`/api/messages/mark-edit-seen`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messageId }),
+      });
+      
+      if (response.ok) {
+        queryClient.invalidateQueries(["chatroom", id]);
+      }
+    } catch (error) {
+      console.error("Failed to mark edit as seen:", error);
+    } finally {
+      // Clean up after a delay to prevent immediate re-processing
+      setTimeout(() => {
+        processedEditMessagesRef.current.delete(messageId);
+      }, 5000);
+    }
+  }, [queryClient, id]);
+
+  // Only mark messages from OTHER users, not own messages
+  useEffect(() => {
+    if (!chatroomMessages || !currentUserId) return;
+
+    const editedMessagesToMark = chatroomMessages.filter(message => {
+      const isEdited = message.createdAt !== message.updatedAt;
+      
+      // Check if sender exists first, then check if it's own message
+      if (!isEdited || !message.sender) return false;
+      
+      const isOwnMessage = message.sender._id === currentUserId;
+      
+      // Only process messages from other users
+      if (isOwnMessage) return false;
+
+      if (isGroupChat) {
+        // Check if current user ID is in the editSeenBy array
+        return !message.editSeenBy?.some(user => user._id === currentUserId);
+      } else {
+        // For 1-to-1 chats: check if current user has seen the partner's edit
+        return !message.editSeenByPartner;
+      }
+    });
+
+    if (editedMessagesToMark.length === 0) return;
+
+    // Mark messages as seen after a delay, but only if not already processed
+    const timeoutIds = editedMessagesToMark.map(message => 
+      setTimeout(() => markEditAsSeen(message._id), 2000)
+    );
+
+    // Cleanup timeouts on unmount or dependency change
+    return () => {
+      timeoutIds.forEach(clearTimeout);
+    };
+  }, [chatroomMessages, currentUserId, isGroupChat, markEditAsSeen]);
 
   function handleEditMessage(message) {
     setEditingMessage(message);
@@ -675,13 +761,20 @@ export const Chatroom = () => {
 
             {/* Settings Button - für Gruppenchats und 1-zu-1 Chats */}
             <button
-              onClick={() => navigate(isGroupChat ? `/chatarea/groups/${id}/settings` : `/chatarea/chats/${id}/settings`)}
+              onClick={() =>
+                navigate(
+                  isGroupChat
+                    ? `/chatarea/groups/${id}/settings`
+                    : `/chatarea/chats/${id}/settings`
+                )
+              }
               className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title={isGroupChat ? "Group Settings" : "Chat Settings"}
             >
               <svg
-                className="w-5 h-5"
-                fill="currentColor"
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 20 20"
               >
                 <path
@@ -818,7 +911,7 @@ export const Chatroom = () => {
                 // System-Nachrichten anders darstellen
                 if (message.isSystemMessage) {
                   return (
-                    <div key={message._id} className="flex justify-center">
+                    <div key={`system-${message._id}`} className="flex justify-center">
                       <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-gray-300 max-w-[80%] text-center border border-gray-200 dark:border-gray-600">
                         {message.content}
                         <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -830,13 +923,26 @@ export const Chatroom = () => {
                 }
 
                 const isOwnMessage =
-                  message.sender.username === currentUsername;
+                  message.sender && message.sender._id === currentUserId;
                 const isAudio = isAudioUrl(message.content);
                 const isImage = isImageUrl(message.content);
+                const isEdited = message.createdAt !== message.updatedAt;
+                
+                // Check if edited message should be highlighted (not seen by relevant users)
+                // Only highlight messages from OTHER users, not own messages
+                const shouldHighlightEdit = isEdited && !isOwnMessage && (() => {
+                  if (isGroupChat) {
+                    // In group chats: highlight until current user has seen the edit
+                    return !message.editSeenBy?.some(user => user._id === currentUserId);
+                  } else {
+                    // In 1-to-1 chats: highlight until current user has seen the edit from partner
+                    return !message.editSeenByPartner;
+                  }
+                })();
 
                 return (
                   <div
-                    key={message._id}
+                    key={`message-${message._id}`}
                     className={cn(
                       "flex",
                       isOwnMessage ? "justify-end" : "justify-start"
@@ -849,15 +955,35 @@ export const Chatroom = () => {
                   >
                     <div
                       className={cn(
-                        "max-w-[75%] rounded-2xl p-4 relative group",
-                        isOwnMessage
-                          ? "bg-blue-600 text-white rounded-br-sm"
-                          : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-bl-sm",
-                        isAudio && "p-2"
+                        "max-w-[75%] rounded-2xl px-4 py-6 relative group transition-all duration-300",
+                        // Nur Text-Nachrichten bekommen einen Hintergrund
+                        !isImage && !isAudio && (
+                          isOwnMessage
+                            ? "bg-blue-600 text-white rounded-br-sm"
+                            : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 rounded-bl-sm"
+                        ),
+                        // Audio-Nachrichten: weniger Padding
+                        isAudio && "p-0",
+                        // Image/Audio-Nachrichten: transparenter Hintergrund
+                        (isImage || isAudio) && (
+                          isOwnMessage 
+                            ? "text-white" 
+                            : "text-gray-900 dark:text-white"
+                        ),
+                        // Highlight für bearbeitete Nachrichten
+                        shouldHighlightEdit && [
+                          "border-2 border-amber-400 dark:border-amber-500",
+                          "shadow-lg shadow-amber-400/30 dark:shadow-amber-500/30",
+                          "animate-pulse",
+                          "ring-2 ring-amber-400/20 dark:ring-amber-500/20",
+                          // Für Audio/Image Nachrichten: spezielle Border-Behandlung
+                          isImage && "ring-offset-2 ring-offset-transparent",
+                          isAudio && "ring-offset-2 ring-offset-transparent"
+                        ]
                       )}
                     >
                       {/* Für Gruppenchats: Sender-Name anzeigen */}
-                      {isGroupChat && !isOwnMessage && (
+                      {isGroupChat && !isOwnMessage && message.sender && (
                         <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
                           {message.sender.username}
                         </div>
@@ -865,7 +991,7 @@ export const Chatroom = () => {
 
                       <div className="message-content">
                         {isAudio ? (
-                          <audio controls className="w-full max-w-xs">
+                          <audio controls className="max-w-full">
                             <source
                               src={message.content}
                               type={getMimeType(message.content)}
@@ -893,35 +1019,105 @@ export const Chatroom = () => {
                             : "text-gray-500 dark:text-gray-400"
                         )}
                       >
-                        {message.createdAt !== message.updatedAt && (
-                          <span className="italic">
-                            {translations.chatroom.timestampUpdateText}
-                          </span>
+                        {isEdited && (
+                          <div className="flex items-center space-x-1">
+                            {shouldHighlightEdit && (
+                              <div className="w-2 h-2 bg-amber-400 dark:bg-amber-500 rounded-full animate-pulse"></div>
+                            )}
+                            <span className={cn(
+                              "italic",
+                              shouldHighlightEdit && "text-amber-600 dark:text-amber-400 font-medium"
+                            )}>
+                              {translations.chatroom.timestampUpdateText || "edited"}
+                            </span>
+                          </div>
                         )}
                         <span>
                           {formatTimestamp(message.createdAt, language)}
                         </span>
                       </div>
 
-                      {/* Edit/Delete Buttons - nur für eigene Nachrichten */}
-                      {isOwnMessage && (
-                        <div className="absolute -left-10 top-1/2 transform -translate-y-1/2 flex flex-col space-y-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          {!isImage && !isAudio && !message.isSystemMessage && (
+                      {/* Edit/Delete Buttons - mit Gruppenchat-Berechtigungen */}
+                      {(() => {
+                        // Für normale 1-zu-1 Chats: nur eigene Nachrichten
+                        if (!isGroupChat) {
+                          return isOwnMessage;
+                        }
+
+                        // Für Gruppenchats: Berechtigungen basierend auf Rollen
+                        const canEdit = isOwnMessage; // Nur eigene Nachrichten bearbeiten
+
+                        const canDelete =
+                          isOwnMessage || // Eigene Nachrichten
+                          userPermissions.isCreator || // Creator kann alle löschen
+                          (userPermissions.isAdmin &&
+                            !admins.some(
+                              (admin) =>
+                                admin.username === message.sender.username
+                            ) &&
+                            message.sender.username !==
+                              groupInfo?.creator?.username); // Admin kann Member-Nachrichten löschen
+
+                        return canEdit || canDelete;
+                      })() && (
+                        <div 
+                          className={cn(
+                            "absolute top-1/2 transform -translate-y-1/2 flex flex-col space-y-8 sm:opacity-0 sm:group-hover:opacity-100 opacity-100 transition-opacity",
+                            isOwnMessage 
+                              ? isImage 
+                                ? "-left-0" // 4px Abstand bei Images für eigene Nachrichten
+                                : "-left-8" // 4px Abstand bei Text/Audio für eigene Nachrichten
+                              : "-right-8" // 4px Abstand rechts für andere User
+                          )}
+                        >
+                          {/* Edit Button - nur für eigene Nachrichten */}
+                          {isOwnMessage &&
+                            !isImage &&
+                            !isAudio &&
+                            !message.isSystemMessage && (
+                              <button
+                                onClick={() => handleEditMessage(message)}
+                                className="p-1 bg-white/90 dark:bg-gray-800/90 text-gray-800 hover:text-blue-700 dark:text-gray-200 dark:hover:text-blue-400 rounded-full shadow-lg transition-colors backdrop-blur-sm border border-gray-200 dark:border-gray-600"
+                                title="Edit message"
+                              >
+                                <EditMessageIcon />
+                              </button>
+                            )}
+                          {/* Delete Button - mit erweiterten Berechtigungen für Gruppenchats */}
+                          {(() => {
+                            if (!isGroupChat) {
+                              return isOwnMessage; // In 1-zu-1 Chats nur eigene Nachrichten
+                            }
+
+                            const canDelete =
+                              isOwnMessage || // Eigene Nachrichten
+                              userPermissions.isCreator || // Creator kann alle löschen
+                              (userPermissions.isAdmin &&
+                                !admins.some(
+                                  (admin) =>
+                                    admin.username === message.sender.username
+                                ) &&
+                                message.sender.username !==
+                                  groupInfo?.creator?.username); // Admin kann Member-Nachrichten löschen
+
+                            return canDelete;
+                          })() && (
                             <button
-                              onClick={() => handleEditMessage(message)}
-                              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
-                              title="Edit message"
+                              onClick={() => handleDeleteMessage(message)}
+                              className="p-1 bg-white/90 dark:bg-gray-800/90 text-gray-800 hover:text-red-700 dark:text-gray-200 dark:hover:text-red-400 rounded-full shadow-lg transition-colors backdrop-blur-sm border border-gray-200 dark:border-gray-600"
+                              title={
+                                isOwnMessage
+                                  ? "Delete message"
+                                  : isGroupChat && userPermissions.isCreator
+                                    ? "Delete message (Creator privilege)"
+                                    : isGroupChat && userPermissions.isAdmin
+                                      ? "Delete message (Admin privilege)"
+                                      : "Delete message"
+                              }
                             >
-                              <EditMessageIcon />
+                              <DeleteMessageIcon />
                             </button>
                           )}
-                          <button
-                            onClick={() => handleDeleteMessage(message)}
-                            className="p-1 text-gray-400 hover:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors"
-                            title="Delete message"
-                          >
-                            <DeleteMessageIcon />
-                          </button>
                         </div>
                       )}
                     </div>
@@ -933,7 +1129,7 @@ export const Chatroom = () => {
 
           {/* Scroll to bottom button */}
           {!nearBottom && (
-            <div className="fixed bottom-28 right-8 z-10">
+            <div className="fixed bottom-30 right-1 z-10 animate-bounce">
               <button
                 onClick={() =>
                   messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
@@ -1061,7 +1257,7 @@ export const Chatroom = () => {
                 title={isRecording ? "Stop recording" : "Start voice recording"}
               >
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
