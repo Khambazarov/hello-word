@@ -6,6 +6,10 @@ import toast, { Toaster } from "react-hot-toast";
 import EmojiPicker from "emoji-picker-react";
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchUserLanguage } from "../utils/api.js";
+import {
+  getAvatarUrl,
+  createAvatarErrorHandler,
+} from "../utils/avatarHelper.js";
 
 import robot from "../assets/robot.png";
 import Emojis from "../assets/add_reaction.svg";
@@ -54,6 +58,33 @@ export const NewChatroom = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["newChatroom"],
     queryFn: fetchUserLanguage,
+  });
+
+  // Lade Benutzerinformationen direkt über API
+  const { data: userInfo } = useQuery({
+    queryKey: ["userInfo", username],
+    queryFn: async () => {
+      const response = await fetch(`/api/users/search?username=${username}`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        // Fallback: Versuche es über Chatroom-Daten
+        const chatroomsResponse = await fetch(`/api/chatrooms/chats`, {
+          credentials: "include",
+        });
+        if (chatroomsResponse.ok) {
+          const chatroomsData = await chatroomsResponse.json();
+          const partnerInfo = chatroomsData?.chatrooms?.find(
+            (chatroom) =>
+              !chatroom.isGroupChat && chatroom.usernames?.includes(username)
+          );
+          return { avatar: partnerInfo?.partnerAvatar };
+        }
+        return { avatar: null };
+      }
+      return response.json();
+    },
+    enabled: !!username,
   });
 
   const [translations, setTranslations] = useState(
@@ -311,8 +342,9 @@ export const NewChatroom = () => {
       <header className="xl:h-25 z-10 h-16 flex justify-between  items-center pl-2 sticky top-0 bg-gray-700">
         <img
           className="relative mt-2 mr-2 overflow-hidden hover:scale-120 duration-300 z-50 aspect-square h-12 border-2 border-gray-100 bg-gray-400 rounded-full"
-          src={username ? `https://robohash.org/${username}` : robot}
+          src={getAvatarUrl(userInfo?.avatar, username)}
           alt="avatar"
+          onError={createAvatarErrorHandler(username)}
         />
         <h1 className="md:text-base xl:text-3xl text-white tracking-widest font-bold absolute left-1/2 transform -translate-x-1/2">
           {username}
