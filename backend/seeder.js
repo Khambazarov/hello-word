@@ -21,6 +21,7 @@ const seedDatabase = async () => {
       email: `user${i}@mail.com`,
       username: `user${i}`,
       password: hashedPassword,
+      isVerified: true,
     });
     users.push(user);
   }
