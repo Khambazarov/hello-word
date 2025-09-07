@@ -308,10 +308,10 @@ export const GroupSettings = () => {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                   Group Settings
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                {/* <p className="text-sm text-gray-500 dark:text-gray-400">
                   Manage {`"${groupData?.groupInfo?.name}"`} settings and
                   members
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -327,7 +327,7 @@ export const GroupSettings = () => {
                 </svg>
                 <span>{groupData?.memberCount} members</span>
               </div>
-              {isAdmin && (
+              {/* {isAdmin && (
                 <button
                   onClick={() => navigate(`/chatarea/groups/${groupId}/invite`)}
                   className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 shadow-sm"
@@ -347,7 +347,7 @@ export const GroupSettings = () => {
                   </svg>
                   Invite
                 </button>
-              )}
+              )} */}
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
                 <img
                   src={getAvatarUrl(
