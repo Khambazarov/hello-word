@@ -517,14 +517,10 @@ export default (io) => {
       const { description } = req.body;
       const currentUserId = req.session.user.id;
 
-      console.log("Updating group description for chatroom:", id);
-      console.log("New description:", description);
-      console.log("Current user ID:", currentUserId);
 
       // Find the chatroom and check if it's a group chat
       const chatroom = await Chatroom.findById(id);
       if (!chatroom) {
-        console.log("Chatroom not found:", id);
         return res.status(404).json({ errorMessage: "Chatroom not found" });
       }
 
@@ -536,7 +532,6 @@ export default (io) => {
       );
 
       if (!chatroom.isGroupChat) {
-        console.log("Not a group chat");
         return res.status(400).json({ errorMessage: "Not a group chat" });
       }
 
@@ -554,7 +549,6 @@ export default (io) => {
       );
 
       if (!isCreator && !isAdmin) {
-        console.log("No permission to edit");
         return res.status(403).json({
           errorMessage: "No permission to edit group description",
         });
@@ -564,7 +558,6 @@ export default (io) => {
       chatroom.groupDescription = description.trim();
       await chatroom.save();
 
-      console.log("Group description updated successfully");
 
       res.json({
         success: true,
@@ -584,7 +577,6 @@ export default (io) => {
       const { username } = req.body;
       const currentUserId = req.session.user.id;
 
-      console.log("Promoting user:", username, "in chatroom:", id);
 
       if (!username) {
         return res.status(400).json({ errorMessage: "Username is required" });
@@ -647,7 +639,6 @@ export default (io) => {
       chatroom.admins.push(userToPromote._id);
       await chatroom.save();
 
-      console.log("User promoted successfully:", username);
 
       res.json({
         success: true,

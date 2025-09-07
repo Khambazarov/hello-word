@@ -241,8 +241,6 @@ export const Chatroom = () => {
 
   const updateGroupDescriptionMutation = useMutation({
     mutationFn: async ({ description }) => {
-      console.log("Updating group description:", description);
-      console.log("Chatroom ID:", id);
       const response = await fetch(`/api/chatrooms/groups/${id}/description`, {
         method: "PATCH",
         headers: {
@@ -260,12 +258,10 @@ export const Chatroom = () => {
       return response.json();
     },
     onSuccess: (data) => {
-      console.log("Success response:", data);
       queryClient.invalidateQueries(["chatroom", id]);
       toast.success("Group description updated successfully!");
     },
     onError: (error) => {
-      console.error("Mutation error:", error);
       toast.error(`Failed to update group description: ${error.message}`);
     },
   });
@@ -454,8 +450,6 @@ export const Chatroom = () => {
     // Nur Socket erstellen wenn Chatroom-ID verfügbar ist
     if (!id) return;
 
-    console.log("Setting up socket listeners in Chatroom for", id);
-
     // Socket verbinden oder wiederverwenden
     socketManager.connect().then(() => {
       // Event-Listener für Chatroom registrieren
@@ -536,7 +530,6 @@ export const Chatroom = () => {
 
     return () => {
       const componentId = `Chatroom-${id}`;
-      console.log("Removing socket listeners in Chatroom for", id);
       socketManager.removeAllListeners(componentId);
     };
   }, [id, queryClient, nearBottom]);

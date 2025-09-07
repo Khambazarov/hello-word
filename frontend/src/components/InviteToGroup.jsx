@@ -21,7 +21,6 @@ export const InviteToGroup = () => {
         throw new Error("Failed to fetch group data");
       }
       const data = await response.json();
-      console.log("API Response:", data); // Debug: Schaue was die API zurückgibt
       return data;
     },
   });
@@ -253,7 +252,6 @@ export const InviteToGroup = () => {
 
             <div className="space-y-2 max-h-100 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600">
               {groupData?.members?.map((member) => {
-                console.log("Member data:", member); // Debug: Zeige Mitgliederdaten
                 const memberIsAdmin = groupData?.admins?.some(
                   (admin) => admin._id === member._id
                 );

@@ -11,16 +11,13 @@ class SocketManager {
   async connect() {
     // Verhindere mehrfache Verbindungsversuche
     if (this.isInitialized && this.socket?.connected) {
-      console.log("Socket already connected, reusing existing connection");
       return this.socket;
     }
 
     if (this.connectionPromise) {
-      console.log("Connection already in progress, waiting...");
       return this.connectionPromise;
     }
 
-    console.log("Creating new socket connection via SocketManager");
 
     this.connectionPromise = new Promise((resolve, reject) => {
       try {
@@ -43,7 +40,6 @@ class SocketManager {
         });
 
         this.socket.on("connect", () => {
-          console.log("Socket connected via SocketManager");
           this.isInitialized = true;
           this.connectionPromise = null;
           resolve(this.socket);
@@ -57,7 +53,6 @@ class SocketManager {
         });
 
         this.socket.on("disconnect", (reason) => {
-          console.log("Socket disconnected via SocketManager:", reason);
           if (reason !== "io client disconnect") {
             this.isInitialized = false;
           }
@@ -85,7 +80,6 @@ class SocketManager {
     
     // Prüfen ob Listener bereits existiert
     if (eventListeners.has(componentId)) {
-      console.log(`Listener for ${eventName} already exists for ${componentId}, skipping`);
       return;
     }
     
@@ -132,7 +126,6 @@ class SocketManager {
   }
 
   disconnect() {
-    console.log("Disconnecting socket via SocketManager");
     
     if (this.socket) {
       this.socket.removeAllListeners();

@@ -69,7 +69,6 @@ io.on("connection", async (socket) => {
   const session = socket.request.session;
 
   if (!session || !session.user || !session.user.id) {
-    console.log("Invalid or missing session");
     socket.disconnect(true);
     return;
   }
@@ -83,14 +82,12 @@ io.on("connection", async (socket) => {
     chatroomIds.forEach((id) => socket.join(id));
     socket.join(userId);
 
-    console.log(`✅ Client connected: ${socket.id}, UserID: ${userId}`);
   } catch (error) {
     console.error("Error loading chats:", error);
     socket.disconnect(true);
   }
 
   socket.on("disconnect", () => {
-    console.log(`❌ Client disconnected: ${socket.id}`);
   });
 });
 

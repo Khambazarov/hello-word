@@ -113,7 +113,6 @@ export const ChatArea = () => {
       return;
     }
 
-    console.log("Setting up socket listeners in ChatArea");
 
     // Socket verbinden oder wiederverwenden
     socketManager.connect().then(() => {
@@ -144,7 +143,6 @@ export const ChatArea = () => {
     });
 
     return () => {
-      console.log("Removing socket listeners in ChatArea");
       // Nur die Listener dieser Komponente entfernen
       socketManager.removeAllListeners("ChatArea");
     };
@@ -153,7 +151,6 @@ export const ChatArea = () => {
   // Cleanup beim Verlassen der Komponente
   useEffect(() => {
     return () => {
-      console.log("Component unmounting - removing ChatArea listeners");
       socketManager.removeAllListeners("ChatArea");
     };
   }, []);
