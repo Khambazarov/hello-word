@@ -4,10 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "npm run env:dev && vite --host",
+    "prod": "npm run env:prod && npm run build",
     "build": "vite build",
+    "build:prod": "vite build --mode production",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "env:dev": "cp .env.development .env && echo '✅ Frontend switched to DEVELOPMENT environment'",
+    "env:prod": "cp .env.production .env && echo '✅ Frontend switched to PRODUCTION environment'"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.3",
