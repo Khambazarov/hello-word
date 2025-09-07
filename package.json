@@ -8,12 +8,15 @@
   "scripts": {
     "install:all": "npm -ws install",
     "build": "npm -ws run build",
-    "dev": "concurrently -k -n BE,FE \"npm -w backend run dev\" \"npm -w frontend run dev\"",
+    "dev": "npm run env:dev && concurrently -k -n BE,FE \"npm -w backend start\" \"npm -w frontend run dev\"",
+    "prod": "npm run env:prod && npm -w frontend run prod",
     "seed": "npm -w backend run seed",
     "build:fe": "npm -w frontend run build",
     "build:be": "npm -w backend run build",
     "dev:fe": "npm -w frontend run dev",
-    "dev:be": "npm -w backend run dev"
+    "dev:be": "npm -w backend run dev",
+    "env:dev": "npm -w frontend run env:dev && npm -w backend run env:dev && echo '🎯 Switched BOTH to DEVELOPMENT'",
+    "env:prod": "npm -w frontend run env:prod && npm -w backend run env:prod && echo '🚀 Switched BOTH to PRODUCTION'"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
