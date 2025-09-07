@@ -13,6 +13,10 @@ import socketManager from "../utils/socketManager.js";
 import { cn } from "../utils/cn.js";
 import { formatTimestamp } from "../utils/formatTimestamp.js";
 import {
+  getAvatarUrl,
+  createAvatarErrorHandler,
+} from "../utils/avatarHelper.js";
+import {
   BackButtonIcon,
   DeleteMessageIcon,
   EditMessageIcon,
@@ -32,6 +36,22 @@ const customEmojis = [
     id: "flag_of_circassians",
   },
 ];
+
+// Function to parse custom emojis in message content
+const parseCustomEmojis = (content) => {
+  if (!content) return content;
+
+  let parsedContent = content;
+
+  // Replace custom emoji codes with img tags
+  customEmojis.forEach((emoji) => {
+    const emojiCode = `:${emoji.id}:`;
+    const imgTag = `<img src="${emoji.imgUrl}" alt="${emoji.names[0]}" style="width: 1.2em; height: 1.2em; display: inline; vertical-align: middle; margin: 0 2px;" title="${emoji.names[0]}" />`;
+    parsedContent = parsedContent.replace(new RegExp(emojiCode, "g"), imgTag);
+  });
+
+  return parsedContent;
+};
 
 const audioSend = new Audio(fingerSnap);
 const audioReceive = new Audio(positiveNotification);
@@ -103,6 +123,7 @@ export const Chatroom = () => {
   const currentUsername = data?.currentUsername;
   const currentUserId = data?.currentUserId;
   const partnerName = data?.partnerName;
+  const partnerAvatar = data?.partnerAvatar;
   const unreadMessagesCount = data?.unreadMessagesCount;
 
   // Gruppenchat-spezifische Daten
@@ -689,13 +710,25 @@ export const Chatroom = () => {
   }
 
   function handleEmojiClick(emojiObject, event) {
-    const emoji = emojiObject.emoji || emojiObject.imgUrl;
-    if (!emoji) return;
+    let emojiToInsert;
+
+    // Handle custom emojis (like the Circassian flag)
+    if (emojiObject.imgUrl) {
+      // For custom emojis, use a special format that we can parse later
+      emojiToInsert = `:${emojiObject.id}:`;
+    } else {
+      // For regular emojis
+      emojiToInsert = emojiObject.emoji;
+    }
+
+    if (!emojiToInsert) return;
 
     const cursorPosition = textareaRef.current.selectionStart;
     const text = textareaRef.current.value;
     const newText =
-      text.slice(0, cursorPosition) + emoji + text.slice(cursorPosition);
+      text.slice(0, cursorPosition) +
+      emojiToInsert +
+      text.slice(cursorPosition);
     textareaRef.current.value = newText;
 
     const inputEvent = new Event("input", { bubbles: true });
@@ -704,8 +737,8 @@ export const Chatroom = () => {
     setTimeout(() => {
       textareaRef.current.focus();
       textareaRef.current.setSelectionRange(
-        cursorPosition + emoji.length,
-        cursorPosition + emoji.length
+        cursorPosition + emojiToInsert.length,
+        cursorPosition + emojiToInsert.length
       );
     }, 0);
   }
@@ -737,13 +770,22 @@ export const Chatroom = () => {
                   )}
                   src={
                     isGroupChat
-                      ? groupInfo?.image ||
-                        `https://robohash.org/${groupInfo?.name}`
+                      ? getAvatarUrl(
+                          groupInfo?.image,
+                          groupInfo?.name || "Group"
+                        )
                       : partnerName === "deletedUser" || !partnerName
                         ? robot
-                        : `https://robohash.org/${partnerName}`
+                        : getAvatarUrl(partnerAvatar, partnerName)
                   }
                   alt="avatar"
+                  onError={
+                    isGroupChat
+                      ? createAvatarErrorHandler(groupInfo?.name || "Group")
+                      : partnerName === "deletedUser" || !partnerName
+                        ? undefined
+                        : createAvatarErrorHandler(partnerName)
+                  }
                 />
               </div>
             </div>
@@ -927,7 +969,11 @@ export const Chatroom = () => {
                       className="flex justify-center"
                     >
                       <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-gray-300 max-w-[80%] text-center border border-gray-200 dark:border-gray-600">
-                        {message.content}
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: parseCustomEmojis(message.content),
+                          }}
+                        />
                         <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {formatTimestamp(message.createdAt, language)}
                         </div>
@@ -1023,9 +1069,12 @@ export const Chatroom = () => {
                             className="max-w-full h-auto rounded-lg"
                           />
                         ) : (
-                          <p className="break-words whitespace-pre-line">
-                            {message.content}
-                          </p>
+                          <div
+                            className="break-words whitespace-pre-line"
+                            dangerouslySetInnerHTML={{
+                              __html: parseCustomEmojis(message.content),
+                            }}
+                          />
                         )}
                       </div>
 
