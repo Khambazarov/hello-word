@@ -54,7 +54,7 @@ pnpm-debug.log*
 # -------------------------
 temp.md
 GROUPCHAT_FEATURES.md
-app_spec.yaml
+*.yaml
 *.local
 
 # -------------------------
