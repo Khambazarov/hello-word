@@ -158,9 +158,9 @@ export default (io) => {
       const currentUserId = req.session.user.id;
 
       const groupChat = await Chatroom.findById(groupId)
-        .populate("users", "username email createdAt")
-        .populate("admins", "username")
-        .populate("creator", "username");
+        .populate("users", "username email avatar createdAt")
+        .populate("admins", "username avatar")
+        .populate("creator", "username avatar");
 
       if (!groupChat || !groupChat.isGroupChat) {
         return res.status(404).json({ errorMessage: "Group chat not found" });
@@ -269,8 +269,6 @@ export default (io) => {
       const { username } = req.body;
       const currentUserId = req.session.user.id;
 
-      console.log("Demoting admin:", username, "in group:", groupId);
-
       if (!username) {
         return res.status(400).json({ errorMessage: "Username is required" });
       }
@@ -331,8 +329,6 @@ export default (io) => {
         demotedUser: userToDemote.username,
         demotedBy: req.session.user.username,
       });
-
-      console.log("Admin demoted successfully:", username);
 
       res.json({
         message: "Admin demoted to member successfully",
