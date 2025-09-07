@@ -161,7 +161,6 @@ export default (io) => {
         email: user.email,
       };
       await req.session.save();
-      console.log("User is succesfully authenticated: ", req.session.user);
       res.json({
         message: "User logged in successfully",
         user: req.session.user,
@@ -444,6 +443,52 @@ export default (io) => {
       });
     } catch (error) {
       console.error("Error updating language:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  /** GET USER PROFILE BY USERNAME */
+  router.get("/profile/:username", async (req, res) => {
+    try {
+      const { username } = req.params;
+
+      const user = await User.findOne({ username }).select("username avatar");
+
+      if (!user) {
+        return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      res.json({
+        username: user.username,
+        avatar: user.avatar,
+      });
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      res.status(500).json({ errorMessage: "Internal server error" });
+    }
+  });
+
+  /** SEARCH USER BY USERNAME */
+  router.get("/search", async (req, res) => {
+    try {
+      const { username } = req.query;
+
+      if (!username) {
+        return res.status(400).json({ errorMessage: "Username is required" });
+      }
+
+      const user = await User.findOne({ username }).select("username avatar");
+
+      if (!user) {
+        return res.status(404).json({ errorMessage: "User not found" });
+      }
+
+      res.json({
+        username: user.username,
+        avatar: user.avatar,
+      });
+    } catch (error) {
+      console.error("Error searching user:", error);
       res.status(500).json({ errorMessage: "Internal server error" });
     }
   });
