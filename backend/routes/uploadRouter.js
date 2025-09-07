@@ -13,7 +13,8 @@ const storageImage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "image",
-    public_id: (req, file) => `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    public_id: (req, file) =>
+      `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     transformation: [
       { quality: "auto", fetch_format: "auto" },
       { width: 300, height: 300, crop: "pad" },
@@ -28,7 +29,7 @@ router.post("/image", uploadImage.single("image"), async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: "No image file provided" });
     }
-    
+
     res.json({ url: req.file.path });
   } catch (error) {
     console.error("Error uploading image:", error);
@@ -108,7 +109,8 @@ const storageAudio = new CloudinaryStorage({
   params: {
     folder: "audio",
     resource_type: "auto", // Changed from "video" to "auto" for better compatibility
-    public_id: (req, file) => `audio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    public_id: (req, file) =>
+      `audio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     allowed_formats: ["mp3", "wav", "ogg", "m4a", "aac", "webm"], // Specify allowed audio formats
   },
 });
@@ -118,11 +120,20 @@ const uploadAudio = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedMimeTypes = [
-      "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", 
-      "audio/m4a", "audio/aac", "audio/webm", "audio/mp4"
+      "audio/mpeg",
+      "audio/mp3",
+      "audio/wav",
+      "audio/ogg",
+      "audio/m4a",
+      "audio/aac",
+      "audio/webm",
+      "audio/mp4",
     ];
-    
-    if (allowedMimeTypes.includes(file.mimetype) || file.mimetype.startsWith("audio/")) {
+
+    if (
+      allowedMimeTypes.includes(file.mimetype) ||
+      file.mimetype.startsWith("audio/")
+    ) {
       cb(null, true);
     } else {
       cb(new Error(`Unsupported audio format: ${file.mimetype}`), false);
@@ -137,21 +148,23 @@ router.post("/audio", uploadAudio.single("audio"), async (req, res) => {
     }
 
     if (!req.file.path) {
-      return res.status(500).json({ error: "Upload failed - no file URL generated" });
+      return res
+        .status(500)
+        .json({ error: "Upload failed - no file URL generated" });
     }
-    
+
     res.json({ url: req.file.path });
   } catch (error) {
     console.error("Error uploading audio:", error);
-    
+
     if (error.message && error.message.includes("Unsupported audio format")) {
       return res.status(400).json({ error: "Unsupported audio format" });
     }
-    
-    if (error.code === 'LIMIT_FILE_SIZE') {
+
+    if (error.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({ error: "File too large - maximum 10MB" });
     }
-    
+
     res.status(500).json({ error: "Failed to upload audio" });
   }
 });
