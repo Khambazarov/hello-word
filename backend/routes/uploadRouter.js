@@ -45,6 +45,32 @@ router.get("/debug/test-cloudinary", async (req, res) => {
   }
 });
 
+// Debug endpoint for audio format testing
+router.get("/debug/audio-formats", (req, res) => {
+  try {
+    const supportedFormats = {
+      mimeTypes: [
+        "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", 
+        "audio/m4a", "audio/aac", "audio/webm", "audio/mp4"
+      ],
+      cloudinaryFormats: ["mp3", "wav", "ogg", "m4a", "aac", "webm"],
+      maxFileSize: "10MB",
+      resourceType: "auto"
+    };
+    
+    res.json({
+      message: "Supported audio formats",
+      formats: supportedFormats,
+      multerConfig: {
+        limits: { fileSize: 10 * 1024 * 1024 },
+        storageType: "CloudinaryStorage"
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Middleware to check Cloudinary configuration
 const checkCloudinaryConfig = (req, res, next) => {
   if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_API_SECRET) {
@@ -174,8 +200,9 @@ const storageAudio = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "audio",
-    resource_type: "video",
-    public_id: (req, file) => `${Date.now()}`,
+    resource_type: "auto", // Changed from "video" to "auto" for better compatibility
+    public_id: (req, file) => `audio-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    allowed_formats: ["mp3", "wav", "ogg", "m4a", "aac", "webm"], // Specify allowed audio formats
   },
 });
 
@@ -183,10 +210,23 @@ const uploadAudio = multer({
   storage: storageAudio,
   limits: { fileSize: 10 * 1024 * 1024 }, // Maximal 10 MB
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("audio/")) {
+    console.log("Audio file filter check:", {
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      size: file.size
+    });
+    
+    // More comprehensive audio MIME type checking
+    const allowedMimeTypes = [
+      "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", 
+      "audio/m4a", "audio/aac", "audio/webm", "audio/mp4"
+    ];
+    
+    if (allowedMimeTypes.includes(file.mimetype) || file.mimetype.startsWith("audio/")) {
       cb(null, true);
     } else {
-      cb(new Error("Nur Audio-Dateien sind erlaubt!"), false);
+      console.error("Rejected audio file:", file.mimetype);
+      cb(new Error(`Unsupported audio format: ${file.mimetype}. Allowed formats: mp3, wav, ogg, m4a, aac, webm`), false);
     }
   },
 });
@@ -198,24 +238,80 @@ router.post("/audio", uploadAudio.single("audio"), async (req, res) => {
       fileName: req.file?.originalname,
       fileSize: req.file?.size,
       mimeType: req.file?.mimetype,
-      sessionUser: req.session.user?.id
+      sessionUser: req.session.user?.id,
+      headers: {
+        contentType: req.headers['content-type'],
+        contentLength: req.headers['content-length']
+      }
     });
 
     if (!req.file) {
       console.error("No audio file provided in request");
-      return res.status(400).json({ error: "No audio file provided" });
+      return res.status(400).json({ 
+        error: "No audio file provided",
+        supportedFormats: ["mp3", "wav", "ogg", "m4a", "aac", "webm"],
+        maxSize: "10MB"
+      });
+    }
+
+    // Additional validation for audio files
+    if (!req.file.path) {
+      console.error("File uploaded but no Cloudinary path returned");
+      return res.status(500).json({ error: "Upload successful but no file URL generated" });
     }
     
-    console.log("Audio upload successful:", req.file.path);
-    res.json({ url: req.file.path });
+    console.log("Audio upload successful:", {
+      url: req.file.path,
+      size: req.file.size,
+      format: req.file.format,
+      resourceType: req.file.resource_type
+    });
+    
+    res.json({ 
+      url: req.file.path,
+      success: true,
+      fileInfo: {
+        size: req.file.size,
+        format: req.file.format || 'unknown',
+        originalName: req.file.originalname
+      }
+    });
   } catch (error) {
     console.error("Error uploading audio:", error);
     console.error("Error details:", {
       message: error.message,
       stack: error.stack,
-      file: req.file,
+      code: error.code,
+      file: req.file ? {
+        originalname: req.file.originalname,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      } : null,
+      multerError: error.field || error.storageErrors
     });
-    res.status(500).json({ error: "Failed to upload audio", details: error.message });
+    
+    // Handle specific error types
+    if (error.message && error.message.includes("Unsupported audio format")) {
+      return res.status(400).json({ 
+        error: "Unsupported audio format", 
+        details: error.message,
+        supportedFormats: ["mp3", "wav", "ogg", "m4a", "aac", "webm"]
+      });
+    }
+    
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ 
+        error: "File too large", 
+        details: "Maximum file size is 10MB",
+        maxSize: "10MB"
+      });
+    }
+    
+    res.status(500).json({ 
+      error: "Failed to upload audio", 
+      details: error.message,
+      code: error.code || 'UNKNOWN_ERROR'
+    });
   }
 });
 
