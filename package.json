@@ -8,7 +8,7 @@
   "scripts": {
     "install:all": "npm -ws install",
     "build": "npm -ws run build",
-    "dev": "npm run env:dev && concurrently -k -n BE,FE \"npm -w backend start\" \"npm -w frontend run dev\"",
+    "dev": "npm run env:dev && concurrently -k -n BE,FE \"npm -w backend run dev\" \"npm -w frontend run dev\"",
     "prod": "npm run env:prod && npm -w frontend run prod",
     "seed": "npm -w backend run seed",
     "build:fe": "npm -w frontend run build",
