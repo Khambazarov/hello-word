@@ -759,8 +759,9 @@ export const Chatroom = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
-        <div className="flex items-center justify-between h-16 px-4 max-w-4xl mx-auto">
-          <div className="flex items-center space-x-3">
+        <div className="flex items-center h-16 px-1 max-w-4xl mx-auto">
+          {/* Left section - Avatar */}
+          <div className="flex items-center space-x-3 flex-1">
             <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5 overflow-hidden">
               <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
                 <img
@@ -789,20 +790,17 @@ export const Chatroom = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight">
-                {isGroupChat ? groupInfo?.name : partnerName}
-              </h1>
-              {isGroupChat && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {members?.length}{" "}
-                  {members?.length === 1 ? "member" : "members"}
-                </p>
-              )}
-            </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          {/* Center section - Title */}
+          <div className="flex-1 flex justify-center">
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight text-center">
+              {isGroupChat ? groupInfo?.name : partnerName}
+            </h1>
+          </div>
+
+          {/* Right section - Settings */}
+          <div className="flex items-center space-x-0 flex-1 justify-end">
             {/* {isGroupChat && userPermissions?.canInvite && (
               <button
                 onClick={() => navigate(`/chatarea/groups/${id}/invite`)}
@@ -821,7 +819,7 @@ export const Chatroom = () => {
                     : `/chatarea/chats/${id}/settings`
                 )
               }
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title={isGroupChat ? "Group Settings" : "Chat Settings"}
             >
               <svg
@@ -840,7 +838,7 @@ export const Chatroom = () => {
 
             <button
               onClick={() => navigate("/chatarea")}
-              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title="Back to Chat List"
             >
               <BackButtonIcon />
