@@ -4,6 +4,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import { BackButtonIcon } from "./_AllSVGs.jsx";
+import {
+  getAvatarUrl,
+  createAvatarErrorHandler,
+} from "../utils/avatarHelper.js";
 import robot from "../assets/robot.png";
 
 export const ChatSettings = () => {
@@ -29,9 +33,7 @@ export const ChatSettings = () => {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(
-          errorData.errorMessage || "Failed to delete chat"
-        );
+        throw new Error(errorData.errorMessage || "Failed to delete chat");
       }
       return response.json();
     },
@@ -85,6 +87,7 @@ export const ChatSettings = () => {
   }
 
   const partnerName = data?.partnerName;
+  const partnerAvatar = data?.partnerAvatar;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -110,9 +113,14 @@ export const ChatSettings = () => {
                   src={
                     partnerName === "deletedUser" || !partnerName
                       ? robot
-                      : `https://robohash.org/${partnerName}`
+                      : getAvatarUrl(partnerAvatar, partnerName)
                   }
                   alt="avatar"
+                  onError={
+                    partnerName === "deletedUser" || !partnerName
+                      ? undefined
+                      : createAvatarErrorHandler(partnerName)
+                  }
                 />
               </div>
             </div>
@@ -139,7 +147,6 @@ export const ChatSettings = () => {
       {/* Settings Content */}
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-          
           {/* Chat Info Section */}
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -153,9 +160,14 @@ export const ChatSettings = () => {
                     src={
                       partnerName === "deletedUser" || !partnerName
                         ? robot
-                        : `https://robohash.org/${partnerName}`
+                        : getAvatarUrl(partnerAvatar, partnerName)
                     }
                     alt="avatar"
+                    onError={
+                      partnerName === "deletedUser" || !partnerName
+                        ? undefined
+                        : createAvatarErrorHandler(partnerName)
+                    }
                   />
                 </div>
               </div>
@@ -175,7 +187,7 @@ export const ChatSettings = () => {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
               Actions
             </h2>
-            
+
             {/* Delete Chat Section */}
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
               <div className="flex items-start justify-between">
@@ -184,11 +196,12 @@ export const ChatSettings = () => {
                     Delete Chat
                   </h3>
                   <p className="text-sm text-red-600 dark:text-red-300 mb-4">
-                    Permanently delete this chat and all messages. This action cannot be undone.
+                    Permanently delete this chat and all messages. This action
+                    cannot be undone.
                   </p>
                 </div>
               </div>
-              
+
               <button
                 onClick={handleDeleteChat}
                 disabled={deleteChatMutation.isPending}
@@ -278,7 +291,8 @@ export const ChatSettings = () => {
                   <span className="font-medium text-gray-900 dark:text-white">
                     {partnerName || "Unknown User"}
                   </span>
-                  ? This will permanently remove all messages and conversation history.
+                  ? This will permanently remove all messages and conversation
+                  history.
                 </p>
               </div>
 
