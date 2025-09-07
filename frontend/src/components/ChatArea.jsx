@@ -8,6 +8,10 @@ import socketManager from "../utils/socketManager.js";
 import { cn } from "../utils/cn.js";
 import { fetchUserLanguage } from "../utils/api.js";
 import { getTranslations } from "../utils/languageHelper.js";
+import {
+  getAvatarUrl,
+  createAvatarErrorHandler,
+} from "../utils/avatarHelper.js";
 
 import robot from "../assets/robot.png";
 import notification from "../assets/positive-notification.wav";
@@ -46,7 +50,7 @@ export const ChatArea = () => {
   } = useQuery({
     queryKey: ["chatrooms"],
     queryFn: async () => {
-      const response = await fetch("/api/chatrooms/chats", {
+      const response = await fetch(`/api/chatrooms/chats`, {
         credentials: "include",
       });
 
@@ -113,34 +117,44 @@ export const ChatArea = () => {
       return;
     }
 
-
     // Socket verbinden oder wiederverwenden
-    socketManager.connect().then(() => {
-      // Event-Listener für ChatArea registrieren
-      const handleMessage = () => {
-        queryClient.invalidateQueries(["chatrooms"]);
-        if (audioReceiveRef.current) {
-          audioReceiveRef.current.play().catch((error) => {
-            console.error("Audio playback failed:", error);
-          });
-        }
-      };
+    socketManager
+      .connect()
+      .then(() => {
+        // Event-Listener für ChatArea registrieren
+        const handleMessage = () => {
+          queryClient.invalidateQueries(["chatrooms"]);
+          if (audioReceiveRef.current) {
+            audioReceiveRef.current.play().catch((error) => {
+              console.error("Audio playback failed:", error);
+            });
+          }
+        };
 
-      const handleMessageUpdate = () => {
-        queryClient.invalidateQueries(["chatroom"]);
-      };
+        const handleMessageUpdate = () => {
+          queryClient.invalidateQueries(["chatroom"]);
+        };
 
-      const handleMessageDelete = () => {
-        queryClient.invalidateQueries(["chatrooms"]);
-      };
+        const handleMessageDelete = () => {
+          queryClient.invalidateQueries(["chatrooms"]);
+        };
 
-      // Listener mit eindeutiger Component-ID registrieren
-      socketManager.addListener("message", handleMessage, "ChatArea");
-      socketManager.addListener("message-update", handleMessageUpdate, "ChatArea");
-      socketManager.addListener("message-delete", handleMessageDelete, "ChatArea");
-    }).catch((error) => {
-      console.error("Failed to connect socket in ChatArea:", error);
-    });
+        // Listener mit eindeutiger Component-ID registrieren
+        socketManager.addListener("message", handleMessage, "ChatArea");
+        socketManager.addListener(
+          "message-update",
+          handleMessageUpdate,
+          "ChatArea"
+        );
+        socketManager.addListener(
+          "message-delete",
+          handleMessageDelete,
+          "ChatArea"
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to connect socket in ChatArea:", error);
+      });
 
     return () => {
       // Nur die Listener dieser Komponente entfernen
@@ -243,16 +257,17 @@ export const ChatArea = () => {
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
                   <img
-                    src={
-                      chatroomsData?.currentUserAvatar ||
-                      (chatroomsData?.currentUsername
-                        ? `https://robohash.org/${chatroomsData?.currentUsername}`
-                        : robot)
-                    }
+                    src={getAvatarUrl(
+                      chatroomsData?.currentUserAvatar,
+                      chatroomsData?.currentUsername || "User"
+                    )}
                     alt="User Avatar"
                     className={cn(
                       "w-full h-full rounded-full object-cover bg-white dark:bg-gray-800 transition-all duration-200 group-hover:scale-105",
                       isLoading && "opacity-50"
+                    )}
+                    onError={createAvatarErrorHandler(
+                      chatroomsData?.currentUsername || "User"
                     )}
                   />
                 </div>
@@ -519,15 +534,20 @@ export const ChatArea = () => {
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
                           <img
                             className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
-                            src={
+                            src={getAvatarUrl(
                               chatroom.isGroupChat
-                                ? chatroom.groupImage ||
-                                  `https://robohash.org/${chatroom.groupName}`
-                                : chatroom.usernames?.join(", ")
-                                  ? `https://robohash.org/${chatroom.usernames.join(", ")}`
-                                  : robot
-                            }
+                                ? chatroom.groupImage
+                                : chatroom.partnerAvatar,
+                              chatroom.isGroupChat
+                                ? chatroom.groupName
+                                : chatroom.usernames?.join(", ") || "Chat"
+                            )}
                             alt="Chat Avatar"
+                            onError={createAvatarErrorHandler(
+                              chatroom.isGroupChat
+                                ? chatroom.groupName
+                                : chatroom.usernames?.join(", ") || "Chat"
+                            )}
                           />
                         </div>
                         {chatroom.isGroupChat && (
