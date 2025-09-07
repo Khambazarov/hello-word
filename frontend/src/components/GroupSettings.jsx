@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import { BackButtonIcon } from "./_AllSVGs";
+import { getAvatarUrl, createAvatarErrorHandler } from "../utils/avatarHelper";
 
 export const GroupSettings = () => {
   const [editingName, setEditingName] = useState(false);
@@ -348,12 +349,15 @@ export const GroupSettings = () => {
               )}
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
                 <img
-                  src={
-                    groupData?.groupInfo?.image ||
-                    `https://robohash.org/${groupData?.groupInfo?.name}`
-                  }
+                  src={getAvatarUrl(
+                    groupData?.groupInfo?.image,
+                    groupData?.groupInfo?.name || "Group"
+                  )}
                   alt="Group"
                   className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
+                  onError={createAvatarErrorHandler(
+                    groupData?.groupInfo?.name || "Group"
+                  )}
                 />
               </div>
             </div>
@@ -427,12 +431,15 @@ export const GroupSettings = () => {
                 <div className="relative">
                   <div className="w-20 h-20 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
                     <img
-                      src={
-                        groupData?.groupInfo?.image ||
-                        `https://robohash.org/${groupData?.groupInfo?.name}`
-                      }
+                      src={getAvatarUrl(
+                        groupData?.groupInfo?.image,
+                        groupData?.groupInfo?.name || "Group"
+                      )}
                       alt="Group"
                       className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
+                      onError={createAvatarErrorHandler(
+                        groupData?.groupInfo?.name || "Group"
+                      )}
                     />
                   </div>
                   {isAdmin && (
@@ -715,15 +722,10 @@ export const GroupSettings = () => {
                     <div className="flex items-center space-x-3">
                       <div className="relative">
                         <img
-                          src={
-                            member.avatar
-                              ? member.avatar.startsWith("http")
-                                ? member.avatar
-                                : `/uploads/${member.avatar}`
-                              : `https://robohash.org/${member.username}`
-                          }
+                          src={getAvatarUrl(member.avatar, member.username)}
                           alt={member.username}
                           className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white dark:border-gray-600 shadow-sm"
+                          onError={createAvatarErrorHandler(member.username)}
                         />
                         {memberIsCreator && (
                           <div className="absolute -top-1 -right-1 bg-yellow-500 text-white rounded-full p-0.5 sm:p-1">
