@@ -39,7 +39,7 @@ export default (io) => {
       const chatroomExists = await Chatroom.findOne({
         users: { $all: [user._id, currentUserId] },
         $expr: { $eq: [{ $size: "$users" }, 2] }, // Nur Chats mit genau 2 Benutzern
-        isGroupChat: { $ne: true } // Explizit ausschließen von Gruppenchats
+        isGroupChat: { $ne: true }, // Explizit ausschließen von Gruppenchats
       });
 
       if (chatroomExists) {
@@ -103,10 +103,17 @@ export default (io) => {
 
       const volume = currentUser.volume || "middle";
       const currentUserAvatar = currentUser.avatar;
+
+      // ✅ VERBESSERUNG: Frische Daten ohne Cache laden
       const allChats = await Chatroom.find({ users: currentUserId })
-        .populate("users", "username email avatar")
+        .populate({
+          path: "users",
+          select: "username email avatar",
+          options: { lean: false }, // Verhindert Mongoose-Caching
+        })
         .populate("creator", "username avatar")
-        .populate("admins", "username avatar");
+        .populate("admins", "username avatar")
+        .lean(false); // Verhindert Lean-Modus für frische Daten
 
       if (!allChats || allChats.length === 0) {
         return res.json({
@@ -164,6 +171,22 @@ export default (io) => {
             .map((user) => user.username)
             .filter((username) => username !== currentUsername);
 
+          // Partner-Avatar für 1-zu-1 Chats - KOMPLETT NEU: Immer frisch laden
+          const partner = chat.users.find(
+            (user) =>
+              user.username !== currentUsername &&
+              user._id.toString() !== currentUserId.toString()
+          );
+
+          // ✅ LÖSUNG: Avatar IMMER frisch aus DB laden, nie auf populate vertrauen
+          let partnerAvatar = null;
+          if (partner && partner._id) {
+            const freshPartner = await User.findById(partner._id).select(
+              "avatar"
+            );
+            partnerAvatar = freshPartner?.avatar || null;
+          }
+
           const lastMessage = await Message.findOne({ chatroom: chatId }).sort({
             createdAt: -1,
           });
@@ -191,6 +214,7 @@ export default (io) => {
             chatId,
             isGroupChat: false,
             usernames,
+            partnerAvatar,
             lastMessage,
             timestamps: formattedTimestamps,
             unreadMessagesCount,
@@ -277,7 +301,7 @@ export default (io) => {
 
       const chatroomMessages = await Message.find({ chatroom: id })
         .populate("sender")
-        .populate("editSeenBy", "username"); // Populate users who have seen edits
+        .populate("editSeenBy", "username avatar"); // Populate users who have seen edits
 
       const timestamps = await Message.find({ chatroom: id })
         .sort({ createdAt: -1 })
@@ -340,6 +364,7 @@ export default (io) => {
           chatroomMessages,
           currentUsername,
           partnerName,
+          partnerAvatar: null,
           unreadMessagesCount,
           volume,
           isGroupChat: false,
@@ -354,6 +379,7 @@ export default (io) => {
           currentUsername,
           currentUserId,
           partnerName,
+          partnerAvatar: null,
           unreadMessagesCount,
           volume,
           isGroupChat: false,
@@ -361,12 +387,14 @@ export default (io) => {
       }
 
       const partnerName = partner.username;
+      const partnerAvatar = partner.avatar;
 
       res.json({
         chatroomMessages,
         currentUsername,
         currentUserId,
         partnerName,
+        partnerAvatar,
         unreadMessagesCount,
         volume,
         isGroupChat: false,
@@ -390,8 +418,8 @@ export default (io) => {
       }
 
       const chatroom = await Chatroom.findById(id)
-        .populate("users", "username")
-        .populate("admins", "username");
+        .populate("users", "username avatar")
+        .populate("admins", "username avatar");
 
       if (!chatroom) {
         return res.status(404).json({ errorMessage: "Chatroom not found" });
@@ -517,19 +545,11 @@ export default (io) => {
       const { description } = req.body;
       const currentUserId = req.session.user.id;
 
-
       // Find the chatroom and check if it's a group chat
       const chatroom = await Chatroom.findById(id);
       if (!chatroom) {
         return res.status(404).json({ errorMessage: "Chatroom not found" });
       }
-
-      console.log(
-        "Chatroom found:",
-        chatroom.groupName,
-        "isGroupChat:",
-        chatroom.isGroupChat
-      );
 
       if (!chatroom.isGroupChat) {
         return res.status(400).json({ errorMessage: "Not a group chat" });
@@ -541,13 +561,6 @@ export default (io) => {
       const isAdmin =
         chatroom.admins && chatroom.admins.includes(currentUserId);
 
-      console.log(
-        "Permission check - isCreator:",
-        isCreator,
-        "isAdmin:",
-        isAdmin
-      );
-
       if (!isCreator && !isAdmin) {
         return res.status(403).json({
           errorMessage: "No permission to edit group description",
@@ -557,7 +570,6 @@ export default (io) => {
       // Update the group description
       chatroom.groupDescription = description.trim();
       await chatroom.save();
-
 
       res.json({
         success: true,
@@ -577,14 +589,13 @@ export default (io) => {
       const { username } = req.body;
       const currentUserId = req.session.user.id;
 
-
       if (!username) {
         return res.status(400).json({ errorMessage: "Username is required" });
       }
 
       const chatroom = await Chatroom.findById(id)
-        .populate("users", "username")
-        .populate("admins", "username");
+        .populate("users", "username avatar")
+        .populate("admins", "username avatar");
 
       if (!chatroom) {
         return res.status(404).json({ errorMessage: "Chatroom not found" });
@@ -639,7 +650,6 @@ export default (io) => {
       chatroom.admins.push(userToPromote._id);
       await chatroom.save();
 
-
       res.json({
         success: true,
         message: "User promoted to admin successfully",
@@ -676,7 +686,7 @@ export default (io) => {
 
       // Delete all messages in the group
       await Message.deleteMany({ chatroom: id });
-      
+
       // Delete the group
       await Chatroom.findByIdAndDelete(id);
 
@@ -702,7 +712,11 @@ export default (io) => {
       }
 
       if (chatroom.isGroupChat) {
-        return res.status(400).json({ errorMessage: "Use group chat deletion endpoint for group chats" });
+        return res
+          .status(400)
+          .json({
+            errorMessage: "Use group chat deletion endpoint for group chats",
+          });
       }
 
       // Check if user is a participant in this chat
@@ -715,7 +729,7 @@ export default (io) => {
 
       // Delete all messages in the chat
       await Message.deleteMany({ chatroom: id });
-      
+
       // Delete the chat
       await Chatroom.findByIdAndDelete(id);
 
