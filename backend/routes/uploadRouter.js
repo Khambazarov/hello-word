@@ -8,6 +8,43 @@ import User from "../models/userSchema.js";
 
 const router = express.Router();
 
+// Debug endpoint to check Cloudinary configuration
+router.get("/debug/config", (req, res) => {
+  try {
+    const config = {
+      hasCloudName: !!process.env.CLOUD_NAME,
+      hasApiKey: !!process.env.CLOUD_API_KEY,
+      hasApiSecret: !!process.env.CLOUD_API_SECRET,
+      nodeEnv: process.env.NODE_ENV,
+      sessionExists: !!req.session,
+      userLoggedIn: !!req.session?.user,
+      cloudinaryConfig: {
+        cloud_name: cloudinary.config().cloud_name,
+        api_key: cloudinary.config().api_key ? "SET" : "MISSING"
+      }
+    };
+    
+    res.json(config);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Test endpoint for Cloudinary connectivity
+router.get("/debug/test-cloudinary", async (req, res) => {
+  try {
+    const result = await cloudinary.api.ping();
+    res.json({ success: true, message: "Cloudinary connection successful", result });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: "Cloudinary connection failed", 
+      error: error.message,
+      details: error
+    });
+  }
+});
+
 // Middleware to check Cloudinary configuration
 const checkCloudinaryConfig = (req, res, next) => {
   if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_API_SECRET) {
@@ -29,7 +66,7 @@ const storageImage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "image",
-    public_id: (req, file) => file.originalname,
+    public_id: (req, file) => `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     transformation: [
       { quality: "auto", fetch_format: "auto" },
       { width: 300, height: 300, crop: "pad" },
@@ -41,6 +78,13 @@ const uploadImage = multer({ storage: storageImage });
 
 router.post("/image", uploadImage.single("image"), async (req, res) => {
   try {
+    console.log("Image upload request received:", {
+      fileReceived: !!req.file,
+      fileName: req.file?.originalname,
+      fileSize: req.file?.size,
+      sessionUser: req.session.user?.id
+    });
+
     if (!req.file) {
       console.error("No image file provided in request");
       return res.status(400).json({ error: "No image file provided" });
@@ -149,6 +193,14 @@ const uploadAudio = multer({
 
 router.post("/audio", uploadAudio.single("audio"), async (req, res) => {
   try {
+    console.log("Audio upload request received:", {
+      fileReceived: !!req.file,
+      fileName: req.file?.originalname,
+      fileSize: req.file?.size,
+      mimeType: req.file?.mimetype,
+      sessionUser: req.session.user?.id
+    });
+
     if (!req.file) {
       console.error("No audio file provided in request");
       return res.status(400).json({ error: "No audio file provided" });
