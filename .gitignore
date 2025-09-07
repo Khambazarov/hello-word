@@ -31,8 +31,9 @@ pnpm-debug.log*
 # (except sample files)
 # -------------------------
 **/.env
-**/.env.*        # .env.development, .env.production etc.
-!**/.env.sample  # Keep the sample file in repo
+**/.env.*
+!**/.env.sample
+!.env.sample  # Keep the sample file in repo
 
 # -------------------------
 # HTTP test files
