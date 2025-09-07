@@ -48,24 +48,24 @@ export const Profile = () => {
     },
     onSuccess: () => {
       toast.success("Avatar updated successfully!");
-      // ✅ LÖSUNG: Alle relevanten Queries invalidieren + Daten refetchen
+      // LÖSUNG: Alle relevanten Queries invalidieren + Daten refetchen
       queryClient.invalidateQueries(["profile"]);
       queryClient.invalidateQueries(["chatrooms"]); // Chatroom-Liste
       queryClient.invalidateQueries({ queryKey: ["chatroom"] }); // Alle Chatroom-Details
       queryClient.invalidateQueries({ queryKey: ["groupMembers"] }); // Alle Gruppenmitglieder
       queryClient.invalidateQueries({ queryKey: ["userInfo"] }); // Benutzerinformationen für NewChatroom
 
-      // ✅ NEU: Auch alle möglichen Cache-Keys invalidieren
+      // NEU: Auch alle möglichen Cache-Keys invalidieren
       queryClient.invalidateQueries(); // Invalidiert ALLE Queries
 
       // Force refetch für aktuelle Queries
       queryClient.refetchQueries(["profile"]);
       queryClient.refetchQueries(["chatrooms"]);
 
-      // ✅ NEU: Force refetch für alle aktiven Queries
+      // NEU: Force refetch für alle aktiven Queries
       queryClient.refetchQueries();
 
-      // ✅ NUCLEAR OPTION: Seite nach kurzer Verzögerung neu laden
+      // NUCLEAR OPTION: Seite nach kurzer Verzögerung neu laden
       setTimeout(() => {
         window.location.reload();
       }, 1500);
