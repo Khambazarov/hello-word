@@ -803,14 +803,14 @@ export const Chatroom = () => {
           </div>
 
           <div className="flex items-center space-x-2">
-            {isGroupChat && userPermissions?.canInvite && (
+            {/* {isGroupChat && userPermissions?.canInvite && (
               <button
                 onClick={() => navigate(`/chatarea/groups/${id}/invite`)}
                 className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
               >
                 {translations.chatroom?.invite || "Invite"}
               </button>
-            )}
+            )} */}
 
             {/* Settings Button - für Gruppenchats und 1-zu-1 Chats */}
             <button
