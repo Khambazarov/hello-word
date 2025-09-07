@@ -4,9 +4,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js --quiet",
+    "dev": "npm run env:dev && nodemon server.js --quiet",
+    "prod": "npm run env:prod && node server.js",
     "start": "node server.js",
-    "seed": "node seeder.js"
+    "seed": "node seeder.js",
+    "env:dev": "cp .env.development .env && echo '✅ Backend switched to DEVELOPMENT environment'",
+    "env:prod": "cp .env.production .env && echo '✅ Backend switched to PRODUCTION environment'"
   },
   "keywords": [],
   "author": "",
