@@ -20,7 +20,7 @@ export const ForgotPw = () => {
     e.preventDefault();
     const email = e.target.email.value.toLowerCase().trim();
 
-    toast.loading(translations.toast.forgotPw.waiting);
+    toast.loading(translations.feedback.toast.auth.forgotPw.waiting);
 
     const response = await fetch("/api/users/forgot-pw", {
       method: "PATCH",
@@ -33,14 +33,14 @@ export const ForgotPw = () => {
     toast.dismiss();
 
     if (response.ok) {
-      toast.success(translations.toast.forgotPw.success);
+      toast.success(translations.feedback.toast.auth.forgotPw.success);
       setTimeout(() => navigate("/new-pw"), 2000);
     } else if (response.status === 404) {
-      toast.error(translations.toast.forgotPw.errorNotFound);
+      toast.error(translations.feedback.toast.auth.forgotPw.errorNotFound);
     } else if (response.status === 401) {
-      toast.error(translations.toast.forgotPw.errorKeyNotCorrect);
+      toast.error(translations.feedback.toast.auth.forgotPw.errorKeyNotCorrect);
     } else {
-      toast.error(translations.toast.forgotPw.errorFailed);
+      toast.error(translations.feedback.toast.auth.forgotPw.errorFailed);
     }
   }
 
@@ -54,11 +54,12 @@ export const ForgotPw = () => {
               <img className="h-12 w-12" src={robot} alt="robot" />
             </div>
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              Reset Password
+              {translations.auth.forgotPw?.title || "Reset Password"}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              Enter your email to receive a password reset link
-            </p>
+            {/* <p className="text-gray-600 dark:text-gray-400 text-lg">
+              {translations.auth.forgotPw?.subtitle ||
+                "Enter your email to receive a password reset link"}
+            </p> */}
           </div>
 
           {/* Reset Password Form */}
@@ -66,15 +67,15 @@ export const ForgotPw = () => {
             onSubmit={handleResetPw}
             className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-8 space-y-6"
           >
-            <div className="text-center mb-6">
+            {/* <div className="text-center mb-6">
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {translations.forgotPw.title}
+                {translations.auth.forgotPw.title}
               </h2>
-            </div>
+            </div> */}
 
             {/* Info Box */}
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-2">
                 <svg
                   className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
                   fill="currentColor"
@@ -88,16 +89,24 @@ export const ForgotPw = () => {
                 </svg>
                 <div className="text-sm">
                   <p className="text-blue-800 dark:text-blue-200 font-medium mb-1">
-                    How it works:
+                    {translations.auth.forgotPw?.howItWorksTitle ||
+                      "How it works:"}
                   </p>
                   <ul className="text-blue-700 dark:text-blue-300 space-y-1">
                     <li>
-                      • Enter the email address associated with your account
+                      •{" "}
+                      {translations.auth.forgotPw?.step1 ||
+                        "Enter the email address associated with your account"}
                     </li>
-                    <li>• Check your inbox for a password reset email</li>
                     <li>
-                      • Follow the instructions in the email to reset your
-                      password
+                      •{" "}
+                      {translations.auth.forgotPw?.step2 ||
+                        "Check your inbox for a password reset email"}
+                    </li>
+                    <li>
+                      •{" "}
+                      {translations.auth.forgotPw?.step3 ||
+                        "Follow the instructions in the email to reset your password"}
                     </li>
                   </ul>
                 </div>
@@ -110,7 +119,7 @@ export const ForgotPw = () => {
                 htmlFor="email"
                 className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.forgotPw.emailTitle}
+                {translations.auth.forgotPw.emailTitle}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -121,7 +130,7 @@ export const ForgotPw = () => {
                   name="email"
                   id="email"
                   autoComplete="email"
-                  placeholder={translations.forgotPw.emailPlaceholder}
+                  placeholder={translations.auth.forgotPw.emailPlaceholder}
                   className="w-full pl-10 pr-4 py-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   required
                   autoFocus
@@ -147,7 +156,7 @@ export const ForgotPw = () => {
                   d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              <span>{translations.forgotPw.sendEmailBtn}</span>
+              <span>{translations.auth.forgotPw.sendEmailBtn}</span>
             </button>
           </form>
 
@@ -170,7 +179,7 @@ export const ForgotPw = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              <span>{translations.forgotPw.backToLogin}</span>
+              <span>{translations.auth.forgotPw.backToLogin}</span>
             </Link>
           </div>
         </div>
