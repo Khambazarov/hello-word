@@ -157,26 +157,43 @@ export const Settings = () => {
   ) {
     return (
       <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
-        <header className="xl:h-25 z-10 h-16 flex justify-center items-center pl-2 sticky top-0 bg-gray-700">
-          <h1 className="flex text-white items-center tracking-widest text-sm md:text-base xl:text-3xl">
-            Hello, Word!
-          </h1>
-          <img
-            className="h-12 absolute left-1/2 transform -translate-x-1/2 xl:h-16"
-            src={robot}
-            alt="robot"
-          />
-          <button
-            onClick={() => navigate("/chatarea")}
-            className="cursor-pointer absolute right-4"
-          >
-            <BackButtonIcon />
-          </button>
+        <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
+          <div className="flex items-center h-16 px-1 max-w-4xl mx-auto">
+            {/* Avatar links */}
+            <div className="flex items-center space-x-3 flex-1">
+              <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5 overflow-hidden">
+                <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
+                  <img
+                    className="w-full h-full object-cover"
+                    src={robot}
+                    alt="Settings Avatar"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Titel mittig */}
+            <div className="flex-1 flex justify-center">
+              <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight text-center">
+                {translations.content.settings.title || "Settings"}
+              </h1>
+            </div>
+            {/* Buttons rechts */}
+            <div className="flex items-center space-x-0 flex-1 justify-end">
+              <button
+                onClick={() => navigate("/chatarea")}
+                className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                title="Back to Chats"
+              >
+                <BackButtonIcon />
+              </button>
+            </div>
+          </div>
         </header>
         <div className="flex flex-col items-center justify-center flex-1 p-6">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">
-            {translations.content.settings.loadingSettings || "Loading settings..."}
+            {translations.content.settings.loadingSettings ||
+              "Loading settings..."}
           </p>
         </div>
       </div>
@@ -185,17 +202,37 @@ export const Settings = () => {
 
   return (
     <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
-      <header className="xl:h-25 z-10 h-16 flex justify-center items-center sticky top-0 bg-gray-700 shadow-md">
-        <h1 className="md:text-base xl:text-2xl text-white tracking-widest font-bold">
-          {translations.settings?.title || "Settings"}
-        </h1>
-        <button
-          onClick={() => navigate("/chatarea")}
-          className="cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2 p-2 text-gray-300 hover:text-white hover:bg-gray-600 rounded-lg transition-colors"
-          title="Back to Chat"
-        >
-          <BackButtonIcon />
-        </button>
+      <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center h-16 px-1 max-w-4xl mx-auto">
+          {/* Avatar links */}
+          <div className="flex items-center space-x-3 flex-1">
+            <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5 overflow-hidden">
+              <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
+                <img
+                  className="w-full h-full object-cover"
+                  src={robot}
+                  alt="Settings Avatar"
+                />
+              </div>
+            </div>
+          </div>
+          {/* Titel mittig */}
+          <div className="flex-1 flex justify-center">
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight text-center">
+              {translations.content.settings?.title || "Settings"}
+            </h1>
+          </div>
+          {/* Buttons rechts */}
+          <div className="flex items-center space-x-0 flex-1 justify-end">
+            <button
+              onClick={() => navigate("/chatarea")}
+              className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              title="Back to Chats"
+            >
+              <BackButtonIcon />
+            </button>
+          </div>
+        </div>
       </header>
 
       <div className="flex flex-col items-center p-6 max-w-4xl mx-auto w-full">
@@ -226,8 +263,8 @@ export const Settings = () => {
             {/* {translations.settings.selectLangTitle || "Settings"} */}
           </h1>
           <p className="text-balance text-gray-600 dark:text-gray-400">
-            Customize your experience with language, audio, and security
-            preferences
+            {translations.content.settings?.description ||
+              "Set up your preferences and manage your account with ease."}
           </p>
         </div>
 
@@ -249,10 +286,12 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.content.settings.selectLangTitle || "Language Settings"}
+                {translations.content.settings.selectLangTitle ||
+                  "Language Settings"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Choose your preferred language
+                {translations.content.settings.selectLangDescription ||
+                  "Choose your preferred language for the app interface."}
               </p>
             </div>
 
@@ -269,7 +308,7 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <UkFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations.content.settings.lang.en}
+                    {translations.content.settings.lang.en || "EN"}
                   </span>
                 </div>
               </label>
@@ -286,7 +325,7 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <GermanFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations.content.settings.lang.de}
+                    {translations.content.settings.lang.de || "DE"}
                   </span>
                 </div>
               </label>
@@ -313,7 +352,8 @@ export const Settings = () => {
                 {translations.content.settings.volumeTitle}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Set notification sound volume
+                {translations.content.settings.adjustVolume ||
+                  "Adjust the volume for notification sounds."}
               </p>
             </div>
 
@@ -380,10 +420,12 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.content.settings.changePwTitle}
+                {translations.content.settings.changePwTitle ||
+                  "Change Password"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Update your account password
+                {translations.content.settings.changePwDescription ||
+                  "6+ characters, incl. uppercase, lowercase & numbers"}
               </p>
             </div>
 
@@ -393,7 +435,8 @@ export const Settings = () => {
                   htmlFor="oldPassword"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
-                  {translations.content.settings.currentPwTitle}
+                  {translations.content.settings.currentPwTitle ||
+                    "Current Password"}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -404,7 +447,10 @@ export const Settings = () => {
                     name="oldPassword"
                     id="oldPassword"
                     autoComplete="current-password"
-                    placeholder={translations.content.settings.currentPwPlaceholder}
+                    placeholder={
+                      translations.content.settings.currentPwPlaceholder ||
+                      "Current Password"
+                    }
                     minLength={6}
                     className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
@@ -424,7 +470,7 @@ export const Settings = () => {
                   htmlFor="newPassword"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
-                  {translations.content.settings.newPwTitle}
+                  {translations.content.settings.newPwTitle || "New Password"}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -435,7 +481,10 @@ export const Settings = () => {
                     name="newPassword"
                     id="newPassword"
                     autoComplete="new-password"
-                    placeholder={translations.content.settings.newPwPlaceholder}
+                    placeholder={
+                      translations.content.settings.newPwPlaceholder ||
+                      "Strong Password"
+                    }
                     minLength={6}
                     className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
@@ -467,7 +516,10 @@ export const Settings = () => {
                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                   />
                 </svg>
-                <span>{translations.content.settings.changePwBtn}</span>
+                <span>
+                  {translations.content.settings.changePwBtn ||
+                    "Change Password"}
+                </span>
               </button>
             </form>
           </div>
@@ -491,10 +543,12 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">
-                {translations.content.settings.deleteAccountTitle}
+                {translations.content.settings.deleteAccountTitle ||
+                  "Delete Account"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Permanently delete your account and all data
+                {translations.content.settings.deleteAccountDescription ||
+                  "Permanently delete your account and all associated data."}
               </p>
             </div>
 
@@ -513,11 +567,12 @@ export const Settings = () => {
                 </svg>
                 <div className="text-sm">
                   <p className="text-red-800 dark:text-red-200 font-medium">
-                    Warning!
+                    {translations.content.settings.warningTitle ||
+                      "Warning!"}
                   </p>
                   <p className="text-red-700 dark:text-red-300 mt-1">
-                    This action cannot be undone. All your chats, messages, and
-                    account data will be permanently deleted.
+                    {translations.content.settings.warningDescription ||
+                      "This action cannot be undone. All your chats, messages, and account data will be permanently deleted."}
                   </p>
                 </div>
               </div>
