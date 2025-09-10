@@ -144,7 +144,7 @@ export const Chatroom = () => {
       return response.json();
     },
     onError: (error) => {
-      toast.error(translations.toast.existChatroom.errorServer);
+      toast.error(translations.feedback.toast.chat.existChatroom.errorServer);
       console.error(error.message);
     },
   });
@@ -340,7 +340,7 @@ export const Chatroom = () => {
       setIsRecording(true);
     } catch (error) {
       console.error("Mikrofonzugriff fehlgeschlagen:", error);
-      toast.error(translations.toast.chatroom.audioNotSupported);
+      toast.error(translations.feedback.toast.chat.chatroom.audioNotSupported);
     }
   };
 
@@ -424,7 +424,7 @@ export const Chatroom = () => {
     ) {
       e.target.textarea.value = "";
       toast.dismiss();
-      toast.error(translations.toast.existChatroom.errorDeletedUser, {
+      toast.error(translations.feedback.toast.chat.existChatroom.errorDeletedUser, {
         position: "bottom-center",
       });
       return;
@@ -749,7 +749,7 @@ export const Chatroom = () => {
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400 font-medium">
-            {translations.chatroom.loading || "Loading chat..."}
+            {translations.chat.room.loading || "Loading chat..."}
           </p>
         </div>
       </div>
@@ -820,7 +820,11 @@ export const Chatroom = () => {
                 )
               }
               className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title={isGroupChat ? "Group Settings" : "Chat Settings"}
+              title={
+                isGroupChat
+                  ? translations.ui.tooltips.groupSettings || "Group Settings"
+                  : translations.ui.tooltips.chatSettings || "Chat Settings"
+              }
             >
               <svg
                 className="w-6 h-6"
@@ -866,14 +870,17 @@ export const Chatroom = () => {
                   <button
                     onClick={handleSaveDescription}
                     className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-lg transition-colors"
-                    title="Save description"
+                    title={
+                      translations.ui.tooltips.saveDescription ||
+                      "Save description"
+                    }
                   >
                     Save
                   </button>
                   <button
                     onClick={handleCancelDescription}
                     className="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded-lg transition-colors"
-                    title="Cancel"
+                    title={translations.common?.cancel || "Cancel"}
                   >
                     Cancel
                   </button>
@@ -898,7 +905,10 @@ export const Chatroom = () => {
                   <button
                     onClick={handleEditDescription}
                     className="ml-3 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                    title="Edit description"
+                    title={
+                      translations.ui.tooltips.editDescription ||
+                      "Edit description"
+                    }
                   >
                     <svg
                       className="w-4 h-4"
@@ -949,8 +959,8 @@ export const Chatroom = () => {
                 </svg>
                 <span>
                   {unreadMessagesCount === 1
-                    ? `${unreadMessagesCount} ${translations.chatroom.unreadMessage}`
-                    : `${unreadMessagesCount} ${translations.chatroom.unreadMessages}`}
+                    ? `${unreadMessagesCount} ${translations.chat.room.unreadMessage}`
+                    : `${unreadMessagesCount} ${translations.chat.room.unreadMessages}`}
                 </span>
               </button>
             </div>
@@ -1096,7 +1106,7 @@ export const Chatroom = () => {
                                   "text-amber-600 dark:text-amber-400 font-medium"
                               )}
                             >
-                              {translations.chatroom.timestampUpdateText ||
+                              {translations.chat.room.timestampUpdateText ||
                                 "edited"}
                             </span>
                           </div>
@@ -1147,7 +1157,10 @@ export const Chatroom = () => {
                               <button
                                 onClick={() => handleEditMessage(message)}
                                 className="p-1 bg-white/90 dark:bg-gray-800/90 text-gray-800 hover:text-blue-700 dark:text-gray-200 dark:hover:text-blue-400 rounded-full shadow-lg transition-colors backdrop-blur-sm border border-gray-200 dark:border-gray-600"
-                                title="Edit message"
+                                title={
+                                  translations.ui.tooltips.editMessage ||
+                                  "Edit message"
+                                }
                               >
                                 <EditMessageIcon />
                               </button>
@@ -1176,12 +1189,18 @@ export const Chatroom = () => {
                               className="p-1 bg-white/90 dark:bg-gray-800/90 text-gray-800 hover:text-red-700 dark:text-gray-200 dark:hover:text-red-400 rounded-full shadow-lg transition-colors backdrop-blur-sm border border-gray-200 dark:border-gray-600"
                               title={
                                 isOwnMessage
-                                  ? "Delete message"
+                                  ? translations.ui.tooltips.deleteMessage ||
+                                    "Delete message"
                                   : isGroupChat && userPermissions.isCreator
-                                    ? "Delete message (Creator privilege)"
+                                    ? translations.chatroom
+                                        ?.deleteMessageCreator ||
+                                      "Delete message (Creator privilege)"
                                     : isGroupChat && userPermissions.isAdmin
-                                      ? "Delete message (Admin privilege)"
-                                      : "Delete message"
+                                      ? translations.chatroom
+                                          ?.deleteMessageAdmin ||
+                                        "Delete message (Admin privilege)"
+                                      : translations.ui.tooltips.deleteMessage ||
+                                        "Delete message"
                               }
                             >
                               <DeleteMessageIcon />
@@ -1265,7 +1284,7 @@ export const Chatroom = () => {
                   type="button"
                   onClick={handleEmojiPicker}
                   className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors"
-                  title="Add emoji"
+                  title={translations.ui.tooltips.addEmoji || "Add emoji"}
                 >
                   <img src={Emojis} alt="Emojis" className="w-6 h-6" />
                 </button>
@@ -1282,7 +1301,7 @@ export const Chatroom = () => {
               <label
                 htmlFor="image-upload"
                 className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl transition-colors cursor-pointer"
-                title="Upload image"
+                title={translations.ui.tooltips.uploadImage || "Upload image"}
               >
                 <svg
                   className="w-6 h-6"
@@ -1325,7 +1344,12 @@ export const Chatroom = () => {
                     ? "text-red-500 bg-red-50 dark:bg-red-900/20 animate-pulse"
                     : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600"
                 )}
-                title={isRecording ? "Stop recording" : "Start voice recording"}
+                title={
+                  isRecording
+                    ? translations.ui.tooltips.stopRecording || "Stop recording"
+                    : translations.ui.tooltips.startRecording ||
+                      "Start voice recording"
+                }
               >
                 <svg
                   className="w-5 h-5"
@@ -1356,7 +1380,7 @@ export const Chatroom = () => {
                 disabled={
                   sendMessageMutation.isPending || editMessageMutation.isPending
                 }
-                title="Send message"
+                title={translations.ui.tooltips.sendMessage || "Send message"}
               >
                 {sendMessageMutation.isPending ||
                 editMessageMutation.isPending ? (
