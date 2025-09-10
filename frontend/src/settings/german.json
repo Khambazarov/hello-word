@@ -273,7 +273,7 @@
     },
     "navigation": {
       "menu": {
-        "profile": "Profil",
+        "profile": "Mein Profil",
         "settings": "Einstellungen",
         "aboutUs": "Über uns",
         "privacy": "Datenschutz",
@@ -529,10 +529,15 @@
     },
     "profile": {
       "dateNotAvailable": "Datum nicht verfügbar",
-      "loading": "Lädt...",
+      "loading": "Profil wird geladen...",
+      "title": "Mein Profil",
+      "description": "Verwalte deine persönlichen Daten und Kontoeinstellungen",
+      "infoText": "Klicke auf das Kamerasymbol, um deinen Avatar zu aktualisieren.",
+      "format": "Unterstützte Formate: JPG, PNG und GIF. (Max. 5MB)",
       "username": "Nutzername",
       "email": "E-Mail",
-      "registered": "Registriert"
+      "registered": "Mitglied seit",
+      "backToChat": "Zurück zum Chat"
     },
     "settings": {
       "loadingSettings": "Lädt Einstellungen...",

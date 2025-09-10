@@ -273,7 +273,7 @@
     },
     "navigation": {
       "menu": {
-        "profile": "Profile",
+        "profile": "My Profile",
         "settings": "Settings",
         "aboutUs": "About Us",
         "privacy": "Privacy",
@@ -529,10 +529,15 @@
     },
     "profile": {
       "dateNotAvailable": "Date not available",
-      "loading": "Loading...",
+      "loading": "Loading profile...",
+      "title": "User Profile",
+      "description": "Manage your personal information and account settings",
+      "infoText": "Click the camera icon to update your avatar. You can upload images in JPG, PNG, or GIF format (max. 5MB).",
+      "format": "Allowed formats: JPG, PNG and GIF (max. 5MB)",
       "username": "Username",
       "email": "Email",
-      "registered": "Registered"
+      "registered": "Member Since",
+      "backToChat": "Back to Chat"
     },
     "settings": {
       "loadingSettings": "Loading settings...",
