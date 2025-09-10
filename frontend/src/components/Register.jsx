@@ -108,12 +108,12 @@ export const Register = () => {
 
     if (response.ok) {
       await response.json();
-      toast.success(translations.toast.register.success);
+      toast.success(translations.feedback.toast.auth.register.success);
       setTimeout(() => navigate("/register/verify"), 2000);
     } else if (response.status === 409) {
-      toast.error(translations.toast.register.errorAlreadyTaken);
+      toast.error(translations.feedback.toast.auth.register.errorAlreadyTaken);
     } else {
-      toast.error(translations.toast.register.errorServer);
+      toast.error(translations.feedback.toast.auth.register.errorServer);
     }
   }
 
@@ -130,12 +130,12 @@ export const Register = () => {
               />
             </div>
             <div className="space-y-2">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Join Hello, Word!
+              <h1 className="text-balance text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {translations.common.welcomeMessage}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed px-2 sm:px-0">
-                Create your account and start connecting with friends
-              </p>
+              <h1 className="text-balance text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {translations.common.appName}
+              </h1>
             </div>
           </div>
 
@@ -170,9 +170,9 @@ export const Register = () => {
                         : "bg-transparent group-hover:bg-white/60 dark:group-hover:bg-gray-700/50"
                     }`}
                   ></div>
-                  <div className="relative flex items-center justify-center space-x-2">
-                    <LoginTabIcon />
-                    <span>Login</span>
+                  <div className="relative flex items-center justify-center space-x-1">
+                    {/* <LoginTabIcon /> */}
+                    <span>{translations.auth.login.signin}</span>
                   </div>
                   {activeTab === "login" && (
                     <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 rounded-full"></div>
@@ -204,9 +204,9 @@ export const Register = () => {
                         : "bg-transparent group-hover:bg-white/60 dark:group-hover:bg-gray-700/50"
                     }`}
                   ></div>
-                  <div className="relative flex items-center justify-center space-x-2">
-                    <RegisterTabIcon />
-                    <span>Register</span>
+                  <div className="relative flex items-center justify-center space-x-1">
+                    {/* <RegisterTabIcon /> */}
+                    <span>{translations.auth.register.signup}</span>
                   </div>
                   {activeTab === "register" && (
                     <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 rounded-full"></div>
@@ -225,11 +225,8 @@ export const Register = () => {
                 aria-labelledby="register-tab"
               >
                 <div className="text-center mb-6 sm:mb-8">
-                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                    {translations.register.title}
-                  </h2>
                   <p className="text-balance text-gray-500 dark:text-gray-400 mt-2 text-xs sm:text-sm leading-relaxed px-1 sm:px-0">
-                    Fill out the form below to create your account
+                    {translations.auth.register.title}
                   </p>
                 </div>
 
@@ -239,7 +236,7 @@ export const Register = () => {
                     htmlFor="email"
                     className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
-                    {translations.register.emailTitle}
+                    {translations.auth.register.emailTitle}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -250,7 +247,7 @@ export const Register = () => {
                       name="email"
                       id="email"
                       autoComplete="email"
-                      placeholder={translations.register.emailPlaceholder}
+                      placeholder={translations.auth.register.emailPlaceholder}
                       className={`w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 placeholder:text-gray-400 ${
                         formErrors.email
                           ? "border-red-300 dark:border-red-600 focus:ring-red-100 focus:border-red-500"
@@ -279,78 +276,13 @@ export const Register = () => {
                   )}
                 </div>
 
-                {/* Username Input */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="username"
-                    className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
-                  >
-                    {translations.register.usernameTitle}
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                      <UserIcon />
-                    </div>
-                    <input
-                      type="text"
-                      name="username"
-                      id="username"
-                      autoComplete="username"
-                      placeholder={translations.register.usernamePlaceholder}
-                      minLength={2}
-                      maxLength={20}
-                      className={`w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 placeholder:text-gray-400 ${
-                        formErrors.username
-                          ? "border-red-300 dark:border-red-600 focus:ring-red-100 focus:border-red-500"
-                          : "border-gray-200 dark:border-gray-600 focus:ring-indigo-100 focus:border-indigo-500 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700/70"
-                      }`}
-                      required
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  {formErrors.username ? (
-                    <p className="text-red-500 text-xs flex items-center mt-2">
-                      <svg
-                        className="w-4 h-4 mr-1.5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      {formErrors.username}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-start sm:items-center">
-                      <svg
-                        className="w-3 h-3 mr-1 mt-0.5 sm:mt-0 flex-shrink-0"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 00-2 0v4a1 1 0 102 0V6zM9 16a1 1 0 112 0 1 1 0 01-2 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="leading-relaxed">
-                        Choose a username with 2-20 characters (letters,
-                        numbers, -, _)
-                      </span>
-                    </p>
-                  )}
-                </div>
-
                 {/* Password Input */}
                 <div className="space-y-2">
                   <label
                     htmlFor="password"
                     className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
-                    {translations.register.pwTitle}
+                    {translations.auth.register.pwTitle}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -361,7 +293,7 @@ export const Register = () => {
                       name="password"
                       id="password"
                       autoComplete="new-password"
-                      placeholder={translations.register.pwPlaceholder}
+                      placeholder={translations.auth.register.pwPlaceholder}
                       minLength={6}
                       className={`w-full pl-12 pr-14 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 placeholder:text-gray-400 ${
                         formErrors.password
@@ -411,8 +343,73 @@ export const Register = () => {
                         />
                       </svg>
                       <span className="leading-relaxed">
-                        At least 6 characters with uppercase, lowercase, and
-                        numbers
+                        {translations.auth.register.pwHelper}
+                      </span>
+                    </p>
+                  )}
+                </div>
+
+                {/* Username Input */}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="username"
+                    className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
+                  >
+                    {translations.auth.register.usernameTitle}
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                      <UserIcon />
+                    </div>
+                    <input
+                      type="text"
+                      name="username"
+                      id="username"
+                      autoComplete="username"
+                      placeholder={
+                        translations.auth.register.usernamePlaceholder
+                      }
+                      minLength={2}
+                      maxLength={20}
+                      className={`w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 placeholder:text-gray-400 ${
+                        formErrors.username
+                          ? "border-red-300 dark:border-red-600 focus:ring-red-100 focus:border-red-500"
+                          : "border-gray-200 dark:border-gray-600 focus:ring-indigo-100 focus:border-indigo-500 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700/70"
+                      }`}
+                      required
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  {formErrors.username ? (
+                    <p className="text-red-500 text-xs flex items-center mt-2">
+                      <svg
+                        className="w-4 h-4 mr-1.5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      {formErrors.username}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-start sm:items-center">
+                      <svg
+                        className="w-3 h-3 mr-1 mt-0.5 sm:mt-0 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 00-2 0v4a1 1 0 102 0V6zM9 16a1 1 0 112 0 1 1 0 01-2 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span className="leading-relaxed">
+                        {translations.auth.register.usernameHelper}
                       </span>
                     </p>
                   )}
@@ -434,16 +431,16 @@ export const Register = () => {
                         htmlFor="privacy-policy"
                         className="text-gray-700 dark:text-gray-300 cursor-pointer leading-relaxed"
                       >
-                        {translations.register.haveRead}{" "}
+                        {translations.auth.register.haveRead}{" "}
                         <Link
                           to="/privacy"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium underline decoration-indigo-300 hover:decoration-indigo-500 transition-colors"
                         >
-                          {translations.register.privacy}
+                          {translations.auth.register.privacy}
                         </Link>{" "}
-                        {translations.register.onlyGermanPrivacy}
+                        {translations.auth.register.onlyGermanPrivacy}
                       </label>
                     </div>
                   </div>
@@ -470,7 +467,7 @@ export const Register = () => {
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <span>{translations.register.submitBtn}</span>
+                    <span>{translations.auth.register.submitBtn}</span>
                   </button>
                   {Object.keys(formErrors).length > 0 && (
                     <p className="text-xs text-red-500 text-center mt-2 flex items-center justify-center px-2">
@@ -485,7 +482,9 @@ export const Register = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span>Please fix the errors above to continue</span>
+                      <span>
+                        {translations.auth.register.fixErrors}
+                      </span>
                     </p>
                   )}
                 </div>
@@ -513,7 +512,7 @@ export const Register = () => {
                   />
                 </svg>
                 <span className="relative">
-                  {translations.register.alreadyRegistered}
+                  {translations.auth.register.alreadyRegistered}
                 </span>
               </Link>
             </div> */}
