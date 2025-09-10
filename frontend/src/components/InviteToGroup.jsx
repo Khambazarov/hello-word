@@ -1,17 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
 import { BackButtonIcon } from "./_AllSVGs";
+import { fetchUserLanguage } from "../utils/api.js";
+import { getTranslations } from "../utils/languageHelper.js";
+import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 export const InviteToGroup = () => {
   const [usernames, setUsernames] = useState("");
   const [isInviting, setIsInviting] = useState(false);
+  const [translations, setTranslations] = useState({});
 
   const { groupId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const loadLanguage = async () => {
+      try {
+        const userData = await fetchUserLanguage();
+        const userLanguage = userData?.language || fetchBrowserLanguage();
+        setTranslations(getTranslations(userLanguage));
+      } catch (error) {
+        console.error("Failed to fetch user language:", error);
+        const browserLanguage = fetchBrowserLanguage();
+        setTranslations(getTranslations(browserLanguage));
+      }
+    };
+    loadLanguage();
+  }, []);
 
   const { data: groupData, isLoading } = useQuery({
     queryKey: ["groupMembers", groupId],
@@ -105,13 +124,12 @@ export const InviteToGroup = () => {
                     />
                   </svg>
                 </button>
-                <div>
-                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                    Invite Members
-                  </h1>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Loading group information...
-                  </p>
+                <div>                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {translations.groupChat.inviteMembers}
+                </h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {translations.groupChat.loadingGroupInfo}
+                </p>
                 </div>
               </div>
 
@@ -466,7 +484,7 @@ export const InviteToGroup = () => {
                         d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
                       />
                     </svg>
-                    <span>Send Invitations</span>
+                    <span>{translations.groupChat?.sendInvitations || "Send Invitations"}</span>
                   </>
                 )}
               </button>
