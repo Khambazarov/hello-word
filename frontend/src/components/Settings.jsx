@@ -78,11 +78,11 @@ export const Settings = () => {
     },
     onSuccess: (data) => {
       setVolume(data.volume || "middle");
-      toast.success(translations.toast.settings.successUpdate);
+      toast.success(translations.feedback.toast.settings.successUpdate);
       queryClient.invalidateQueries(["userSettings"]);
     },
     onError: () => {
-      toast.error(translations.toast.settings.errorFailedChange);
+      toast.error(translations.feedback.toast.settings.errorFailedChange);
     },
   });
 
@@ -124,10 +124,10 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      toast.success(translations.toast.settings.successUpdate);
+      toast.success(translations.feedback.toast.settings.successUpdate);
     },
     onError: () => {
-      toast.error(translations.toast.settings.errorFailedChange);
+      toast.error(translations.feedback.toast.settings.errorFailedChange);
     },
   });
 
@@ -140,12 +140,12 @@ export const Settings = () => {
       return response.json();
     },
     onSuccess: () => {
-      toast.success(translations.toast.settings.successAccountDelete);
+      toast.success(translations.feedback.toast.settings.successAccountDelete);
       setShow(false);
       navigate("/");
     },
     onError: () => {
-      toast.error(translations.toast.settings.errorAccountDelete);
+      toast.error(translations.feedback.toast.settings.errorAccountDelete);
     },
   });
 
@@ -176,7 +176,7 @@ export const Settings = () => {
         <div className="flex flex-col items-center justify-center flex-1 p-6">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">
-            {translations.settings.loadingSettings || "Loading settings..."}
+            {translations.content.settings.loadingSettings || "Loading settings..."}
           </p>
         </div>
       </div>
@@ -187,7 +187,7 @@ export const Settings = () => {
     <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="xl:h-25 z-10 h-16 flex justify-center items-center sticky top-0 bg-gray-700 shadow-md">
         <h1 className="md:text-base xl:text-2xl text-white tracking-widest font-bold">
-          Settings
+          {translations.settings?.title || "Settings"}
         </h1>
         <button
           onClick={() => navigate("/chatarea")}
@@ -249,7 +249,7 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.settings.selectLangTitle || "Language Settings"}
+                {translations.content.settings.selectLangTitle || "Language Settings"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Choose your preferred language
@@ -269,7 +269,7 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <UkFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations.settings.lang.en}
+                    {translations.content.settings.lang.en}
                   </span>
                 </div>
               </label>
@@ -286,7 +286,7 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <GermanFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations.settings.lang.de}
+                    {translations.content.settings.lang.de}
                   </span>
                 </div>
               </label>
@@ -310,7 +310,7 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.settings.volumeTitle}
+                {translations.content.settings.volumeTitle}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Set notification sound volume
@@ -322,17 +322,17 @@ export const Settings = () => {
                 {
                   value: "silent",
                   icon: "🔇",
-                  label: translations.settings.volume.silent,
+                  label: translations.content.settings.volume.silent,
                 },
                 {
                   value: "middle",
                   icon: "🔉",
-                  label: translations.settings.volume.middle,
+                  label: translations.content.settings.volume.middle,
                 },
                 {
                   value: "full",
                   icon: "🔊",
-                  label: translations.settings.volume.loud,
+                  label: translations.content.settings.volume.loud,
                 },
               ].map((vol) => (
                 <label
@@ -380,7 +380,7 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.settings.changePwTitle}
+                {translations.content.settings.changePwTitle}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Update your account password
@@ -393,7 +393,7 @@ export const Settings = () => {
                   htmlFor="oldPassword"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
-                  {translations.settings.currentPwTitle}
+                  {translations.content.settings.currentPwTitle}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -404,7 +404,7 @@ export const Settings = () => {
                     name="oldPassword"
                     id="oldPassword"
                     autoComplete="current-password"
-                    placeholder={translations.settings.currentPwPlaceholder}
+                    placeholder={translations.content.settings.currentPwPlaceholder}
                     minLength={6}
                     className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
@@ -424,7 +424,7 @@ export const Settings = () => {
                   htmlFor="newPassword"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
-                  {translations.settings.newPwTitle}
+                  {translations.content.settings.newPwTitle}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -435,7 +435,7 @@ export const Settings = () => {
                     name="newPassword"
                     id="newPassword"
                     autoComplete="new-password"
-                    placeholder={translations.settings.newPwPlaceholder}
+                    placeholder={translations.content.settings.newPwPlaceholder}
                     minLength={6}
                     className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
@@ -467,7 +467,7 @@ export const Settings = () => {
                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                   />
                 </svg>
-                <span>{translations.settings.changePwBtn}</span>
+                <span>{translations.content.settings.changePwBtn}</span>
               </button>
             </form>
           </div>
@@ -491,7 +491,7 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">
-                {translations.settings.deleteAccountTitle}
+                {translations.content.settings.deleteAccountTitle}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Permanently delete your account and all data
@@ -541,7 +541,7 @@ export const Settings = () => {
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                 />
               </svg>
-              <span>{translations.settings.deleteBtn}</span>
+              <span>{translations.content.settings.deleteBtn}</span>
             </button>
           </div>
         </div>
@@ -570,7 +570,7 @@ export const Settings = () => {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {translations.settings.prompt.title}
+                {translations.content.settings.prompt.title}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
                 This action cannot be undone. All your data will be permanently
@@ -581,13 +581,13 @@ export const Settings = () => {
                   onClick={() => setShow(false)}
                   className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg font-medium transition-colors"
                 >
-                  {translations.settings.prompt.cancelBtn}
+                  {translations.content.settings.prompt.cancelBtn}
                 </button>
                 <button
                   onClick={() => deleteAccountMutation.mutate()}
                   className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                 >
-                  {translations.settings.prompt.deleteBtn}
+                  {translations.content.settings.prompt.deleteBtn}
                 </button>
               </div>
             </div>
