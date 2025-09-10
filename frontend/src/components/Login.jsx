@@ -31,7 +31,7 @@ export const Login = () => {
     const email = e.target.email.value.toLowerCase().trim();
     const password = e.target.password.value.trim();
 
-    toast.loading(translations.toast.login.waiting);
+    toast.loading(translations.feedback.toast.auth.login.waiting);
 
     const response = await fetch("/api/users/login", {
       method: "POST",
@@ -46,14 +46,14 @@ export const Login = () => {
     toast.dismiss();
 
     if (response.ok && data.isVerified === true) {
-      toast.success(translations.toast.login.success);
+      toast.success(translations.feedback.toast.auth.login.success);
       setTimeout(() => navigate("/chatarea"), 2000);
     } else if (data.isVerified === false) {
-      toast.error(translations.toast.login.errorLoginVerify);
+      toast.error(translations.feedback.toast.auth.login.errorLoginVerify);
     } else if (response.status === 404) {
-      toast.error(translations.toast.login.errorUsernameOrPw);
+      toast.error(translations.feedback.toast.auth.login.errorUsernameOrPw);
     } else {
-      toast.error(translations.toast.login.errorFailedLogin);
+      toast.error(translations.feedback.toast.auth.login.errorFailedLogin);
     }
   }
 
@@ -70,12 +70,12 @@ export const Login = () => {
               />
             </div>
             <div className="space-y-2">
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Welcome Back!
+              <h1 className="text-balance text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {translations.common.welcomeBack}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed px-2 sm:px-0">
-                Sign in to continue to Hello, Word!
-              </p>
+              <h1 className="text-balance text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {translations.common.appName}
+              </h1>
             </div>
           </div>
 
@@ -112,9 +112,9 @@ export const Login = () => {
                         : "bg-transparent group-hover:bg-white/60 dark:group-hover:bg-gray-700/50"
                     }`}
                   ></div>
-                  <div className="relative flex items-center justify-center space-x-2">
-                    <LoginTabIcon />
-                    <span>Login</span>
+                  <div className="relative flex items-center justify-center space-x-1">
+                    {/* <LoginTabIcon /> */}
+                    <span>{translations.auth.login.signin}</span>
                   </div>
                   {activeTab === "login" && (
                     <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 rounded-full"></div>
@@ -144,9 +144,9 @@ export const Login = () => {
                         : "bg-transparent group-hover:bg-white/60 dark:group-hover:bg-gray-700/50"
                     }`}
                   ></div>
-                  <div className="relative flex items-center justify-center space-x-2">
-                    <RegisterTabIcon />
-                    <span>Register</span>
+                  <div className="relative flex items-center justify-center space-x-1">
+                    {/* <RegisterTabIcon /> */}
+                    <span>{translations.auth.register.signup}</span>
                   </div>
                   {activeTab === "register" && (
                     <div className="absolute bottom-0 left-4 right-4 h-1 bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-500 rounded-full"></div>
@@ -165,20 +165,17 @@ export const Login = () => {
                 aria-labelledby="login-tab"
               >
                 <div className="text-center mb-6 sm:mb-8">
-                  <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                    {translations.login.title}
-                  </h2>
                   <p className="text-balance text-gray-500 dark:text-gray-400 mt-2 text-xs sm:text-sm leading-relaxed px-1 sm:px-0">
-                    Please sign in to your account to continue
+                    {translations.auth.login.title}
                   </p>
-                </div>{" "}
+                </div>
                 {/* Email Input */}
                 <div className="space-y-2">
                   <label
                     htmlFor="email"
                     className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
-                    {translations.login.emailTitle}
+                    {translations.auth.login.emailTitle}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -189,7 +186,7 @@ export const Login = () => {
                       name="email"
                       id="email"
                       autoComplete="email"
-                      placeholder={translations.login.emailPlaceholder}
+                      placeholder={translations.auth.login.emailPlaceholder}
                       className="w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 placeholder:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/70"
                       required
                       autoFocus
@@ -202,7 +199,7 @@ export const Login = () => {
                     htmlFor="password"
                     className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
-                    {translations.login.pwTitle}
+                    {translations.auth.login.pwTitle}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -213,7 +210,7 @@ export const Login = () => {
                       name="password"
                       id="password"
                       autoComplete="current-password"
-                      placeholder={translations.login.pwPlaceholder}
+                      placeholder={translations.auth.login.pwPlaceholder}
                       minLength={6}
                       className="w-full pl-12 pr-14 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 placeholder:text-gray-400 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/70"
                       required
@@ -230,14 +227,14 @@ export const Login = () => {
                     </button>
                   </div>
                 </div>
-                {/* Forgot Password Link */}
-                <div className="text-right">
+                {/* Email Verification && Forgot Password */}
+                <div className="flex justify-between">
                   <button
                     type="button"
-                    onClick={() => navigate("/forgot-pw")}
+                    onClick={() => navigate("/register/verify")}
                     className="inline-flex items-center text-indigo-600 dark:text-indigo-400 text-sm hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors duration-200 group"
                   >
-                    <svg
+                    {/* <svg
                       className="w-4 h-4 mr-1 group-hover:translate-x-0.5 transition-transform duration-200"
                       fill="none"
                       stroke="currentColor"
@@ -249,10 +246,30 @@ export const Login = () => {
                         strokeWidth={2}
                         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       />
-                    </svg>
-                    {translations.login.forgotPw}
+                    </svg> */}
+                    {translations.auth.login.notYetVerified}
                   </button>
-                </div>{" "}
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-pw")}
+                    className="inline-flex items-center text-indigo-600 dark:text-indigo-400 text-sm hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors duration-200 group"
+                  >
+                    {/* <svg
+                      className="w-4 h-4 mr-1 group-hover:translate-x-0.5 transition-transform duration-200"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg> */}
+                    {translations.auth.login.forgotPw}
+                  </button>
+                </div>
                 {/* Login Button */}
                 <div className="pt-2 sm:pt-4">
                   <button
@@ -273,14 +290,14 @@ export const Login = () => {
                         d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
                       />
                     </svg>
-                    <span>{translations.login.loginBtn}</span>
+                    <span>{translations.auth.login.loginBtn}</span>
                   </button>
                 </div>
               </form>
 
               {/* Additional Action - Email Verification Only */}
-              <div className="px-6 sm:px-8 pb-6">
-                <Link
+              {/* <div className="px-6 sm:px-8 pb-6"> */}
+              {/* <Link
                   to="/register/verify"
                   className="group relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white w-full px-4 py-2 sm:py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                 >
@@ -299,10 +316,10 @@ export const Login = () => {
                     />
                   </svg>
                   <span className="relative text-xs sm:text-sm text-nowrap">
-                    {translations.login.notYetVerified}
+                    {translations.auth.login.notYetVerified}
                   </span>
-                </Link>
-              </div>
+                </Link> */}
+              {/* </div> */}
             </div>
           </div>
         </div>
