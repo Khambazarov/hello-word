@@ -56,10 +56,6 @@ export const ForgotPw = () => {
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {translations.auth.forgotPw?.title || "Reset Password"}
             </h1>
-            {/* <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {translations.auth.forgotPw?.subtitle ||
-                "Enter your email to receive a password reset link"}
-            </p> */}
           </div>
 
           {/* Reset Password Form */}
@@ -67,12 +63,6 @@ export const ForgotPw = () => {
             onSubmit={handleResetPw}
             className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-8 space-y-6"
           >
-            {/* <div className="text-center mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {translations.auth.forgotPw.title}
-              </h2>
-            </div> */}
-
             {/* Info Box */}
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
               <div className="flex items-start space-x-2">
@@ -119,7 +109,7 @@ export const ForgotPw = () => {
                 htmlFor="email"
                 className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.forgotPw.emailTitle}
+                {translations.auth.forgotPw.emailTitle || "Email Address"}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -130,7 +120,10 @@ export const ForgotPw = () => {
                   name="email"
                   id="email"
                   autoComplete="email"
-                  placeholder={translations.auth.forgotPw.emailPlaceholder}
+                  placeholder={
+                    translations.auth.forgotPw.emailPlaceholder ||
+                    "Your email address"
+                  }
                   className="w-full pl-10 pr-4 py-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   required
                   autoFocus
@@ -156,7 +149,9 @@ export const ForgotPw = () => {
                   d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              <span>{translations.auth.forgotPw.sendEmailBtn}</span>
+              <span>
+                {translations.auth.forgotPw.sendEmailBtn || "Send Code"}
+              </span>
             </button>
           </form>
 
@@ -179,7 +174,9 @@ export const ForgotPw = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              <span>{translations.auth.forgotPw.backToLogin}</span>
+              <span>
+                {translations.auth.forgotPw.backToLogin || "Back to Login"}
+              </span>
             </Link>
           </div>
         </div>
