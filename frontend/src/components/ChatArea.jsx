@@ -331,7 +331,7 @@ export const ChatArea = () => {
                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                       />
                     </svg>
-                    {translations.menu.profile}
+                    {translations.ui.navigation.menu.profile}
                   </button>
 
                   <button
@@ -360,7 +360,7 @@ export const ChatArea = () => {
                         d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    {translations.menu.settings}
+                    {translations.ui.navigation.menu.settings}
                   </button>
 
                   <button
@@ -383,7 +383,7 @@ export const ChatArea = () => {
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    {translations.menu.aboutUs}
+                    {translations.ui.navigation.menu.aboutUs}
                   </button>
 
                   <a
@@ -406,7 +406,7 @@ export const ChatArea = () => {
                         d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                       />
                     </svg>
-                    {translations.menu.privacy}
+                    {translations.ui.navigation.menu.privacy}
                     <svg
                       className="w-3 h-3 ml-auto"
                       fill="none"
@@ -443,7 +443,7 @@ export const ChatArea = () => {
                           d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                         />
                       </svg>
-                      {translations.menu.logout}
+                      {translations.ui.navigation.menu.logout}
                     </button>
                   </div>
                 </div>
@@ -457,7 +457,7 @@ export const ChatArea = () => {
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
             <p className="text-gray-600 dark:text-gray-300">
-              {translations.chatArea.loading}
+              {translations.chat.area.loading}
             </p>
           </div>
         ) : chatroomsError ? (
@@ -476,7 +476,7 @@ export const ChatArea = () => {
               />
             </svg>
             <p className="text-red-600 dark:text-red-400">
-              {translations.chatArea.errorLoadingChatrooms}
+              {translations.chat.area.errorLoadingChatrooms}
             </p>
           </div>
         ) : (
@@ -577,7 +577,7 @@ export const ChatArea = () => {
                             {chatroom.isGroupChat
                               ? chatroom.groupName
                               : (chatroom.usernames?.join(", ") ??
-                                translations.chatArea.noUsername)}
+                                translations.chat.area.noUsername)}
                           </h3>
                           <div className="flex items-center space-x-2 flex-shrink-0">
                             {chatroom.isGroupChat && (
@@ -607,7 +607,7 @@ export const ChatArea = () => {
                         <div className="flex items-center">
                           {chatroom.isDeletedAccount ? (
                             <span className="text-sm text-red-500 italic">
-                              {translations.chatArea.deletedAccount}
+                              {translations.chat.area.deletedAccount}
                             </span>
                           ) : chatroom.lastMessage ? (
                             <div className="flex items-center space-x-2 flex-1 min-w-0">
@@ -644,7 +644,7 @@ export const ChatArea = () => {
                                       />
                                     </svg>
                                     <span>
-                                      {translations.chatArea.sentImage}
+                                      {translations.chat.area.sentImage}
                                     </span>
                                   </span>
                                 ) : isAudioUrl(chatroom.lastMessage.content) ? (
@@ -663,7 +663,7 @@ export const ChatArea = () => {
                                       />
                                     </svg>
                                     <span>
-                                      {translations.chatArea.sentAudioMessage}
+                                      {translations.chat.area.sentAudioMessage}
                                     </span>
                                   </span>
                                 ) : (
@@ -676,7 +676,7 @@ export const ChatArea = () => {
                             </div>
                           ) : (
                             <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                              {translations.chatArea.noMessages}
+                              {translations.chat.area.noMessages}
                             </p>
                           )}
                         </div>
@@ -720,10 +720,12 @@ export const ChatArea = () => {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  No conversations yet
+                  {translations.chat.area?.noConversationsTitle ||
+                    "No conversations yet"}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  Start your first conversation or create a group chat
+                  {translations.chat.area?.noConversationsText ||
+                    "Start your first conversation or create a group chat"}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <button
@@ -743,7 +745,7 @@ export const ChatArea = () => {
                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                       />
                     </svg>
-                    Start New Chat
+                    {translations.chat.area?.startNewChat || "Start New Chat"}
                   </button>
                   <button
                     onClick={() => navigate("/chatarea/groups/create")}
@@ -762,7 +764,7 @@ export const ChatArea = () => {
                         d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                       />
                     </svg>
-                    Create Group
+                    {translations.chat.area?.createGroup || "Create Group"}
                   </button>
                 </div>
               </div>
@@ -792,7 +794,7 @@ export const ChatArea = () => {
               <button
                 onClick={() => navigate("/chatarea/exist")}
                 className="group w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
-                title="Add Person"
+                title={translations.chat.area?.addPerson || "Add Person"}
               >
                 <svg
                   className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
