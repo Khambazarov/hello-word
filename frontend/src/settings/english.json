@@ -1,249 +1,643 @@
 {
-  "menu": {
-    "profile": "Profile",
-    "settings": "Settings",
-    "aboutUs": "About us",
-    "privacy": "Privacy",
-    "logout": "Logout"
-  },
-
-  "profile": {
-    "dateNotAvailable": "Date not available",
+  "common": {
+    "appName": "Hello, Word!",
     "loading": "Loading...",
-    "username": "Username",
-    "email": "Email",
-    "registered": "Registered"
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "send": "Send",
+    "close": "Close",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "confirm": "Confirm",
+    "apply": "Apply",
+    "submit": "Submit",
+    "search": "Search",
+    "welcomeMessage": "Welcome to",
+    "welcomeBack": "Welcome back to"
   },
 
-  "settings": {
-    "loadingSettings": "Loading settings...",
-    "selectLangTitle": "Select language",
-    "lang": {
-      "en": "EN",
-      "de": "DE"
-    },
-    "volumeTitle": "Audio volume",
-    "volume": {
-      "silent": "Silent",
-      "middle": "Middle",
-      "loud": "Loud"
-    },
-    "changePwTitle": "Change password",
-    "currentPwTitle": "Current password",
-    "currentPwPlaceholder": "Current password",
-    "newPwTitle": "New password",
-    "newPwPlaceholder": "New password",
-    "changePwBtn": "Change password",
-    "deleteAccountTitle": "Delete your account",
-    "deleteBtn": "Delete",
-    "prompt": {
-      "title": "Delete your account?",
-      "deleteBtn": "Delete",
-      "cancelBtn": "Cancel"
-    }
-  },
-
-  "aboutUs": {
-    "title": "About Us",
-    "introDev": "We, Olivia and Renat, are passionate developers who took on the challenge of creating a powerful and user-friendly real-time chat application. With our experience in web and software development, we successfully brought this project from concept to implementation. Our goal was to build a modern, fast, and secure communication platform.",
-    "appDevTitle": "App Development",
-    "appDev": "Our real-time chat application is built on the MERN stack (MongoDB, Express, React, Node.js). By utilizing cutting-edge technologies and best practices, we developed a robust and scalable architecture.",
-    "usedTechTitle": "Technologies Used",
-    "usedTechFrontend": "Frontend: React with Vite for an optimized development environment, Zustand for state management, and Tailwind CSS/React-hot-toast for an appealing UI design.",
-    "usedTechBackend": "Backend: Express.js as the web framework for Node.js, MongoDB as the NoSQL database, bcrypt for password encryption, and Express-session for secure authentication.",
-    "usedTechSocket": "Real-time Communication: Socket.io enables smooth real-time messaging.",
-    "usedTechClaudinary": "Cloud Integration: Cloudinary is used for storing and managing images.",
-    "featuresTitle": "App Features",
-    "featuresRegister": "Our application allows users to register, log in, and communicate in real-time.",
-    "featuresIncludeTitle": "Key features include:",
-    "featuresUI": "Modern user interface, optimized for both desktop and mobile devices",
-    "featuresAuth": "User registration and login with secure authentication",
-    "featuresUpload": "Image uploads and media support",
-    "featuresMessaging": "Real-time messaging powered by Socket.io",
-    "projectTitle": "Project Links",
-    "sourceCode": "Source Code:",
-    "ourContacts": "Our Contacts",
-    "feedback": "We appreciate feedback and suggestions and warmly invite developers to contribute to the further development of the app!"
-  },
-
-  "privacy": {
-    "loading": "Loading...",
-    "title": "Privacy policy",
-    "dataController": "1. Data Controller",
-    "dataDescription": "This real-time chat app is a training project developed for educational purposes. The developers of this training project are responsible for data processing within this app.",
-    "dataTypes": "2. Types of Processed Data",
-    "dataTypesDescription": "When using our chat app, we collect and process the following personal data:",
-    "dataTypesList": [
-      "✉️ Message content (text messages)",
-      "🖼️ Uploaded images (stored and sent via Cloudinary)",
-      "👤 Username or display name (if provided)",
-      "🕒 Timestamp of messages"
-    ],
-    "purpose": "3. Purpose of Data Processing",
-    "purposeDescription": "The collected data is used solely for operating the chat function, enabling real-time communication between users. There is no commercial use or transfer of data to third parties.",
-    "security": "4. Security and Encryption",
-    "securityDescription": "Please note that all messages and images are transmitted and stored unencrypted. This poses a risk that third parties may access transmitted content. We recommend not sharing sensitive or confidential information via this app. However, passwords are securely stored using bcrypt encryption to ensure user account security.",
-    "userRights": "5. User Rights",
-    "userRightsDescription": "As a user of the chat app, you have the following rights:",
-    "userRightsList": [
-      "📄 Access to stored personal data",
-      "✏️ Correction of incorrect or incomplete data",
-      "🗑️ Deletion of your data",
-      "⏸️ Restriction of data processing"
-    ],
-    "disclaimer": "6. Disclaimer",
-    "disclaimerDescription": "This app is in the development phase and is operated for educational purposes. We assume no liability for potential data loss or unauthorized access to transmitted content.",
-    "contact": "7. Contact",
-    "contactDescription": "If you have any questions regarding data processing or wish to exercise your rights, you can reach us via the contact information provided on the About Us page.",
-    "lastUpdated": "Last updated: March 2025"
-  },
-
-  "toast": {
-    "settings": {
-      "loading": "Loading...",
-      "successUpdate": "Updated successfully!",
-      "successAccountDelete": "Account deleted!",
-      "errorAccountDelete": "Failed to delete account. Please try again!",
-      "errorFailedChange": "Failed to change!"
+  "auth": {
+    "login": {
+      "signin": "Sign In",
+      "logout": "Logout",
+      "title": "Sign in to view your messages",
+      "emailTitle": "Email",
+      "emailPlaceholder": "Your email address",
+      "pwTitle": "Password",
+      "pwPlaceholder": "Your password",
+      "forgotPw": "Forgot password?",
+      "loginBtn": "Sign In",
+      "notYetRegistered": "Don't have an account yet?",
+      "notYetVerified": "Email verified?"
     },
     "register": {
-      "success": "Registered successfully!",
-      "errorAlreadyTaken": "Registration Failed. Username or Email already taken",
-      "errorServer": "Registration Failed. Internal server error"
+      "signup": "Sign Up",
+      "title": "Fill out the form below to create your account",
+      "emailTitle": "Email",
+      "emailPlaceholder": "Email address",
+      "usernameTitle": "Username",
+      "usernamePlaceholder": "Unique Username",
+      "usernameHelper": "2-20 characters & allowed: letters, numbers, -, _",
+      "pwTitle": "Password",
+      "pwPlaceholder": "Strong Password",
+      "pwHelper": "6+ characters, incl. uppercase, lowercase & numbers.",
+      "haveRead": "I agree to the",
+      "privacy": " Privacy Policy",
+      "onlyGermanPrivacy": "",
+      "submitBtn": "Create Account",
+      "alreadyRegistered": "Already registered?",
+      "fixErrors": "Please fix the errors to continue"
     },
     "verify": {
-      "loading": "Loading...",
-      "success": "Verified Successfully.",
-      "errorAlreadyVerified": "Verification failed. Your email is already verified",
-      "errorNoMatch": "Verification failed. Key and email don't match",
-      "errorServer": "Verification failed. Internal server error"
-    },
-    "login": {
-      "waiting": "Waiting...",
-      "success": "Logged in Successfully.",
-      "errorLoginVerify": "Login failed. You need to verify your email.",
-      "errorUsernameOrPw": "Login failed. Username or password is wrong.",
-      "errorFailedLogin": "Login Failed."
+      "title": "Verify Email",
+      "description": "You will receive a 6-digit code via email. Enter it here to verify your account",
+      "verificationSteps": "Verification steps:",
+      "step1": "Enter your email address used during registration",
+      "step2": "Check your email inbox (and spam folder)",
+      "step3": "Copy the 6-digit verification code",
+      "step4": "Paste the code into the field below to activate your account",
+      "emailTitle": "Email",
+      "emailPlaceholder": "Your email address",
+      "key": "Verification Code",
+      "keyText": "Paste it here to verify your account",
+      "submitBtn": "Verify Account",
+      "backToLogin": "Back to Login"
     },
     "forgotPw": {
-      "waiting": "Waiting...",
-      "success": "Email sent with new password!",
-      "errorNotFound": "No user found with this email!",
-      "errorKeyNotCorrect": "Key is not correct, please try again!",
-      "errorFailed": "Progress failed!"
+      "title": "Reset Password",
+      "howItWorksTitle": "How it works:",
+      "step1": "Enter the email address associated with your account",
+      "step2": "We will send a 6-digit verification code to your email",
+      "step3": "Follow the instructions in the email to reset your password",
+      "emailTitle": "Email",
+      "emailPlaceholder": "Your email address",
+      "sendEmailBtn": "Send Code",
+      "backToLogin": "Back to Login"
     },
     "newPw": {
-      "waiting": "Waiting...",
-      "success": "Password successfully changed!",
-      "errorNotFound": "No user found with this email!",
-      "errorKeyNotCorrect": "Key is not correct, please try again!",
-      "error": "Failed, please try again!"
-    },
-    "existChatroom": {
-      "alreadyChatted": "You have already chatted with ",
-      "errorUserNotFound": "username not found.",
-      "errorSearchYourself": "You can't search yourself.",
-      "errorFailedToFind": "Failed to find the user.",
-      "errorNameRequired": "you have to type a username.",
-      "errorDeletedUser": "You cannot send messages to a deleted user!",
-      "errorServer": "Internal Server Error!"
-    },
-    "chatroom": {
-      "audioNotSupported": "Audio recording is not supported on this device."
+      "title": "New Password",
+      "emailTitle": "Email",
+      "emailPlaceholder": "Your email address",
+      "resetKeyTitle": "Verification Code",
+      "resetKeyPlaceholder": "6-digit code",
+      "pwTitle": "New Password",
+      "pwPlaceholder": "New Password",
+      "setBtn": "Change Password",
+      "backToLogin": "Back to Login"
     }
   },
 
-  "register": {
-    "title": "Create Account",
-    "emailTitle": "Email Address",
-    "emailPlaceholder": "Enter your email address",
-    "usernameTitle": "Username",
-    "usernamePlaceholder": "Choose a unique username",
-    "pwTitle": "Password",
-    "pwPlaceholder": "Create a secure password",
-    "haveRead": "I have read and agree to the",
-    "privacy": " Privacy Policy",
-    "onlyGermanPrivacy": "",
-    "submitBtn": "Create Account",
-    "alreadyRegistered": "Already have an account?"
+  "chat": {
+    "room": {
+      "loading": "Loading chat...",
+      "unreadMessage": "new message ↓",
+      "unreadMessages": "new messages ↓",
+      "timestampUpdateText": "edited",
+      "failedToFindUser": "User not found"
+    },
+    "area": {
+      "loading": "Loading...",
+      "sentImage": "Image",
+      "sentAudioMessage": "Voice message",
+      "noUsername": "Unknown",
+      "deletedAccount": "Deleted Account",
+      "noMessages": "No messages",
+      "errorLoadingChatrooms": "Could not load chats",
+      "noConversationsTitle": "No conversations yet",
+      "noConversationsText": "Start your first conversation or create a group chat",
+      "startNewChat": "Start New Chat",
+      "createGroup": "Create Group",
+      "addPerson": "Add Person"
+    },
+    "settings": {
+      "deleteChat": "Delete Chat",
+      "confirmDeleteChat": "Are you sure you want to delete this chat?",
+      "thisWillPermanentlyDelete": "This will permanently delete all messages and cannot be undone.",
+      "backToGroup": "Back to Group"
+    },
+    "existing": {
+      "loading": "Loading...",
+      "searchUserTitle": "Search User",
+      "placeholder": "John.Doe",
+      "createChatroomBtn": "Start Chat"
+    },
+    "new": {
+      "loading": "Loading...",
+      "firstMessage": "Write your first message",
+      "to": "to: "
+    }
   },
 
-  "verify": {
-    "title": "Verify your email",
-    "description": "You will receive an email with a 6-digit key, please use it to verify your email address",
-    "emailTitle": "Email",
-    "emailPlaceholder": "john-doe@mail.com",
-    "key": "Reset key",
-    "submitBtn": "Verify your account",
-    "backToLogin": "Back to login? "
+  "group": {
+    "createTitle": "Create Group Chat",
+    "createButton": "Create Group Chat",
+    "createGroup": "Create Group",
+    "groupName": "Group Name",
+    "groupDescription": "Group Description",
+    "groupNamePlaceholder": "Enter group name...",
+    "groupDescriptionPlaceholder": "Enter group description (optional)...",
+    "noDescriptionYet": "No group description yet.",
+    "inviteMembers": "Invite Members",
+    "searchMembers": "Search members to invite",
+    "searchPlaceholder": "Search users...",
+    "inviteButton": "Invite to Group",
+    "failedToCreate": "Failed to create group",
+    "nameRequired": "Group name is required",
+    "nameTooLong": "Group name too long (max. 50 characters)",
+    "descriptionTooLong": "Description too long (max. 200 characters)",
+    "inviteNewMembers": "Invite New Members",
+    "currentMembers": "Current Members",
+    "membersInGroup": "Members in this group",
+    "addUsersToGroup": "Add users to group",
+    "howToInvite": "How to invite:",
+    "usernamesInstruction": "Enter usernames separated by commas",
+    "usersNeedAccounts": "Users must have accounts to receive invitations",
+    "multipleInvite": "Multiple users can be invited at once",
+    "usernamesToInvite": "Usernames to invite",
+    "required": "(Required)",
+    "separateCommas": "Separate multiple usernames with commas",
+    "users": "Users",
+    "user": "User",
+    "sendingInvitations": "Sending invitations...",
+    "sendInvitations": "Send Invitations",
+    "creator": "Creator",
+    "admin": "Admin",
+    "loadingGroupData": "Loading group data...",
+    "loadingGroupInfo": "Loading group info...",
+    "expandGroup": "Expand your group by inviting friends and colleagues to the conversation",
+    "groupCreationMessage": "This message will be sent when the group is created",
+    "groupSettings": "Group Settings",
+    "manageSettings": "Manage settings and members",
+    "members": "Members",
+    "groupInformation": "Group Information",
+    "basicGroupDetails": "Basic group details and settings",
+    "adminPrivileges": "Admin Privileges",
+    "creatorPrivileges": "As group creator you have full control: edit group info, manage all members, promote/demote admins and delete the group.",
+    "adminRights": "You can edit group info, manage regular members and invite new users. Only the creator can manage other admins.",
+    "nameIsRequired": "Name is required",
+    "nameMustBeTwoChars": "Name must be at least 2 characters",
+    "groupDescriptionOptional": "Group Description (Optional)",
+    "descriptionPlaceholder": "Enter group description...",
+    "promote": "Promote",
+    "demote": "Demote",
+    "remove": "Remove",
+    "leaveGroup": "Leave Group",
+    "deleteGroup": "Delete Group",
+    "removeMember": "Remove Member",
+    "confirmRemoveMember": "Are you sure you want to remove this member from the group?",
+    "removeButton": "Remove",
+    "cancelButton": "Cancel",
+    "confirmLeaveGroup": "Are you sure you want to leave this group?",
+    "leaveButton": "Leave",
+    "confirmDeleteGroup": "Are you sure you want to delete this group?",
+    "deleteAllMessages": "Delete all group messages",
+    "deleteAllData": "Delete all group data and settings",
+    "thisActionCannotBeUndone": "This action cannot be undone",
+    "deleteButton": "Delete Group",
+    "customizeGroup": "Customize your group experience and manage member permissions"
   },
 
-  "login": {
-    "title": "Welcome Back",
-    "emailTitle": "Email Address",
-    "emailPlaceholder": "Enter your email address",
-    "pwTitle": "Password",
-    "pwPlaceholder": "Enter your password",
-    "forgotPw": "Forgot Password?",
-    "loginBtn": "Sign In",
-    "notYetRegistered": "Don't have an account?",
-    "notYetVerified": "Need to verify your email?"
+  "ui": {
+    "buttons": {
+      "next": "Next",
+      "previous": "Previous",
+      "done": "Done",
+      "finish": "Finish",
+      "continue": "Continue",
+      "skip": "Skip",
+      "retry": "Retry",
+      "refresh": "Refresh",
+      "reload": "Reload",
+      "update": "Update",
+      "reset": "Reset"
+    },
+    "actions": {
+      "upload": "Upload",
+      "download": "Download",
+      "copy": "Copy",
+      "paste": "Paste",
+      "cut": "Cut",
+      "select": "Select",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "filter": "Filter",
+      "sort": "Sort",
+      "clear": "Clear"
+    },
+    "display": {
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "show": "Show",
+      "hide": "Hide",
+      "preview": "Preview",
+      "fullscreen": "Fullscreen",
+      "minimize": "Minimize",
+      "maximize": "Maximize",
+      "showPassword": "Show Password",
+      "hidePassword": "Hide Password"
+    },
+    "forms": {
+      "required": "Required",
+      "optional": "Optional",
+      "placeholder": "Placeholder",
+      "choose": "Choose",
+      "browse": "Browse"
+    },
+    "tooltips": {
+      "backToChat": "Back to Chat",
+      "backToChatList": "Back to Chat List",
+      "backToChatArea": "Back to Chat Overview",
+      "backToGroup": "Back to Group",
+      "addEmoji": "Add Emoji",
+      "uploadImage": "Upload Image",
+      "startRecording": "Start Voice Recording",
+      "stopRecording": "Stop Recording",
+      "sendMessage": "Send Message",
+      "scrollToBottom": "Scroll to Bottom",
+      "editMessage": "Edit Message",
+      "deleteMessage": "Delete Message",
+      "editDescription": "Edit Description",
+      "saveDescription": "Save Description",
+      "createGroupChat": "Create Group Chat",
+      "addPerson": "Add Person",
+      "groupSettings": "Group Settings",
+      "chatSettings": "Chat Settings"
+    },
+    "navigation": {
+      "menu": {
+        "profile": "Profile",
+        "settings": "Settings",
+        "aboutUs": "About Us",
+        "privacy": "Privacy",
+        "logout": "Logout"
+      },
+      "pages": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "inbox": "Inbox",
+        "sent": "Sent",
+        "drafts": "Drafts",
+        "trash": "Trash",
+        "archive": "Archive",
+        "favorites": "Favorites",
+        "recent": "Recent",
+        "help": "Help",
+        "support": "Support",
+        "contact": "Contact",
+        "feedback": "Feedback",
+        "account": "Account",
+        "profile": "Profile",
+        "preferences": "Preferences",
+        "security": "Security",
+        "privacy": "Privacy",
+        "notifications": "Notifications",
+        "appearance": "Appearance",
+        "language": "Language",
+        "theme": "Theme"
+      }
+    }
   },
 
-  "forgotPw": {
-    "title": "Reset your Password",
-    "emailTitle": "Email",
-    "emailPlaceholder": "Email",
-    "sendEmailBtn": "Send Email",
-    "backToLogin": "Back to login?"
+  "feedback": {
+    "errors": {
+      "general": {
+        "networkError": "Network error",
+        "serverError": "Server error",
+        "connectionLost": "Connection lost",
+        "unauthorized": "Unauthorized",
+        "forbidden": "Access denied",
+        "notFound": "Not found",
+        "timeout": "Timeout",
+        "invalidInput": "Invalid input",
+        "invalidFormat": "Invalid format",
+        "operationFailed": "Operation failed",
+        "permissionDenied": "Permission denied",
+        "sessionExpired": "Session expired",
+        "noChangesToSave": "No changes to save"
+      },
+      "auth": {
+        "accountLocked": "Account locked",
+        "tooManyAttempts": "Too many attempts",
+        "weakPassword": "Weak password",
+        "passwordMismatch": "Passwords don't match",
+        "emailInvalid": "Invalid email address",
+        "usernameExists": "Username already taken",
+        "emailExists": "Email already registered",
+        "userNotFound": "User not found",
+        "incorrectPassword": "Incorrect password",
+        "accountNotVerified": "Account not verified",
+        "verificationFailed": "Verification failed",
+        "tokenInvalid": "Invalid token",
+        "tokenExpired": "Token expired"
+      },
+      "group": {
+        "groupNameRequired": "Group name is required",
+        "groupNameTooLong": "Group name too long (max. 50 characters)",
+        "groupDescriptionTooLong": "Description too long (max. 200 characters)",
+        "groupNameTwoCharacters": "Group name must be at least 2 characters",
+        "groupNameFiftyCharacters": "Group name cannot exceed 50 characters",
+        "enterUsernamesPlaceholder": "Please enter usernames to invite",
+        "enterValidUsernames": "Please enter valid usernames"
+      },
+      "media": {
+        "audioNotSupported": "Voice recording not supported on this device",
+        "fileTooLarge": "File too large",
+        "unsupportedFileType": "Unsupported file type",
+        "uploadFailed": "Upload failed",
+        "downloadFailed": "Download failed"
+      }
+    },
+    "validation": {
+      "usernameHelp": "Choose a username with 2-20 characters (letters, numbers, -, _)",
+      "passwordHelp": "At least 6 characters with uppercase, lowercase letters and numbers",
+      "fixErrors": "Please fix the errors to continue",
+      "emailRequired": "Email address is required",
+      "emailInvalid": "Please enter a valid email address",
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Username must be at least 2 characters",
+      "usernameMaxLength": "Username cannot exceed 20 characters",
+      "usernameInvalidChars": "Username can only contain letters, numbers, hyphens, and underscores",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordNeedsLowercase": "Password must contain at least one lowercase letter",
+      "passwordNeedsUppercase": "Password must contain at least one uppercase letter",
+      "passwordNeedsNumber": "Password must contain at least one number"
+    },
+    "success": {
+      "general": {
+        "saved": "Saved",
+        "updated": "Updated",
+        "created": "Created",
+        "deleted": "Deleted",
+        "uploaded": "Uploaded",
+        "downloaded": "Downloaded",
+        "sent": "Sent",
+        "received": "Received",
+        "copied": "Copied",
+        "moved": "Moved",
+        "verified": "Verified",
+        "confirmed": "Confirmed"
+      },
+      "auth": {
+        "passwordChanged": "Password changed",
+        "profileUpdated": "Profile updated",
+        "accountCreated": "Account created",
+        "emailVerified": "Email verified",
+        "loginSuccessful": "Login successful",
+        "logoutSuccessful": "Logout successful"
+      },
+      "group": {
+        "invited": "Invited",
+        "joined": "Joined",
+        "left": "Left",
+        "promoted": "Promoted",
+        "demoted": "Demoted"
+      }
+    },
+    "toast": {
+      "settings": {
+        "loading": "Loading...",
+        "successUpdate": "Successfully changed!",
+        "successAccountDelete": "User account deleted!",
+        "errorAccountDelete": "Error deleting, please try again!",
+        "errorFailedChange": "Error occurred during change!"
+      },
+      "auth": {
+        "register": {
+          "success": "Registration successful!",
+          "errorAlreadyTaken": "Username or email already taken",
+          "errorServer": "Registration failed"
+        },
+        "verify": {
+          "loading": "Loading...",
+          "success": "Email verified successfully!",
+          "errorAlreadyVerified": "Email already verified",
+          "errorNoMatch": "Code or email incorrect",
+          "errorServer": "Verification failed"
+        },
+        "login": {
+          "waiting": "Waiting...",
+          "success": "Successfully logged in",
+          "errorLoginVerify": "Please verify your email first",
+          "errorUsernameOrPw": "Email or password incorrect",
+          "errorFailedLogin": "Login failed"
+        },
+        "forgotPw": {
+          "waiting": "Sending...",
+          "success": "Code sent via email!",
+          "errorNotFound": "Email address not found",
+          "errorKeyNotCorrect": "Code incorrect",
+          "errorFailed": "Operation failed"
+        },
+        "newPw": {
+          "waiting": "Saving...",
+          "success": "Password changed successfully!",
+          "errorNotFound": "Email address not found",
+          "errorKeyNotCorrect": "Code incorrect",
+          "error": "Password could not be changed"
+        }
+      },
+      "chat": {
+        "existChatroom": {
+          "alreadyChatted": "You are already chatting with ",
+          "errorUserNotFound": "User not found",
+          "errorSearchYourself": "You cannot chat with yourself",
+          "errorFailedToFind": "User not found",
+          "errorNameRequired": "Please enter a username",
+          "errorDeletedUser": "This user no longer exists",
+          "errorServer": "Error loading"
+        },
+        "chatroom": {
+          "audioNotSupported": "Voice recording not available"
+        }
+      }
+    },
+    "notifications": {
+      "newMessage": "New message",
+      "newMessages": "New messages",
+      "messageFrom": "Message from {sender}",
+      "mention": "You were mentioned",
+      "invitation": "Group invitation",
+      "joined": "joined the group",
+      "left": "left the group",
+      "promoted": "was promoted to admin",
+      "demoted": "was demoted from admin"
+    }
   },
 
-  "newPw": {
-    "title": "New Password",
-    "emailTitle": "Email",
-    "emailPlaceholder": "Email",
-    "resetKeyTitle": "Reset key",
-    "resetKeyPlaceholder": "Reset key",
-    "pwTitle": "New Password",
-    "pwPlaceholder": "New Password",
-    "setBtn": "Set new Password",
-    "backToLogin": "Back to login?"
+  "content": {
+    "aboutUs": {
+      "title": "About Us",
+      "introDev": "We, Olivia and Renat, are passionate developers who took on the challenge of creating a powerful and user-friendly real-time chat application. With our experience in web and software development, we successfully brought this project from conception to implementation. Our goal was to create a modern, fast and secure communication platform.",
+      "appDevTitle": "App Development",
+      "appDev": "Our real-time chat application is based on the MERN stack (MongoDB, Express, React, Node.js). By using cutting-edge technologies and best practices, we developed a robust and scalable architecture.",
+      "usedTechTitle": "Technologies Used",
+      "usedTechFrontend": "Frontend: React with Vite for an optimized development environment, Zustand for state management and Tailwind CSS/React-hot-toast for an appealing UI design.",
+      "usedTechBackend": "Backend: Express.js as web framework for Node.js, MongoDB as NoSQL database, bcrypt for password encryption and Express-session for secure authentication.",
+      "usedTechSocket": "Real-time Communication: Socket.io enables seamless real-time messaging.",
+      "usedTechClaudinary": "Cloud Integration: Cloudinary is used for storing and managing images.",
+      "featuresTitle": "App Features",
+      "featuresRegister": "Our application allows users to register, log in and communicate in real-time.",
+      "featuresIncludeTitle": "Main Features:",
+      "featuresUI": "Modern user interface, optimized for desktop and mobile devices",
+      "featuresAuth": "User registration and login with secure authentication",
+      "featuresUpload": "Image uploads and media support",
+      "featuresMessaging": "Real-time messaging with Socket.io",
+      "projectTitle": "Project Links",
+      "sourceCode": "Source Code:",
+      "ourContacts": "Our Contacts",
+      "feedback": "We welcome feedback and suggestions and warmly invite developers to contribute to the app's further development!"
+    },
+    "privacy": {
+      "loading": "Loading...",
+      "title": "Privacy Policy",
+      "dataController": "1. Data Controller",
+      "dataDescription": "This Real-Time Chat App is an educational project developed for learning purposes. The developers of the educational project are responsible for data processing within this app.",
+      "dataTypes": "2. Types of Data Processed",
+      "dataTypesDescription": "As part of using our chat app, we collect and process the following personal data:",
+      "dataTypesList": [
+        "✉️ Message content (text messages)",
+        "🖼️ Uploaded images (stored and sent via Cloudinary)",
+        "👤 Username or display name (if provided)",
+        "🕒 Message timestamps"
+      ],
+      "purpose": "3. Purpose of Data Processing",
+      "purposeDescription": "The collected data serves exclusively for operating the chat function to enable real-time communication between users. There is no commercial use or sharing of data with third parties.",
+      "security": "4. Security and Encryption",
+      "securityDescription": "Please note that all messages and images are transmitted unencrypted. This poses a risk that third parties may access the transmitted content. We recommend not sharing sensitive or confidential information via this app. However, passwords are stored encrypted with bcrypt to ensure user account security.",
+      "userRights": "5. User Rights",
+      "userRightsDescription": "As a user of the chat app, you have the following rights:",
+      "userRightsList": [
+        "📄 Information about stored personal data",
+        "✏️ Correction of incorrect or incomplete data",
+        "🗑️ Deletion of your data",
+        "⏸️ Restriction of processing your data"
+      ],
+      "disclaimer": "6. Disclaimer",
+      "disclaimerDescription": "This app is in development phase and operated for educational purposes. We assume no liability for possible data loss or unauthorized access to transmitted content.",
+      "contact": "7. Contact",
+      "contactDescription": "For questions about data processing or to exercise your rights, you can reach us via the contact options provided on the About Us page.",
+      "lastUpdated": "Last updated: March 2025"
+    },
+    "profile": {
+      "dateNotAvailable": "Date not available",
+      "loading": "Loading...",
+      "username": "Username",
+      "email": "Email",
+      "registered": "Registered"
+    },
+    "settings": {
+      "loadingSettings": "Loading settings...",
+      "selectLangTitle": "Select Language",
+      "lang": {
+        "en": "EN",
+        "de": "DE"
+      },
+      "volumeTitle": "Audio Volume",
+      "volume": {
+        "silent": "Silent",
+        "middle": "Medium",
+        "loud": "Loud"
+      },
+      "changePwTitle": "Change Password",
+      "currentPwTitle": "Current Password",
+      "currentPwPlaceholder": "Current Password",
+      "newPwTitle": "New Password",
+      "newPwPlaceholder": "New Password",
+      "changePwBtn": "Change Password",
+      "deleteAccountTitle": "Delete Account",
+      "deleteBtn": "Delete",
+      "prompt": {
+        "title": "Delete Account?",
+        "deleteBtn": "Delete",
+        "cancelBtn": "Cancel"
+      }
+    },
+    "deletedAccount": {
+      "title": "Deleted Account"
+    },
+    "pageNotFound": "NOT FOUND"
   },
 
-  "existChatroom": {
-    "loading": "Loading...",
-    "searchUserTitle": "Search for a User",
-    "placeholder": "John-Doe",
-    "createChatroomBtn": "Create new chatroom"
-  },
-
-  "newChatroom": {
-    "loading": "Loading...",
-    "firstMessage": "Send your first message",
-    "to": "to: "
-  },
-
-  "chatArea": {
-    "loading": "Loading...",
-    "sentImage": "Sent image",
-    "sentAudioMessage": "Sent audio message",
-    "noUsername": "No Username",
-    "deletedAccount": "Deleted account",
-    "noMessages": "No messages",
-    "errorLoadingChatrooms": "Error loading chatrooms"
-  },
-
-  "chatroom": {
-    "loading": "Loading...",
-    "unreadMessage": "message. Tap to see. ↓",
-    "unreadMessages": "messages. Tap to see. ↓",
-    "timestampUpdateText": "Updated",
-    "failedToFindUser": "Failed to find the user."
-  },
-
-  "deletedAccount": {
-    "title": "Deleted account"
-  },
-
-  "pageNotFound": "NOT FOUND"
+  "system": {
+    "datetime": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "now": "Now",
+      "justNow": "Just now",
+      "minuteAgo": "a minute ago",
+      "minutesAgo": "{count} minutes ago",
+      "hourAgo": "an hour ago",
+      "hoursAgo": "{count} hours ago",
+      "dayAgo": "a day ago",
+      "daysAgo": "{count} days ago",
+      "weekAgo": "a week ago",
+      "weeksAgo": "{count} weeks ago",
+      "monthAgo": "a month ago",
+      "monthsAgo": "{count} months ago",
+      "yearAgo": "a year ago",
+      "yearsAgo": "{count} years ago",
+      "online": "Online",
+      "offline": "Offline",
+      "away": "Away",
+      "busy": "Busy",
+      "lastSeen": "last seen",
+      "typing": "typing...",
+      "isTyping": "is typing..."
+    },
+    "status": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "connecting": "Connecting...",
+      "reconnecting": "Reconnecting...",
+      "failed": "Failed",
+      "success": "Success",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Information",
+      "pending": "Pending",
+      "processing": "Processing...",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "media": {
+      "image": "Image",
+      "video": "Video",
+      "audio": "Audio",
+      "file": "File",
+      "document": "Document",
+      "voice": "Voice message",
+      "recording": "Recording...",
+      "uploading": "Uploading...",
+      "downloading": "Downloading...",
+      "unsupported": "Unsupported",
+      "tooLarge": "File too large",
+      "invalidFormat": "Invalid format"
+    },
+    "permissions": {
+      "admin": "Administrator",
+      "moderator": "Moderator",
+      "member": "Member",
+      "guest": "Guest",
+      "owner": "Owner",
+      "creator": "Creator",
+      "canRead": "Can read",
+      "canWrite": "Can write",
+      "canEdit": "Can edit",
+      "canDelete": "Can delete",
+      "canInvite": "Can invite",
+      "canKick": "Can remove",
+      "canBan": "Can ban",
+      "canManage": "Can manage",
+      "fullAccess": "Full access",
+      "readOnly": "Read only",
+      "noAccess": "No access"
+    }
+  }
 }
