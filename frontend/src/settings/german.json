@@ -81,12 +81,15 @@
     },
     "newPw": {
       "title": "Neues Passwort",
+      "infoText": "Gib deine E-Mail, den 8-stelligen Bestätigungscode aus deiner E-Mail und dein neues Passwort ein.",
       "emailTitle": "E-Mail",
       "emailPlaceholder": "Deine E-Mail-Adresse",
       "resetKeyTitle": "Bestätigungscode",
-      "resetKeyPlaceholder": "6-stelliger Code",
+      "resetKeyPlaceholder": "8-stelliger Code",
+      "resetKeyHelper": "8 Zeichen genau wie in deiner E-Mail erhalten",
       "pwTitle": "Neues Passwort",
-      "pwPlaceholder": "Neues Passwort",
+      "pwPlaceholder": "Starkes Passwort",
+      "pwHelper": "6+ Zeichen, inkl. Groß- und Kleinbuchstaben & Zahlen",
       "setBtn": "Passwort ändern",
       "backToLogin": "Zurück zur Anmeldung"
     }
