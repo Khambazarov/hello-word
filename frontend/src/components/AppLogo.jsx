@@ -134,7 +134,6 @@ const AppLogo = ({ className = "w-12 h-12", showAnimation = false }) => {
           x="0"
           y="0"
         >
-          Hello, Word!
           {showAnimation && (
             <animate
               attributeName="opacity"
