@@ -18,7 +18,7 @@ export const RegisterVerify = () => {
 
   async function handleVerify(e) {
     e.preventDefault();
-    toast.loading(translations.toast.verify.loading);
+    toast.loading(translations.feedback.toast.auth.verify.loading);
 
     const email = e.target.email.value.toLowerCase().trim();
 
@@ -49,14 +49,14 @@ export const RegisterVerify = () => {
     toast.dismiss();
 
     if (user.isVerified) {
-      toast.success(translations.toast.verify.success);
+      toast.success(translations.feedback.toast.auth.verify.success);
       setTimeout(() => navigate("/"), 2000);
     } else if (response.status === 400) {
-      toast.error(translations.toast.verify.errorAlreadyVerified);
+      toast.error(translations.feedback.toast.auth.verify.errorAlreadyVerified);
     } else if (response.status === 409) {
-      toast.error(translations.toast.verify.errorNoMatch);
+      toast.error(translations.feedback.toast.auth.verify.errorNoMatch);
     } else {
-      toast.error(translations.toast.verify.errorServer);
+      toast.error(translations.feedback.toast.auth.verify.errorServer);
     }
   }
 
@@ -69,21 +69,16 @@ export const RegisterVerify = () => {
             <img className="h-12 w-12" src={robot} alt="robot" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
-            Verify Account
+            {translations.auth.verify.title || "Verify Email"}
           </h1>
-          <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
-            Check your email and enter the verification code
-          </p>
         </div>
 
         {/* Verify Form */}
         <div className="backdrop-blur-lg bg-white/90 dark:bg-gray-800/90 shadow-2xl rounded-3xl border border-white/30 dark:border-gray-700/50 p-8 sm:p-10 space-y-8">
           <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
-              {translations.verify.titel}
-            </h2>
             <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
-              {translations.verify.description}
+              {translations.auth.verify.description ||
+                "ou will receive a 6-digit code via email. Enter it here to verify your account"}
             </p>
           </div>
 
@@ -105,12 +100,30 @@ export const RegisterVerify = () => {
               </div>
               <div className="text-sm">
                 <p className="text-emerald-800 dark:text-emerald-200 font-medium mb-2">
-                  Verification steps:
+                  {translations.auth.verify.verificationSteps ||
+                    "Verification steps:"}
                 </p>
                 <ul className="text-emerald-700 dark:text-emerald-300 space-y-1 text-xs sm:text-sm">
-                  <li>• Enter your email address used during registration</li>
-                  <li>• Check your inbox for a 6-digit verification code</li>
-                  <li>• Enter the code below to activate your account</li>
+                  <li>
+                    •{" "}
+                    {translations.auth.verify.step1 ||
+                      "Enter the email address used during registration"}
+                  </li>
+                  <li>
+                    •{" "}
+                    {translations.auth.verify.step2 ||
+                      "Check your email inbox (and spam folder)"}
+                  </li>
+                  <li>
+                    •{" "}
+                    {translations.auth.verify.step3 ||
+                      "Copy the 6-digit verification code"}
+                  </li>
+                  <li>
+                    •{" "}
+                    {translations.auth.verify.step4 ||
+                      "Paste the code into the field below to activate your account"}
+                  </li>
                 </ul>
               </div>
             </div>
@@ -123,7 +136,7 @@ export const RegisterVerify = () => {
                 htmlFor="email"
                 className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.verify.emailTitle}
+                {translations.auth.verify.emailTitle}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -136,7 +149,7 @@ export const RegisterVerify = () => {
                   name="email"
                   id="email"
                   autoComplete="email"
-                  placeholder={translations.verify.emailPlaceholder}
+                  placeholder={translations.auth.verify.emailPlaceholder}
                   className={`w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 placeholder:text-gray-400`}
                   required
                   autoFocus
@@ -150,7 +163,7 @@ export const RegisterVerify = () => {
                 htmlFor="key-0"
                 className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4"
               >
-                {translations.verify.key}
+                {translations.auth.verify.key}
               </label>
 
               <div className="flex justify-center space-x-1 mb-4">
@@ -253,7 +266,7 @@ export const RegisterVerify = () => {
               </div>
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                Enter the 6-digit code from your email
+                {translations.auth.verify.keyText || "Paste it here to verify your account"}
               </p>
             </div>
 
@@ -276,7 +289,7 @@ export const RegisterVerify = () => {
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span>{translations.verify.submitBtn}</span>
+              <span>{translations.auth.verify.submitBtn}</span>
             </button>
           </form>
 
@@ -299,7 +312,7 @@ export const RegisterVerify = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              <span>{translations.verify.backToLogin}</span>
+              <span>{translations.auth.verify.backToLogin}</span>
             </Link>
           </div>
         </div>
