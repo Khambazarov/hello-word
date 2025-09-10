@@ -332,7 +332,7 @@ export const NewChatroom = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{translations.newChatroom.loading || "Loading..."}</p>
+        <p>{translations.chat.new.loading || "Loading..."}</p>
       </div>
     );
   }
@@ -359,9 +359,9 @@ export const NewChatroom = () => {
       </header>
       <div className="relative flex flex-col h-full flex-grow">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-nowrap text-2xl text-center">
-          <h2>{translations.newChatroom.firstMessage}</h2>
+          <h2>{translations.chat.new.firstMessage}</h2>
           <h2>
-            {translations.newChatroom.to} {username}
+            {translations.chat.new.to} {username}
           </h2>
         </div>
       </div>
@@ -440,7 +440,9 @@ export const NewChatroom = () => {
             className="inline-flex justify-center pr-3 text-[rgb(229,47,64)] cursor-pointer"
           >
             <SendMessageIcon />
-            <span className="sr-only">Send message</span>
+            <span className="sr-only">
+              {translations.ui?.screenReaderSendMessage || "Send message"}
+            </span>
           </button>
         </div>
       </form>
