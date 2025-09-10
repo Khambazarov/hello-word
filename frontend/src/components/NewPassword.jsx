@@ -108,7 +108,7 @@ export const NewPassword = () => {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {translations.auth.newPassword.title}
+              {translations.auth.newPw.title}
             </h2>
           </div>
 
@@ -119,7 +119,7 @@ export const NewPassword = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.newPassword.emailTitle}
+                {translations.auth.newPw.emailTitle}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -130,7 +130,7 @@ export const NewPassword = () => {
                   name="email"
                   id="email"
                   autoComplete="email"
-                  placeholder={translations.auth.newPassword.emailPlaceholder}
+                  placeholder={translations.auth.newPw.emailPlaceholder}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                   autoFocus
@@ -144,7 +144,7 @@ export const NewPassword = () => {
                 htmlFor="key"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.newPassword.resetKeyTitle}
+                {translations.auth.newPw.resetKeyTitle}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -154,7 +154,7 @@ export const NewPassword = () => {
                   type="text"
                   name="key"
                   id="key"
-                  placeholder={translations.auth.newPassword.resetKeyPlaceholder}
+                  placeholder={translations.auth.newPw.resetKeyPlaceholder}
                   minLength={8}
                   maxLength={8}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono"
@@ -173,7 +173,7 @@ export const NewPassword = () => {
                 htmlFor="newPw"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.newPassword.pwTitle}
+                {translations.auth.newPw.pwTitle}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -183,7 +183,7 @@ export const NewPassword = () => {
                   type={showPassword ? "text" : "password"}
                   name="newPw"
                   id="newPw"
-                  placeholder={translations.auth.newPassword.pwPlaceholder}
+                  placeholder={translations.auth.newPw.pwPlaceholder}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                   minLength={6}
@@ -208,7 +208,7 @@ export const NewPassword = () => {
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             >
-              {translations.auth.newPassword.setBtn}
+              {translations.auth.newPw.setBtn}
             </button>
           </form>
 
@@ -231,7 +231,7 @@ export const NewPassword = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              {translations.auth.newPassword.backToLogin}
+              {translations.auth.newPw.backToLogin}
             </Link>
           </div>
         </div>
