@@ -136,7 +136,7 @@ export const RegisterVerify = () => {
                 htmlFor="email"
                 className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.verify.emailTitle}
+                {translations.auth.verify.emailTitle || "Email"}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -149,7 +149,10 @@ export const RegisterVerify = () => {
                   name="email"
                   id="email"
                   autoComplete="email"
-                  placeholder={translations.auth.verify.emailPlaceholder}
+                  placeholder={
+                    translations.auth.verify.emailPlaceholder ||
+                    "Your email address"
+                  }
                   className={`w-full pl-12 pr-4 py-4 text-gray-900 dark:text-white bg-gray-50/50 dark:bg-gray-700/50 border-2 rounded-xl focus:outline-none focus:ring-4 transition-all duration-200 placeholder:text-gray-400`}
                   required
                   autoFocus
@@ -163,7 +166,7 @@ export const RegisterVerify = () => {
                 htmlFor="key-0"
                 className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4"
               >
-                {translations.auth.verify.key}
+                {translations.auth.verify.key || "Verification Code"}
               </label>
 
               <div className="flex justify-center space-x-1 mb-4">
@@ -266,7 +269,8 @@ export const RegisterVerify = () => {
               </div>
 
               <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                {translations.auth.verify.keyText || "Paste it here to verify your account"}
+                {translations.auth.verify.keyText ||
+                  "Paste it here to verify your account"}
               </p>
             </div>
 
@@ -289,7 +293,9 @@ export const RegisterVerify = () => {
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span>{translations.auth.verify.submitBtn}</span>
+              <span>
+                {translations.auth.verify.submitBtn || "Verify Account"}
+              </span>
             </button>
           </form>
 
@@ -312,7 +318,9 @@ export const RegisterVerify = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              <span>{translations.auth.verify.backToLogin}</span>
+              <span>
+                {translations.auth.verify.backToLogin || "Back to Login"}
+              </span>
             </Link>
           </div>
         </div>
