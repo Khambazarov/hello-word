@@ -283,8 +283,29 @@ export const GroupSettings = () => {
       <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Left side - Back button and title */}
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
+              <img
+                src={getAvatarUrl(
+                  groupData?.groupInfo?.image,
+                  groupData?.groupInfo?.name || "Group"
+                )}
+                alt="Group"
+                className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
+                onError={createAvatarErrorHandler(
+                  groupData?.groupInfo?.name || "Group"
+                )}
+              />
+            </div>
             <div className="flex items-center space-x-4">
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Group Settings
+                </h1>
+              </div>
+            </div>
+
+            {/* Right side - Actions */}
+            <div className="flex items-center space-x-3">
               <button
                 onClick={() => navigate(`/chatarea/chats/${groupId}`)}
                 className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group"
@@ -304,63 +325,6 @@ export const GroupSettings = () => {
                   />
                 </svg>
               </button>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  Group Settings
-                </h1>
-                {/* <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Manage {`"${groupData?.groupInfo?.name}"`} settings and
-                  members
-                </p> */}
-              </div>
-            </div>
-
-            {/* Right side - Actions */}
-            <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                </svg>
-                <span>{groupData?.memberCount} members</span>
-              </div>
-              {/* {isAdmin && (
-                <button
-                  onClick={() => navigate(`/chatarea/groups/${groupId}/invite`)}
-                  className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200 shadow-sm"
-                >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  Invite
-                </button>
-              )} */}
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
-                <img
-                  src={getAvatarUrl(
-                    groupData?.groupInfo?.image,
-                    groupData?.groupInfo?.name || "Group"
-                  )}
-                  alt="Group"
-                  className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
-                  onError={createAvatarErrorHandler(
-                    groupData?.groupInfo?.name || "Group"
-                  )}
-                />
-              </div>
             </div>
           </div>
         </div>
