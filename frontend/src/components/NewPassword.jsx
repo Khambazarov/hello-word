@@ -51,11 +51,17 @@ export const NewPassword = () => {
       );
     } else if (response.status === 401) {
       setTimeout(
-        () => toast.error(translations.feedback.toast.auth.newPw.errorKeyNotCorrect),
+        () =>
+          toast.error(
+            translations.feedback.toast.auth.newPw.errorKeyNotCorrect
+          ),
         1300
       );
     } else {
-      setTimeout(() => toast.error(translations.feedback.toast.auth.newPw.error), 1300);
+      setTimeout(
+        () => toast.error(translations.feedback.toast.auth.newPw.error),
+        1300
+      );
     }
   }
 
@@ -72,13 +78,13 @@ export const NewPassword = () => {
             />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-wide">
-            Hello, Word!
+            {translations.auth.newPw?.title || "Reset Your Password"}
           </h1>
         </div>
 
         {/* Info Card */}
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
-          <div className="flex items-start space-x-3">
+          <div className="flex items-start space-x-2">
             <div className="flex-shrink-0">
               <svg
                 className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5"
@@ -93,11 +99,8 @@ export const NewPassword = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                {translations.newPw?.infoTitle || "Reset Your Password"}
-              </h3>
               <p className="mt-1 text-sm text-blue-700 dark:text-blue-300">
-                {translations.newPw?.infoText ||
+                {translations.auth.newPw?.infoText ||
                   "Enter your email, the 8-character reset key from your email, and your new password."}
               </p>
             </div>
@@ -106,12 +109,6 @@ export const NewPassword = () => {
 
         {/* Main Form Card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {translations.auth.newPw.title}
-            </h2>
-          </div>
-
           <form onSubmit={handleNewPw} className="space-y-6">
             {/* Email Field */}
             <div>
@@ -119,7 +116,7 @@ export const NewPassword = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.newPw.emailTitle}
+                {translations.auth.newPw.emailTitle || "Email"}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -130,7 +127,10 @@ export const NewPassword = () => {
                   name="email"
                   id="email"
                   autoComplete="email"
-                  placeholder={translations.auth.newPw.emailPlaceholder}
+                  placeholder={
+                    translations.auth.newPw.emailPlaceholder ||
+                    "Your email address"
+                  }
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                   autoFocus
@@ -144,7 +144,7 @@ export const NewPassword = () => {
                 htmlFor="key"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.newPw.resetKeyTitle}
+                {translations.auth.newPw.resetKeyTitle || "Verification Code"}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -154,7 +154,10 @@ export const NewPassword = () => {
                   type="text"
                   name="key"
                   id="key"
-                  placeholder={translations.auth.newPw.resetKeyPlaceholder}
+                  placeholder={
+                    translations.auth.newPw.resetKeyPlaceholder ||
+                    "8-character code"
+                  }
                   minLength={8}
                   maxLength={8}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors font-mono"
@@ -162,7 +165,7 @@ export const NewPassword = () => {
                 />
               </div>
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {translations.newPw?.resetKeyHelp ||
+                {translations.auth.newPw?.resetKeyHelper ||
                   "8 characters exactly as received in your email"}
               </p>
             </div>
@@ -173,7 +176,7 @@ export const NewPassword = () => {
                 htmlFor="newPw"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                {translations.auth.newPw.pwTitle}
+                {translations.auth.newPw.pwTitle || "New Password"}
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -183,7 +186,9 @@ export const NewPassword = () => {
                   type={showPassword ? "text" : "password"}
                   name="newPw"
                   id="newPw"
-                  placeholder={translations.auth.newPw.pwPlaceholder}
+                  placeholder={
+                    translations.auth.newPw.pwPlaceholder || "Strong Password"
+                  }
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                   required
                   minLength={6}
@@ -199,7 +204,7 @@ export const NewPassword = () => {
                 </button>
               </div>
               <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                {translations.newPw?.pwHelp || "Minimum 6 characters"}
+                {translations.auth.newPw?.pwHelper || "Minimum 6 characters"}
               </p>
             </div>
 
@@ -208,7 +213,7 @@ export const NewPassword = () => {
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             >
-              {translations.auth.newPw.setBtn}
+              {translations.auth.newPw.setBtn || "Change Password"}
             </button>
           </form>
 
@@ -231,7 +236,7 @@ export const NewPassword = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              {translations.auth.newPw.backToLogin}
+              {translations.auth.newPw.backToLogin || "Back to Login"}
             </Link>
           </div>
         </div>
