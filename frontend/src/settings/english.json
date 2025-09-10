@@ -81,12 +81,15 @@
     },
     "newPw": {
       "title": "New Password",
+      "infoText": "Enter your email, the 8-character reset key from your email, and your new password.",
       "emailTitle": "Email",
       "emailPlaceholder": "Your email address",
       "resetKeyTitle": "Verification Code",
-      "resetKeyPlaceholder": "6-digit code",
+      "resetKeyPlaceholder": "8-character code",
+      "resetKeyHelper": "8 characters exactly as received in your email",
       "pwTitle": "New Password",
-      "pwPlaceholder": "New Password",
+      "pwPlaceholder": "Strong Password",
+      "pwHelper": "6+ characters, incl. uppercase, lowercase & numbers.",
       "setBtn": "Change Password",
       "backToLogin": "Back to Login"
     }
