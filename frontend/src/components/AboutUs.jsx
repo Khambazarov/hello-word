@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -16,73 +16,180 @@ import Web from "../assets/web.svg";
 export const AboutUs = () => {
   const navigate = useNavigate();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["aboutUs"],
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["user", "language"],
     queryFn: fetchUserLanguage,
+    staleTime: 5 * 60 * 1000,
   });
 
-  const [translations, setTranslations] = useState(
-    getTranslations(data?.language || "en")
-  );
+  const lang = data?.language || "en";
+  const translations = useMemo(() => getTranslations(lang), [lang]);
+  const t = translations?.content?.aboutUs ?? {};
 
-  useEffect(() => {
-    if (data?.language) {
-      setTranslations(getTranslations(data.language));
-    }
-  }, [data]);
+  const projectLinks = [
+    {
+      label: "Live Demo (Olivia):",
+      href: "https://hello-word-6z2bg.ondigitalocean.app/",
+      text: "Hello-Word Olivia",
+    },
+    {
+      label: `${t.sourceCode || "Source Code"}:`,
+      href: "https://github.com/final-project-real-time-chat/realtime-chat",
+      text: "GitHub Repo",
+    },
+    {
+      label: "Live Demo (Renat):",
+      href: "https://hello-word.khambazarov.dev/",
+      text: "Hello-Word Renat",
+    },
+    {
+      label: `${t.sourceCode || "Source Code"}:`,
+      href: "https://github.com/Khambazarov/hello-word",
+      text: "GitHub Repo",
+    },
+  ];
+
+  const contacts = [
+    {
+      name: "Olivia",
+      links: [
+        {
+          href: "https://olivia-piechowski.netlify.app",
+          icon: Web,
+          label: "Olivia – Website",
+        },
+        {
+          href: "https://github.com/OliviaPiwe",
+          icon: GitHub,
+          label: "Olivia – GitHub",
+        },
+        {
+          href: "https://linkedin.com/in/olivia-piechowski",
+          icon: LinkedIn,
+          label: "Olivia – LinkedIn",
+        },
+        {
+          href: "mailto:olivia_piechowski@hotmail.de",
+          icon: Email,
+          label: "Olivia – Email",
+        },
+      ],
+    },
+    {
+      name: "Renat",
+      links: [
+        {
+          href: "https://khambazarov.dev",
+          icon: Web,
+          label: "Renat – Website",
+        },
+        {
+          href: "https://github.com/Khambazarov",
+          icon: GitHub,
+          label: "Renat – GitHub",
+        },
+        {
+          href: "http://linkedin.com/in/khambazarov",
+          icon: LinkedIn,
+          label: "Renat – LinkedIn",
+        },
+        {
+          href: "mailto:contact@khambazarov.dev",
+          icon: Email,
+          label: "Renat – Email",
+        },
+      ],
+    },
+  ];
+
+  const features = [
+    t.featuresUI,
+    t.featuresAuth,
+    t.featuresUpload,
+    t.featuresMessaging,
+  ].filter(Boolean);
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <div
+            role="status"
+            aria-live="polite"
+            className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"
+          />
           <p className="text-gray-600 dark:text-gray-400 font-medium">
-            {translations.loading || "Loading..."}
+            {translations?.loading || "Loading..."}
           </p>
         </div>
       </div>
     );
   }
 
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <p className="text-gray-700 dark:text-gray-300">
+          {t.error ||
+            "Could not load your language preference. Please try again."}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Header: nur Branding, kein H1 (SEO: ein H1 unten in der Hero-Section) */}
       <header className="sticky top-0 z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="flex items-center justify-between h-16 px-4 max-w-6xl mx-auto">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-wider">
+          <div
+            className="text-xl font-bold text-gray-900 dark:text-white tracking-wider"
+            aria-label="Hello, Word! — Branding"
+          >
             Hello, Word!
-          </h1>
+          </div>
+
           <div className="absolute left-1/2 transform -translate-x-1/2">
             <img
               className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-1"
               src={robot}
-              alt="robot"
+              alt="Project mascot robot"
+              loading="lazy"
+              decoding="async"
             />
           </div>
+
           <button
+            type="button"
             onClick={() => navigate("/chatarea")}
             className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             title="Back to Chat"
+            aria-label="Back to Chat"
           >
             <BackButtonIcon />
           </button>
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <main className="max-w-4xl mx-auto px-6 py-12">
         {/* Hero Section */}
-        <div className="text-center mb-16">
+        <section className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            {translations.aboutUs.title}
+            {t.title || "About Us"}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            {translations.aboutUs.introDev}
+            {t.introDev ||
+              "We are Olivia and Renat, passionate developers united by a shared vision: to create Hello, Word!, a modern real-time chat application that combines reliability, ease of use, and an engaging design."}
           </p>
-        </div>
+        </section>
 
         {/* App Development Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
+        <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3">
+            <div
+              className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3"
+              aria-hidden="true"
+            >
               <svg
                 className="w-5 h-5 text-blue-600 dark:text-blue-400"
                 fill="currentColor"
@@ -95,17 +202,21 @@ export const AboutUs = () => {
                 />
               </svg>
             </div>
-            {translations.aboutUs.appDevTitle}
+            {t.appDevTitle || "Development Approach"}
           </h2>
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            {translations.aboutUs.appDev}
+            {t.appDev ||
+              "From concept to implementation, we focused on reliability, performance, and a clean user experience."}
           </p>
-        </div>
+        </section>
 
         {/* Technology Stack Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
+        <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-            <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+            <div
+              className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3"
+              aria-hidden="true"
+            >
               <svg
                 className="w-5 h-5 text-purple-600 dark:text-purple-400"
                 fill="currentColor"
@@ -114,40 +225,45 @@ export const AboutUs = () => {
                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
               </svg>
             </div>
-            {translations.aboutUs.usedTechTitle}
+            {t.usedTechTitle || "Technology Stack"}
           </h2>
+
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-3">
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <p className="text-gray-700 dark:text-gray-300">
-                  {translations.aboutUs.usedTechFrontend}
+                  {t.usedTechFrontend ||
+                    "Frontend: React, Tailwind, React Router, React Query"}
                 </p>
               </div>
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <p className="text-gray-700 dark:text-gray-300">
-                  {translations.aboutUs.usedTechBackend}
+                  {t.usedTechBackend || "Backend: Node.js, Express, REST API"}
                 </p>
               </div>
             </div>
             <div className="space-y-3">
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <p className="text-gray-700 dark:text-gray-300">
-                  {translations.aboutUs.usedTechSocket}
+                  {t.usedTechSocket || "Real-time: Socket.io"}
                 </p>
               </div>
               <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <p className="text-gray-700 dark:text-gray-300">
-                  {translations.aboutUs.usedTechClaudinary}
+                  {t.usedTechClaudinary || "Media & Storage: Cloudinary"}
                 </p>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Features Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
+        <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3">
+            <div
+              className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3"
+              aria-hidden="true"
+            >
               <svg
                 className="w-5 h-5 text-green-600 dark:text-green-400"
                 fill="currentColor"
@@ -160,46 +276,82 @@ export const AboutUs = () => {
                 />
               </svg>
             </div>
-            {translations.aboutUs.featuresTitle}
+            {t.featuresTitle || "Key Features"}
           </h2>
+
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-            {translations.aboutUs.featuresRegister}
+            {t.featuresRegister ||
+              "Create your account and start chatting in seconds."}
           </p>
+
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-            {translations.aboutUs.featuresIncludeTitle}
+            {t.featuresIncludeTitle || "Highlights include:"}
           </h3>
+
           <div className="grid md:grid-cols-2 gap-3">
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"></div>
-              <p className="text-gray-700 dark:text-gray-300">
-                {translations.aboutUs.featuresUI}
-              </p>
-            </div>
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"></div>
-              <p className="text-gray-700 dark:text-gray-300">
-                {translations.aboutUs.featuresAuth}
-              </p>
-            </div>
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"></div>
-              <p className="text-gray-700 dark:text-gray-300">
-                {translations.aboutUs.featuresUpload}
-              </p>
-            </div>
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"></div>
-              <p className="text-gray-700 dark:text-gray-300">
-                {translations.aboutUs.featuresMessaging}
-              </p>
-            </div>
+            {features.length ? (
+              features.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                >
+                  <span
+                    className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  ></span>
+                  <p className="text-gray-700 dark:text-gray-300">{item}</p>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <span
+                    className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  ></span>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Clean and responsive UI
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <span
+                    className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  ></span>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Secure authentication
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <span
+                    className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  ></span>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Media uploads
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <span
+                    className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  ></span>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    Real-time messaging
+                  </p>
+                </div>
+              </>
+            )}
           </div>
-        </div>
+        </section>
 
         {/* Project Links Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
+        <section className="bg-white dark:bg-gray-800 rounded-2xl p-8 mb-8 shadow-lg border border-gray-200 dark:border-gray-700">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-            <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-3">
+            <div
+              className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mr-3"
+              aria-hidden="true"
+            >
               <svg
                 className="w-5 h-5 text-indigo-600 dark:text-indigo-400"
                 fill="currentColor"
@@ -212,153 +364,77 @@ export const AboutUs = () => {
                 />
               </svg>
             </div>
-            {translations.aboutUs.projectTitle}
+            {t.projectTitle || "Project Links"}
           </h2>
+
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <span className="font-medium text-gray-900 dark:text-white">
-                Live Demo (Olivia):
-              </span>
-              <a
-                href="https://hello-word-6z2bg.ondigitalocean.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
+            {projectLinks.map(({ label, href, text }) => (
+              <div
+                key={href}
+                className="border flex items-center justify-between flex-col md:flex-row p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
               >
-                Hello-Word Olivia
-              </a>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <span className="font-medium text-gray-900 dark:text-white">
-                Live Demo (Renat):
-              </span>
-              <a
-                href="https://hello-word.khambazarov.dev/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
-              >
-                Hello-Word Renat
-              </a>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <span className="font-medium text-gray-900 dark:text-white">
-                {translations.aboutUs.sourceCode}:
-              </span>
-              <a
-                href="https://github.com/final-project-real-time-chat/realtime-chat"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
-              >
-                GitHub Repo
-              </a>
-            </div>
+                <span className="font-medium text-gray-900 dark:text-white">
+                  {label}
+                </span>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline transition-colors"
+                >
+                  {text}
+                </a>
+              </div>
+            ))}
           </div>
-        </div>
+        </section>
 
         {/* Team Section */}
-        <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl p-8 mb-8 shadow-lg text-white">
+        <section className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl p-8 mb-8 shadow-lg text-white">
           <h2 className="text-3xl font-bold text-center mb-8 tracking-wide">
-            {translations.aboutUs.ourContacts}
+            {t.ourContacts || "Our Contacts"}
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Olivia */}
-            <div className="text-center">
-              <h3 className="text-2xl font-semibold mb-4 tracking-wide">
-                Olivia
-              </h3>
-              <div className="flex justify-center space-x-4">
-                <a
-                  href="https://olivia-piechowski.netlify.app"
-                  title="Website"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={Web} alt="Website" className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://github.com/OliviaPiwe"
-                  title="GitHub"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={GitHub} alt="GitHub" className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://linkedin.com/in/olivia-piechowski"
-                  title="LinkedIn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={LinkedIn} alt="LinkedIn" className="w-6 h-6" />
-                </a>
-                <a
-                  href="mailto:olivia_piechowski@hotmail.de"
-                  title="Email"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={Email} alt="Email" className="w-6 h-6" />
-                </a>
+            {contacts.map((person) => (
+              <div key={person.name} className="text-center">
+                <h3 className="text-2xl font-semibold mb-4 tracking-wide">
+                  {person.name}
+                </h3>
+                <div className="flex justify-center space-x-4">
+                  {person.links.map((l) => (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      title={l.label}
+                      aria-label={l.label}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 sm:p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                    >
+                      <img
+                        src={l.icon}
+                        alt={l.label}
+                        className="w-6 h-6"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Renat */}
-            <div className="text-center">
-              <h3 className="text-2xl font-semibold mb-4 tracking-wide">
-                Renat
-              </h3>
-              <div className="flex justify-center space-x-4">
-                <a
-                  href="https://khambazarov.dev"
-                  title="Website"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={Web} alt="Website" className="w-6 h-6" />
-                </a>
-                <a
-                  href="https://github.com/Khambazarov"
-                  title="GitHub"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={GitHub} alt="GitHub" className="w-6 h-6" />
-                </a>
-                <a
-                  href="http://linkedin.com/in/renat-khambazarov"
-                  title="LinkedIn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={LinkedIn} alt="LinkedIn" className="w-6 h-6" />
-                </a>
-                <a
-                  href="mailto:contact@khambazarov.dev"
-                  title="Email"
-                  className="p-3 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-                >
-                  <img src={Email} alt="Email" className="w-6 h-6" />
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
+        </section>
 
         {/* Feedback Section */}
-        <div className="text-center">
+        <section className="text-center">
           <h3 className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
-            {translations.aboutUs.feedback}
+            {t.feedback ||
+              "We welcome your feedback to keep improving Hello, Word!"}
           </h3>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 };
