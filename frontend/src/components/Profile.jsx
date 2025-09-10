@@ -90,14 +90,14 @@ export const Profile = () => {
 
   const userRegisteredAt = dateOfRegistration
     ? formatTimestamp(dateOfRegistration, language)
-    : translations.profile.dateNotAvailable || "Date not available";
+    : translations.content.profile.dateNotAvailable || "Date not available";
 
   if (isProfileLoading) {
     return (
       <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
         <header className="xl:h-25 z-10 h-16 flex justify-center items-center sticky top-0 bg-gray-700 shadow-md">
           <h1 className="md:text-base xl:text-2xl text-white tracking-widest font-bold">
-            Profile
+            {translations.profile?.title || "Profile"}
           </h1>
           <button
             onClick={() => navigate("/chatarea")}
@@ -110,7 +110,7 @@ export const Profile = () => {
         <div className="flex flex-col items-center justify-center flex-1 p-6">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">
-            {translations.profile.loading || "Loading profile..."}
+            {translations.content.profile.loading || "Loading profile..."}
           </p>
         </div>
       </div>
@@ -124,7 +124,7 @@ export const Profile = () => {
           Profile
         </h1> */}
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-          {translations.profile.title || "My Profile"}
+          {translations.content.profile.title || "My Profile"}
         </h1>
         <button
           onClick={() => navigate("/chatarea")}
@@ -178,7 +178,7 @@ export const Profile = () => {
                   />
                 </svg>
                 <span className="text-balance font-medium text-sm">
-                  {translations.profile.info ||
+                  {translations.content.profile.info ||
                     "Click the camera icon to update your avatar"}
                 </span>
               </div>
@@ -251,7 +251,7 @@ export const Profile = () => {
                     </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                    {translations.profile.username || "Username"}
+                    {translations.content.profile.username || "Username"}
                   </p>
                   <p className="text-lg font-semibold text-gray-900 dark:text-white break-all">
                     {username}
@@ -276,7 +276,7 @@ export const Profile = () => {
                     </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                    {translations.profile.email || "Email"}
+                    {translations.content.profile.email || "Email"}
                   </p>
                   <p className="text-lg font-semibold text-gray-900 dark:text-white break-all">
                     {usermail}
@@ -301,7 +301,7 @@ export const Profile = () => {
                     </svg>
                   </div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                    {translations.profile.registered || "Member Since"}
+                    {translations.content.profile.registered || "Member Since"}
                   </p>
                   <p className="text-lg font-semibold text-gray-900 dark:text-white">
                     {userRegisteredAt}
