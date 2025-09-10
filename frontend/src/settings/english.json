@@ -540,25 +540,33 @@
       "backToChat": "Back to Chat"
     },
     "settings": {
+      "title": "Settings",
+      "description": "Set up your preferences and manage your account with ease.",
       "loadingSettings": "Loading settings...",
       "selectLangTitle": "Select Language",
+      "selectLangDescription": "Choose your preferred language for the app interface.",
       "lang": {
         "en": "EN",
         "de": "DE"
       },
       "volumeTitle": "Audio Volume",
+      "adjustVolume": "Adjust the volume for notification sounds.",
       "volume": {
         "silent": "Silent",
-        "middle": "Medium",
+        "middle": "Normal",
         "loud": "Loud"
       },
       "changePwTitle": "Change Password",
+      "changePwDescription": "6+ characters, incl. uppercase, lowercase & numbers.",
       "currentPwTitle": "Current Password",
       "currentPwPlaceholder": "Current Password",
       "newPwTitle": "New Password",
-      "newPwPlaceholder": "New Password",
+      "newPwPlaceholder": "Strong Password",
       "changePwBtn": "Change Password",
       "deleteAccountTitle": "Delete Account",
+      "deleteAccountDescription": "Permanently delete your account and all data.",
+      "warningTitle": "Warning!",
+      "warningDescription": "This action cannot be undone. All your chats, messages, and account data will be permanently deleted.",
       "deleteBtn": "Delete",
       "prompt": {
         "title": "Delete Account?",

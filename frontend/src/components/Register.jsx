@@ -343,7 +343,8 @@ export const Register = () => {
                         />
                       </svg>
                       <span className="leading-relaxed">
-                        {translations.auth.register.pwHelper}
+                        {translations.auth.register.pwHelper ||
+                          "6+ characters, incl. uppercase, lowercase & numbers."}
                       </span>
                     </p>
                   )}
@@ -355,7 +356,7 @@ export const Register = () => {
                     htmlFor="username"
                     className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
                   >
-                    {translations.auth.register.usernameTitle}
+                    {translations.auth.register.usernameTitle || "Username"}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
@@ -367,7 +368,8 @@ export const Register = () => {
                       id="username"
                       autoComplete="username"
                       placeholder={
-                        translations.auth.register.usernamePlaceholder
+                        translations.auth.register.usernamePlaceholder ||
+                        "Unique username"
                       }
                       minLength={2}
                       maxLength={20}
@@ -409,7 +411,8 @@ export const Register = () => {
                         />
                       </svg>
                       <span className="leading-relaxed">
-                        {translations.auth.register.usernameHelper}
+                        {translations.auth.register.usernameHelper ||
+                          "2-20 characters, letters, numbers, -, _"}
                       </span>
                     </p>
                   )}
@@ -431,14 +434,16 @@ export const Register = () => {
                         htmlFor="privacy-policy"
                         className="text-gray-700 dark:text-gray-300 cursor-pointer leading-relaxed"
                       >
-                        {translations.auth.register.haveRead}{" "}
+                        {translations.auth.register.haveRead ||
+                          "Failed to load"}{" "}
                         <Link
                           to="/privacy"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium underline decoration-indigo-300 hover:decoration-indigo-500 transition-colors"
                         >
-                          {translations.auth.register.privacy}
+                          {translations.auth.register.privacy ||
+                            "Privacy Policy"}
                         </Link>{" "}
                         {translations.auth.register.onlyGermanPrivacy}
                       </label>
@@ -482,9 +487,7 @@ export const Register = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span>
-                        {translations.auth.register.fixErrors}
-                      </span>
+                      <span>{translations.auth.register.fixErrors}</span>
                     </p>
                   )}
                 </div>

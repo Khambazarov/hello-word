@@ -540,25 +540,33 @@
       "backToChat": "Zurück zum Chat"
     },
     "settings": {
+      "title": "Einstellungen",
+      "description": "Passe deine Einstellungen und Kontodaten ganz einfach an.",
       "loadingSettings": "Lädt Einstellungen...",
       "selectLangTitle": "Sprache auswählen",
+      "selectLangDescription": "Wähle deine bevorzugte Sprache für die App",
       "lang": {
         "en": "EN",
         "de": "DE"
       },
       "volumeTitle": "Audio-Lautstärke",
+      "adjustVolume": "Passe die Lautstärke für Benachrichtigungstöne an",
       "volume": {
-        "silent": "Stumm",
-        "middle": "Mittel",
+        "silent": "Leise",
+        "middle": "Normal",
         "loud": "Laut"
       },
       "changePwTitle": "Passwort ändern",
+      "changePwDescription": "6+ Zeichen, inkl. Groß- und Kleinbuchstaben & Zahlen",
       "currentPwTitle": "Aktuelles Passwort",
       "currentPwPlaceholder": "Aktuelles Passwort",
       "newPwTitle": "Neues Passwort",
-      "newPwPlaceholder": "Neues Passwort",
+      "newPwPlaceholder": "Starkes Passwort",
       "changePwBtn": "Passwort ändern",
       "deleteAccountTitle": "Nutzerkonto löschen",
+      "deleteAccountDescription": "Lösche dein Konto und alle Daten dauerhaft",
+      "warningTitle": "Warnung!",
+      "warningDescription": "Diese Aktion kann nicht rückgängig gemacht werden. Alle deine Chats, Nachrichten und Kontodaten werden dauerhaft gelöscht.",
       "deleteBtn": "Löschen",
       "prompt": {
         "title": "Nutzerkonto löschen?",
