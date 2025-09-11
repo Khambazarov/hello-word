@@ -214,7 +214,7 @@ export const Profile = () => {
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-8">
             {/* Info Box */}
             <div className="mb-8 p-4 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-lg">
-              <div className="flex flex-col items-center gap-3 text-indigo-700 dark:text-indigo-300">
+              <div className="flex flex-col gap-3 text-indigo-700 dark:text-indigo-300">
                 <svg
                   className="w-5 h-5 flex-shrink-0"
                   fill="currentColor"
