@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Hello, Word!",
+    "appDescription": "Deine Messaging-Plattform",
     "loading": "Lädt...",
     "save": "Speichern",
     "cancel": "Abbrechen",
@@ -18,7 +19,10 @@
     "submit": "Absenden",
     "search": "Suchen",
     "welcomeMessage": "Willkommen bei",
-    "welcomeBack": "Willkommen zurück bei"
+    "welcomeBack": "Willkommen zurück bei",
+    "online": "Online",
+    "relogin": "Erneut anmelden",
+    "loggingOut": "Melde ab..."
   },
 
   "auth": {
@@ -104,6 +108,9 @@
       "failedToFindUser": "Benutzer nicht gefunden"
     },
     "area": {
+      "title": "Deine Unterhaltungen",
+      "subtitle": "Bleibe mit Freunden in Verbindung",
+      "createGroupChatTooltip": "Gruppenchat erstellen",
       "loading": "Lädt...",
       "sentImage": "Bild",
       "sentAudioMessage": "Sprachnachricht",
@@ -274,6 +281,7 @@
     "navigation": {
       "menu": {
         "profile": "Mein Profil",
+        "manageAccount": "Verwalte dein Konto",
         "settings": "Einstellungen",
         "aboutUs": "Über uns",
         "privacy": "Datenschutz",

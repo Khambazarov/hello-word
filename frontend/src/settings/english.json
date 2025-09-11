@@ -1,6 +1,7 @@
 {
   "common": {
     "appName": "Hello, Word!",
+    "appDescription": "Your messaging platform",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -18,7 +19,10 @@
     "submit": "Submit",
     "search": "Search",
     "welcomeMessage": "Welcome to",
-    "welcomeBack": "Welcome back to"
+    "welcomeBack": "Welcome back to",
+    "online": "Online",
+    "relogin": "Sign in again",
+    "loggingOut": "Logging out…"
   },
 
   "auth": {
@@ -104,6 +108,9 @@
       "failedToFindUser": "User not found"
     },
     "area": {
+      "title": "Your Conversations",
+      "subtitle": "Stay connected with friends",
+      "createGroupChatTooltip": "Create Group Chat",
       "loading": "Loading...",
       "sentImage": "Image",
       "sentAudioMessage": "Voice message",
@@ -274,6 +281,7 @@
     "navigation": {
       "menu": {
         "profile": "My Profile",
+        "manageAccount": "Manage your account",
         "settings": "Settings",
         "aboutUs": "About Us",
         "privacy": "Privacy",
