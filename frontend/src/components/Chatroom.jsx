@@ -800,15 +800,7 @@ export const Chatroom = () => {
           </div>
 
           {/* Right section - Settings */}
-          <div className="flex items-center space-x-0 flex-1 justify-end">
-            {/* {isGroupChat && userPermissions?.canInvite && (
-              <button
-                onClick={() => navigate(`/chatarea/groups/${id}/invite`)}
-                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                {translations.chatroom?.invite || "Invite"}
-              </button>
-            )} */}
+          <div className="flex items-center space-x-0 sm:space-x-4 flex-1 justify-end">
 
             {/* Settings Button - für Gruppenchats und 1-zu-1 Chats */}
             <button
@@ -842,7 +834,7 @@ export const Chatroom = () => {
 
             <button
               onClick={() => navigate("/chatarea")}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title="Back to Chat List"
             >
               <BackButtonIcon />
