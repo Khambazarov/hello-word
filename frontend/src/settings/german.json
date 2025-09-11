@@ -125,6 +125,9 @@
       "addPerson": "Person hinzufügen"
     },
     "settings": {
+      "chatInformation": "Chat-Informationen",
+      "directChat": "Direktchat",
+      "groupChat": "Gruppenchat",
       "deleteChat": "Chat löschen",
       "confirmDeleteChat": "Bist du sicher, dass du diesen Chat löschen möchtest?",
       "thisWillPermanentlyDelete": "Dies wird alle Nachrichten dauerhaft löschen und kann nicht rückgängig gemacht werden.",
