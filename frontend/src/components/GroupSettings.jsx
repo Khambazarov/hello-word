@@ -1,14 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
 
-import { BackButtonIcon } from "./_AllSVGs";
 import { getAvatarUrl, createAvatarErrorHandler } from "../utils/avatarHelper";
+import { fetchUserLanguage } from "../utils/api";
+import { getTranslations } from "../utils/languageHelper";
+
+// kleine Helper für Platzhalter-Strings: "Hi {user}"
+const fmt = (s, dict) =>
+  typeof s === "string"
+    ? s.replace(/\{(\w+)\}/g, (_, k) => dict?.[k] ?? "")
+    : s;
 
 export const GroupSettings = () => {
-  const [editingName, setEditingName] = useState(false);
-  const [editingDescription, setEditingDescription] = useState(false);
+  // --------------------------- i18n ---------------------------
+  const [language, setLanguage] = useState("en");
+  const [t, setT] = useState(getTranslations("en"));
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const user = await fetchUserLanguage();
+        const lang = user?.language || "en";
+        if (mounted) {
+          setLanguage(lang);
+          setT(getTranslations(lang));
+        }
+      } catch (e) {
+        // fallback bleibt "en"
+        console.debug("language load failed:", e);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // --------------------------- Local state ---------------------------
   const [newGroupName, setNewGroupName] = useState("");
   const [newGroupDescription, setNewGroupDescription] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -19,18 +49,30 @@ export const GroupSettings = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // --------------------------- Data fetching ---------------------------
   const { data: groupData, isLoading } = useQuery({
     queryKey: ["groupMembers", groupId],
     queryFn: async () => {
-      const response = await fetch(`/api/groupchats/${groupId}/members`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch group data");
-      }
+      const response = await fetch(`/api/groupchats/${groupId}/members`, {
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch group data");
       return response.json();
     },
   });
 
-  // Set initial values when data is loaded
+  const { data: chatData } = useQuery({
+    queryKey: ["chatroom", groupId],
+    queryFn: async () => {
+      const response = await fetch(`/api/chatrooms/chats/${groupId}`, {
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch chatroom");
+      return response.json();
+    },
+  });
+
+  // Set initial values
   useEffect(() => {
     if (groupData) {
       setNewGroupName(groupData.groupInfo?.name || "");
@@ -38,37 +80,27 @@ export const GroupSettings = () => {
     }
   }, [groupData]);
 
-  const { data: chatData } = useQuery({
-    queryKey: ["chatroom", groupId],
-    queryFn: async () => {
-      const response = await fetch(`/api/chatrooms/chats/${groupId}`);
-      return response.json();
-    },
-  });
-
+  // --------------------------- Mutations ---------------------------
   const updateGroupMutation = useMutation({
     mutationFn: async (updates) => {
       const response = await fetch(`/api/groupchats/${groupId}/edit`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(updates),
       });
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.errorMessage || "Failed to update group");
       }
-
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Group updated successfully");
-      queryClient.invalidateQueries(["groupMembers", groupId]);
-      queryClient.invalidateQueries(["chatroom", groupId]);
-      setEditingName(false);
-      setEditingDescription(false);
+      toast.success(
+        t.feedback?.success?.group?.updated || "Group updated successfully"
+      );
+      queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["chatroom", groupId] });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -79,149 +111,140 @@ export const GroupSettings = () => {
     mutationFn: async (username) => {
       const response = await fetch(`/api/groupchats/${groupId}/promote`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username }),
       });
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.errorMessage || "Failed to promote user");
       }
-
       return response.json();
     },
     onSuccess: (data) => {
-      toast.success(`${data.newAdmin} promoted to admin`);
-      queryClient.invalidateQueries(["groupMembers", groupId]);
+      toast.success(
+        fmt(t.group?.settings?.promotedToAdmin, { user: data.newAdmin }) ||
+          `${data.newAdmin} promoted to admin`
+      );
+      queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   const demoteMutation = useMutation({
     mutationFn: async (username) => {
       const response = await fetch(`/api/groupchats/${groupId}/demote`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username }),
       });
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.errorMessage || "Failed to demote admin");
       }
-
       return response.json();
     },
     onSuccess: (data) => {
-      toast.success(`${data.demotedAdmin} demoted to member`);
-      queryClient.invalidateQueries(["groupMembers", groupId]);
+      toast.success(
+        fmt(t.group?.settings?.demotedToMember, {
+          user: data.demotedAdmin,
+        }) || `${data.demotedAdmin} demoted to member`
+      );
+      queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   const removeMemberMutation = useMutation({
     mutationFn: async (username) => {
       const response = await fetch(
         `/api/groupchats/${groupId}/members/${username}`,
-        {
-          method: "DELETE",
-        }
+        { method: "DELETE", credentials: "include" }
       );
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.errorMessage || "Failed to remove member");
       }
-
       return response.json();
     },
     onSuccess: (data) => {
-      toast.success(`${data.removedUser} removed from group`);
-      queryClient.invalidateQueries(["groupMembers", groupId]);
+      toast.success(
+        fmt(t.group?.settings?.removedUser, { user: data.removedUser }) ||
+          `${data.removedUser} removed from group`
+      );
+      queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   const leaveGroupMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(`/api/groupchats/${groupId}/leave`, {
         method: "POST",
+        credentials: "include",
       });
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.errorMessage || "Failed to leave group");
       }
-
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Successfully left the group");
+      toast.success(
+        t.group?.settings?.leftGroup || "Successfully left the group"
+      );
       navigate("/chatarea");
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   const deleteGroupMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(`/api/chatrooms/groupchats/${groupId}`, {
         method: "DELETE",
+        credentials: "include",
       });
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.errorMessage || "Failed to delete group");
       }
-
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Group deleted successfully");
+      toast.success(t.group?.settings?.deleted || "Group deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["chatrooms"] });
       navigate("/chatarea");
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
   const uploadGroupImageMutation = useMutation({
     mutationFn: async (formData) => {
       const response = await fetch(`/api/upload/group-image/${groupId}`, {
         method: "POST",
+        credentials: "include",
         body: formData,
       });
-
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({}));
         throw new Error(error.error || "Failed to upload image");
       }
-
       return response.json();
     },
     onSuccess: () => {
-      toast.success("Group image updated successfully");
-      queryClient.invalidateQueries(["groupMembers", groupId]);
-      queryClient.invalidateQueries(["chatroom", groupId]);
+      toast.success(
+        t.group?.settings?.imageUpdated || "Group image updated successfully"
+      );
+      queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
+      queryClient.invalidateQueries({ queryKey: ["chatroom", groupId] });
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+    onError: (error) => toast.error(error.message),
   });
 
+  // --------------------------- Handlers ---------------------------
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (file) {
       const formData = new FormData();
       formData.append("groupImage", file);
@@ -231,15 +254,20 @@ export const GroupSettings = () => {
 
   const handleUpdateGroup = () => {
     const updates = {};
-
-    // Validierung des Gruppennamens
     const trimmedGroupName = newGroupName.trim();
+
     if (trimmedGroupName.length < 2) {
-      toast.error("Group name must be at least 2 characters long");
+      toast.error(
+        t.feedback?.errors?.group?.nameTooShort ||
+          "Group name must be at least 2 characters long"
+      );
       return;
     }
-    if (trimmedGroupName.length > 50) {
-      toast.error("Group name cannot exceed 50 characters");
+    if (trimmedGroupName.length > 20) {
+      toast.error(
+        t.feedback?.errors?.group?.nameTooLong ||
+          "Group name cannot exceed 20 characters"
+      );
       return;
     }
 
@@ -255,16 +283,64 @@ export const GroupSettings = () => {
     if (Object.keys(updates).length > 0) {
       updateGroupMutation.mutate(updates);
     } else {
-      toast("No changes to save", {
+      toast(t.common?.noChangesToSave || "No changes to save", {
         icon: "ℹ️",
-        style: {
-          background: "#3b82f6",
-          color: "#ffffff",
-        },
+        style: { background: "#3b82f6", color: "#ffffff" },
       });
     }
   };
 
+  // --------------------------- A11y: Focus & Modals ---------------------------
+  const confirmCancelRef = useRef(null);
+  const deleteCancelRef = useRef(null);
+  const openerRef = useRef(null);
+
+  const openConfirm = (member) => {
+    openerRef.current = document.activeElement;
+    setMemberToRemove(member);
+    setShowConfirmModal(true);
+  };
+  const openDeleteGroup = () => {
+    openerRef.current = document.activeElement;
+    setShowDeleteGroupModal(true);
+  };
+
+  const anyModalOpen = showConfirmModal || showDeleteGroupModal;
+
+  useEffect(() => {
+    if (!anyModalOpen) return;
+
+    if (showConfirmModal) confirmCancelRef.current?.focus();
+    if (showDeleteGroupModal) deleteCancelRef.current?.focus();
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        if (!removeMemberMutation.isLoading && !deleteGroupMutation.isLoading) {
+          setShowConfirmModal(false);
+          setShowDeleteGroupModal(false);
+          setMemberToRemove(null);
+        }
+      }
+    };
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+      openerRef.current?.focus?.();
+    };
+  }, [
+    anyModalOpen,
+    showConfirmModal,
+    showDeleteGroupModal,
+    removeMemberMutation.isLoading,
+    deleteGroupMutation.isLoading,
+  ]);
+
+  // --------------------------- Render: Loading ---------------------------
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -273,13 +349,15 @@ export const GroupSettings = () => {
     );
   }
 
+  // --------------------------- Derived ---------------------------
   const userPermissions = chatData?.userPermissions || {};
   const isCreator = userPermissions.isCreator;
   const isAdmin = userPermissions.isAdmin;
 
+  // --------------------------- UI ---------------------------
   return (
     <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
-      {/* Modern Navigation Header */}
+      {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -289,7 +367,7 @@ export const GroupSettings = () => {
                   groupData?.groupInfo?.image,
                   groupData?.groupInfo?.name || "Group"
                 )}
-                alt="Group"
+                alt={t.group?.settings?.altGroup || "Group"}
                 className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
                 onError={createAvatarErrorHandler(
                   groupData?.groupInfo?.name || "Group"
@@ -299,17 +377,16 @@ export const GroupSettings = () => {
             <div className="flex items-center space-x-4">
               <div>
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  Group Settings
+                  {t.group?.settings?.title || "Group Settings"}
                 </h1>
               </div>
             </div>
-
-            {/* Right side - Actions */}
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => navigate(`/chatarea/chats/${groupId}`)}
                 className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group"
-                title="Back to Group"
+                title={t.ui?.tooltips?.backToGroup || "Back to Group"}
+                aria-label={t.ui?.tooltips?.backToGroup || "Back to Group"}
               >
                 <svg
                   className="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform duration-200"
@@ -331,7 +408,7 @@ export const GroupSettings = () => {
       </header>
 
       <div className="flex flex-col items-center p-6 max-w-7xl mx-auto w-full">
-        {/* Header Section - Simplified */}
+        {/* Intro */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-4 shadow-lg">
             <svg
@@ -354,13 +431,12 @@ export const GroupSettings = () => {
               />
             </svg>
           </div>
-          {/* <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">
-            Group Settings
-          </h2> */}
           <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-            Customize your group experience and manage member permissions
+            {t.group?.settings?.subtitle ||
+              "Customize your group experience and manage member permissions"}
           </p>
         </div>
+
         <div className="w-full max-w-4xl space-y-6 sm:space-y-8">
           {/* Group Information Card */}
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
@@ -382,10 +458,11 @@ export const GroupSettings = () => {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                  Group Information
+                  {t.group?.settings?.groupInformation || "Group Information"}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Basic group details and settings
+                  {t.group?.settings?.groupInformationSubtitle ||
+                    "Basic group details and settings"}
                 </p>
               </div>
             </div>
@@ -394,13 +471,13 @@ export const GroupSettings = () => {
               {/* Group Avatar */}
               <div className="flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0">
                 <div className="relative">
-                  <div className="w-20 h-20 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
                     <img
                       src={getAvatarUrl(
                         groupData?.groupInfo?.image,
                         groupData?.groupInfo?.name || "Group"
                       )}
-                      alt="Group"
+                      alt={t.group?.settings?.altGroup || "Group"}
                       className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
                       onError={createAvatarErrorHandler(
                         groupData?.groupInfo?.name || "Group"
@@ -408,7 +485,10 @@ export const GroupSettings = () => {
                     />
                   </div>
                   {isAdmin && (
-                    <label className="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-1.5 sm:p-2 cursor-pointer hover:bg-blue-700 transition-colors shadow-lg">
+                    <label
+                      className="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-1.5 sm:p-2 cursor-pointer hover:bg-blue-700 transition-colors shadow-lg"
+                      title={t.group?.settings?.changeImage || "Change image"}
+                    >
                       <input
                         type="file"
                         accept="image/*"
@@ -437,46 +517,21 @@ export const GroupSettings = () => {
                     >
                       <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
                     </svg>
-                    {groupData?.memberCount} members
+                    {groupData?.memberCount}{" "}
+                    {t.group?.settings?.membersLabel || "members"}
                   </p>
                 </div>
               </div>
 
-              {isAdmin && (
+              {/* Editable fields (Admins) */}
+              {isAdmin ? (
                 <>
-                  {/* Info Box for Admins */}
-                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <svg
-                        className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <div className="text-sm">
-                        <p className="text-blue-800 dark:text-blue-200 font-medium mb-1">
-                          Admin Privileges
-                        </p>
-                        <p className="text-blue-700 dark:text-blue-300">
-                          {isCreator
-                            ? "As the group creator, you have full control: edit group information, manage all members, promote/demote admins, and delete the group."
-                            : "You can edit group information, manage regular members, and invite new users. Only the creator can manage other admins."}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Group Name */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Group Name
+                      {t.group?.settings?.groupName || "Group Name"}
                       <span className="text-xs text-gray-500 ml-1">
-                        (Required)
+                        ({t.common?.required || "Required"})
                       </span>
                     </label>
                     <div className="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
@@ -487,29 +542,34 @@ export const GroupSettings = () => {
                           onChange={(e) => setNewGroupName(e.target.value)}
                           className={`w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors dark:bg-gray-700 dark:text-white ${
                             newGroupName.trim().length < 2 ||
-                            newGroupName.trim().length > 50
+                            newGroupName.trim().length > 20
                               ? "border-red-500 dark:border-red-500"
                               : "border-gray-300 dark:border-gray-600"
                           }`}
-                          maxLength={50}
-                          placeholder="Enter group name..."
+                          maxLength={20}
+                          placeholder={
+                            t.group?.settings?.groupNamePlaceholder ||
+                            "Enter group name..."
+                          }
                         />
                         <div className="flex justify-between items-center mt-2">
                           <div className="text-xs">
                             {newGroupName.trim().length < 2 &&
                               newGroupName.trim().length > 0 && (
                                 <span className="text-red-500">
-                                  Name must be at least 2 characters
+                                  {t.feedback?.errors?.group?.nameTooShort ||
+                                    "Name must be at least 2 characters"}
                                 </span>
                               )}
                             {newGroupName.trim().length === 0 && (
                               <span className="text-red-500">
-                                Name is required
+                                {t.feedback?.errors?.group?.nameRequired ||
+                                  "Name is required"}
                               </span>
                             )}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {newGroupName.length}/50
+                            {newGroupName.length}/20
                           </div>
                         </div>
                       </div>
@@ -517,7 +577,7 @@ export const GroupSettings = () => {
                         onClick={handleUpdateGroup}
                         disabled={
                           newGroupName.trim().length < 2 ||
-                          newGroupName.trim().length > 50
+                          newGroupName.trim().length > 20
                         }
                         className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors duration-200 disabled:cursor-not-allowed flex items-center justify-center space-x-2 w-full sm:w-auto"
                       >
@@ -534,7 +594,7 @@ export const GroupSettings = () => {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        <span>Save</span>
+                        <span>{t.common?.save || "Save"}</span>
                       </button>
                     </div>
                   </div>
@@ -542,9 +602,10 @@ export const GroupSettings = () => {
                   {/* Group Description */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Group Description
+                      {t.group?.settings?.groupDescription ||
+                        "Group Description"}
                       <span className="text-xs text-gray-500 ml-1">
-                        (Optional)
+                        ({t.common?.optional || "Optional"})
                       </span>
                     </label>
                     <div className="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
@@ -557,7 +618,10 @@ export const GroupSettings = () => {
                           className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none"
                           rows={3}
                           maxLength={200}
-                          placeholder="Enter group description..."
+                          placeholder={
+                            t.group?.settings?.groupDescriptionPlaceholder ||
+                            "Enter group description..."
+                          }
                         />
                         <div className="text-right text-xs text-gray-500 dark:text-gray-400 mt-2">
                           {newGroupDescription.length}/200
@@ -567,7 +631,7 @@ export const GroupSettings = () => {
                         onClick={handleUpdateGroup}
                         disabled={
                           newGroupName.trim().length < 2 ||
-                          newGroupName.trim().length > 50
+                          newGroupName.trim().length > 20
                         }
                         className="px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors duration-200 disabled:cursor-not-allowed self-start flex items-center justify-center space-x-2 w-full sm:w-auto"
                       >
@@ -584,14 +648,12 @@ export const GroupSettings = () => {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        <span>Save</span>
+                        <span>{t.common?.save || "Save"}</span>
                       </button>
                     </div>
                   </div>
                 </>
-              )}
-
-              {!isAdmin && (
+              ) : (
                 <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg">
                   <div className="flex items-start space-x-3">
                     <svg
@@ -607,11 +669,12 @@ export const GroupSettings = () => {
                     </svg>
                     <div className="text-sm">
                       <p className="text-amber-800 dark:text-amber-200 font-medium mb-1">
-                        Member Access
+                        {t.group?.settings?.memberAccessTitle ||
+                          "Member Access"}
                       </p>
                       <p className="text-amber-700 dark:text-amber-300">
-                        Only admins can modify group settings. Contact a group
-                        admin to make changes.
+                        {t.group?.settings?.memberAccessText ||
+                          "Only admins can modify group settings. Contact a group admin to make changes."}
                       </p>
                     </div>
                   </div>
@@ -641,10 +704,12 @@ export const GroupSettings = () => {
                 </div>
                 <div>
                   <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
-                    Group Members
+                    {t.group?.settings?.membersTitle || "Group Members"}
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                    {groupData?.memberCount} members total
+                    {groupData?.memberCount}{" "}
+                    {t.group?.settings?.membersLabel || "members"}{" "}
+                    {t.group?.settings?.total || "total"}
                   </p>
                 </div>
               </div>
@@ -666,7 +731,9 @@ export const GroupSettings = () => {
                       d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                     />
                   </svg>
-                  <span>Invite Members</span>
+                  <span>
+                    {t.group?.settings?.inviteMembers || "Invite Members"}
+                  </span>
                 </button>
               )}
             </div>
@@ -711,28 +778,27 @@ export const GroupSettings = () => {
                         <div className="flex flex-wrap gap-1 sm:gap-2 mt-1">
                           {memberIsCreator && (
                             <span className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 px-2 py-0.5 sm:py-1 rounded-full font-medium">
-                              Creator
+                              {t.roles?.creator || "Creator"}
                             </span>
                           )}
                           {memberIsAdmin && !memberIsCreator && (
                             <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 px-2 py-0.5 sm:py-1 rounded-full font-medium">
-                              Admin
+                              {t.roles?.admin || "Admin"}
                             </span>
                           )}
                           {!memberIsAdmin && !memberIsCreator && (
                             <span className="text-xs bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300 px-2 py-0.5 sm:py-1 rounded-full font-medium">
-                              Member
+                              {t.roles?.member || "Member"}
                             </span>
                           )}
                         </div>
                       </div>
                     </div>
 
-                    {/* Admin/Creator Actions - Only show for non-creators and based on permissions */}
+                    {/* Actions */}
                     {((isCreator && !memberIsCreator) ||
                       (isAdmin && !memberIsAdmin && !memberIsCreator)) && (
                       <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                        {/* Only Creator can promote regular members to admin */}
                         {isCreator && !memberIsAdmin && !memberIsCreator && (
                           <button
                             onClick={() =>
@@ -753,11 +819,12 @@ export const GroupSettings = () => {
                                 d="M5 10l7-7m0 0l7 7m-7-7v18"
                               />
                             </svg>
-                            <span>Promote</span>
+                            <span>
+                              {t.group?.settings?.promote || "Promote"}
+                            </span>
                           </button>
                         )}
 
-                        {/* Only Creator can demote admins */}
                         {isCreator && memberIsAdmin && !memberIsCreator && (
                           <button
                             onClick={() =>
@@ -778,11 +845,10 @@ export const GroupSettings = () => {
                                 d="M19 14l-7 7m0 0l-7-7m7 7V3"
                               />
                             </svg>
-                            <span>Demote</span>
+                            <span>{t.group?.settings?.demote || "Demote"}</span>
                           </button>
                         )}
 
-                        {/* Remove button - Creator can remove anyone, Admin can only remove regular members */}
                         <button
                           onClick={() => {
                             setMemberToRemove(member);
@@ -803,7 +869,7 @@ export const GroupSettings = () => {
                               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                             />
                           </svg>
-                          <span>Remove</span>
+                          <span>{t.group?.settings?.remove || "Remove"}</span>
                         </button>
                       </div>
                     )}
@@ -833,10 +899,11 @@ export const GroupSettings = () => {
               </div>
               <div>
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
-                  Group Actions
+                  {t.group?.settings?.actionsTitle || "Group Actions"}
                 </h2>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                  Manage your group membership
+                  {t.group?.settings?.actionsSubtitle ||
+                    "Manage your group membership"}
                 </p>
               </div>
             </div>
@@ -859,20 +926,22 @@ export const GroupSettings = () => {
                       </svg>
                       <div className="text-xs sm:text-sm">
                         <p className="text-red-800 dark:text-red-200 font-medium mb-1">
-                          Leave Group
+                          {t.group?.settings?.leaveGroupTitle || "Leave Group"}
                         </p>
                         <p className="text-red-700 dark:text-red-300">
-                          You will no longer be able to access this group or its
-                          messages.
+                          {t.group?.settings?.leaveGroupText ||
+                            "You will no longer be able to access this group or its messages."}
                         </p>
                       </div>
                     </div>
                   </div>
                   <button
                     onClick={() => {
-                      if (
-                        confirm("Are you sure you want to leave this group?")
-                      ) {
+                      // Native confirm, lokalisiert:
+                      const question =
+                        t.group?.settings?.confirmLeave ||
+                        "Are you sure you want to leave this group?";
+                      if (confirm(question)) {
                         leaveGroupMutation.mutate();
                       }
                     }}
@@ -891,7 +960,9 @@ export const GroupSettings = () => {
                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                       />
                     </svg>
-                    <span>Leave Group</span>
+                    <span>
+                      {t.group?.settings?.leaveGroupBtn || "Leave Group"}
+                    </span>
                   </button>
                 </>
               )}
@@ -913,17 +984,18 @@ export const GroupSettings = () => {
                       </svg>
                       <div className="text-xs sm:text-sm">
                         <p className="text-gray-800 dark:text-gray-200 font-medium mb-1">
-                          Creator Privileges
+                          {t.group?.settings?.creatorPrivilegesTitle ||
+                            "Creator Privileges"}
                         </p>
                         <p className="text-gray-600 dark:text-gray-400">
-                          As the group creator, you cannot leave the group. You
-                          can transfer ownership or delete the group.
+                          {t.group?.settings?.creatorPrivilegesText ||
+                            "As the group creator, you cannot leave the group. You can transfer ownership or delete the group."}
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Delete Group Section */}
+                  {/* Delete Group */}
                   <div className="p-3 sm:p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
                     <div className="flex items-start space-x-3">
                       <svg
@@ -944,18 +1016,19 @@ export const GroupSettings = () => {
                       </svg>
                       <div className="text-xs sm:text-sm">
                         <p className="text-red-800 dark:text-red-200 font-medium mb-1">
-                          Delete Group
+                          {t.group?.settings?.deleteGroupTitle ||
+                            "Delete Group"}
                         </p>
                         <p className="text-red-700 dark:text-red-300">
-                          Permanently delete this group and all its messages.
-                          This action cannot be undone.
+                          {t.group?.settings?.deleteGroupText ||
+                            "Permanently delete this group and all its messages. This action cannot be undone."}
                         </p>
                       </div>
                     </div>
                   </div>
 
                   <button
-                    onClick={() => setShowDeleteGroupModal(true)}
+                    onClick={openDeleteGroup}
                     className="w-full px-4 py-2 sm:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center justify-center space-x-2 font-semibold text-sm sm:text-base"
                   >
                     <svg
@@ -971,7 +1044,9 @@ export const GroupSettings = () => {
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                       />
                     </svg>
-                    <span>Delete Group</span>
+                    <span>
+                      {t.group?.settings?.deleteGroupBtn || "Delete Group"}
+                    </span>
                   </button>
                 </>
               )}
@@ -980,12 +1055,29 @@ export const GroupSettings = () => {
         </div>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Remove Member Modal */}
       {showConfirmModal && memberToRemove && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={
+            !removeMemberMutation.isLoading
+              ? () => {
+                  setShowConfirmModal(false);
+                  setMemberToRemove(null);
+                }
+              : undefined
+          }
+          aria-labelledby="remove-dialog-title"
+          aria-describedby="remove-dialog-desc"
+        >
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-busy={removeMemberMutation.isLoading}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6">
-              {/* Modal Header */}
               <div className="flex items-center mb-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full mr-4">
                   <svg
@@ -1003,37 +1095,42 @@ export const GroupSettings = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    Remove Member
+                  <h3
+                    id="remove-dialog-title"
+                    className="text-lg font-bold text-gray-900 dark:text-white"
+                  >
+                    {t.group?.settings?.removeMemberTitle || "Remove Member"}
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    This action cannot be undone
+                  <p
+                    id="remove-dialog-desc"
+                    className="text-sm text-gray-600 dark:text-gray-400"
+                  >
+                    {t.group?.settings?.irreversible ||
+                      "This action cannot be undone"}
                   </p>
                 </div>
               </div>
 
-              {/* Modal Content */}
               <div className="mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
-                  Are you sure you want to remove{" "}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    {memberToRemove.username}
-                  </span>{" "}
-                  from this group? They will no longer have access to the group
-                  chat and messages.
+                  {fmt(
+                    t.group?.settings?.removeMemberQuestion ||
+                      "Are you sure you want to remove {user} from this group?",
+                    { user: memberToRemove.username }
+                  )}
                 </p>
               </div>
 
-              {/* Modal Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 sm:justify-end">
+              <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
                 <button
+                  ref={confirmCancelRef}
                   onClick={() => {
                     setShowConfirmModal(false);
                     setMemberToRemove(null);
                   }}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
                 >
-                  Cancel
+                  {t.common?.cancel || "Cancel"}
                 </button>
                 <button
                   onClick={() => {
@@ -1047,7 +1144,7 @@ export const GroupSettings = () => {
                   {removeMemberMutation.isLoading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Removing...</span>
+                      <span>{t.common?.processing || "Processing..."}</span>
                     </>
                   ) : (
                     <>
@@ -1064,7 +1161,9 @@ export const GroupSettings = () => {
                           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                         />
                       </svg>
-                      <span>Remove Member</span>
+                      <span>
+                        {t.group?.settings?.removeMemberBtn || "Remove Member"}
+                      </span>
                     </>
                   )}
                 </button>
@@ -1076,10 +1175,24 @@ export const GroupSettings = () => {
 
       {/* Delete Group Confirmation Modal */}
       {showDeleteGroupModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={
+            !deleteGroupMutation.isLoading
+              ? () => setShowDeleteGroupModal(false)
+              : undefined
+          }
+          aria-labelledby="delete-dialog-title"
+          aria-describedby="delete-dialog-desc"
+        >
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-busy={deleteGroupMutation.isLoading}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="p-6">
-              {/* Modal Header */}
               <div className="flex items-center mb-4">
                 <div className="inline-flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full mr-4">
                   <svg
@@ -1097,23 +1210,29 @@ export const GroupSettings = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    Delete Group
+                  <h3
+                    id="delete-dialog-title"
+                    className="text-lg font-bold text-gray-900 dark:text-white"
+                  >
+                    {t.group?.settings?.deleteGroupTitle || "Delete Group"}
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    This action cannot be undone
+                  <p
+                    id="delete-dialog-desc"
+                    className="text-sm text-gray-600 dark:text-gray-400"
+                  >
+                    {t.group?.settings?.irreversible ||
+                      "This action cannot be undone"}
                   </p>
                 </div>
               </div>
 
-              {/* Modal Content */}
               <div className="mb-6">
                 <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base mb-3">
-                  Are you sure you want to permanently delete{" "}
-                  <span className="font-semibold text-gray-900 dark:text-white">
-                    &ldquo;{groupData?.groupInfo?.name}&rdquo;
-                  </span>
-                  ?
+                  {fmt(
+                    t.group?.settings?.deleteGroupQuestion ||
+                      "Are you sure you want to permanently delete “{name}”?",
+                    { name: groupData?.groupInfo?.name }
+                  )}
                 </p>
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-3">
                   <div className="flex items-start space-x-2">
@@ -1129,24 +1248,39 @@ export const GroupSettings = () => {
                       />
                     </svg>
                     <div className="text-xs text-red-800 dark:text-red-200">
-                      <p className="font-medium mb-1">This will permanently:</p>
+                      <p className="font-medium mb-1">
+                        {t.group?.settings?.willPermanently ||
+                          "This will permanently:"}
+                      </p>
                       <ul className="list-disc list-inside space-y-0.5">
-                        <li>Delete all group messages</li>
-                        <li>Remove all {groupData?.memberCount} members</li>
-                        <li>Delete all group data and settings</li>
+                        <li>
+                          {t.group?.settings?.deletePointMessages ||
+                            "Delete all group messages"}
+                        </li>
+                        <li>
+                          {fmt(
+                            t.group?.settings?.deletePointMembers ||
+                              "Remove all {count} members",
+                            { count: groupData?.memberCount }
+                          )}
+                        </li>
+                        <li>
+                          {t.group?.settings?.deletePointData ||
+                            "Delete all group data and settings"}
+                        </li>
                       </ul>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Modal Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 sm:justify-end">
+              <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
                 <button
+                  ref={deleteCancelRef}
                   onClick={() => setShowDeleteGroupModal(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
                 >
-                  Cancel
+                  {t.common?.cancel || "Cancel"}
                 </button>
                 <button
                   onClick={() => {
@@ -1159,7 +1293,7 @@ export const GroupSettings = () => {
                   {deleteGroupMutation.isLoading ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Deleting...</span>
+                      <span>{t.common?.processing || "Processing..."}</span>
                     </>
                   ) : (
                     <>
@@ -1176,7 +1310,9 @@ export const GroupSettings = () => {
                           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                         />
                       </svg>
-                      <span>Delete Group</span>
+                      <span>
+                        {t.group?.settings?.deleteGroupBtn || "Delete Group"}
+                      </span>
                     </>
                   )}
                 </button>
