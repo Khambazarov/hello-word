@@ -603,7 +603,7 @@
         "en": "EN",
         "de": "DE"
       },
-      "volumeTitle": "Lautstärke",
+      "volumeTitle": "Lautstärke wählen",
       "adjustVolume": "Passe die Lautstärke für Benachrichtigungstöne an.",
       "volume": {
         "silent": "Leise",
@@ -621,9 +621,10 @@
       "deleteAccountDescription": "Konto und alle Daten dauerhaft löschen.",
       "warningTitle": "Warnung!",
       "warningDescription": "Dieser Vorgang kann nicht rückgängig gemacht werden. Alle Chats, Nachrichten und Kontodaten werden dauerhaft gelöscht.",
-      "deleteBtn": "Löschen",
+      "deleteBtn": "Konto löschen",
       "prompt": {
         "title": "Konto löschen?",
+        "description": "Bist du sicher, dass du dein Konto löschen möchtest? Dies entfernt alle deine Daten dauerhaft.",
         "deleteBtn": "Löschen",
         "cancelBtn": "Abbrechen"
       }

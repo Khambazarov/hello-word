@@ -349,7 +349,8 @@ export const Settings = () => {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.content.settings.volumeTitle}
+                {translations.content.settings.volumeTitle ||
+                  "Select Audio Volume"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {translations.content.settings.adjustVolume ||
@@ -400,9 +401,9 @@ export const Settings = () => {
         </div>
 
         {/* Security Settings */}
-        <div className="w-full mt-8 grid gap-6 md:grid-cols-2">
+        <div className="w-full mt-8 grid gap-6 md:grid-cols-2 items-stretch">
           {/* Password Change */}
-          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-orange-100 dark:bg-orange-900/20 rounded-full mb-3">
                 <svg
@@ -429,7 +430,10 @@ export const Settings = () => {
               </p>
             </div>
 
-            <form onSubmit={changePassword} className="space-y-4">
+            <form
+              onSubmit={changePassword}
+              className="space-y-4 flex flex-col flex-1"
+            >
               <div>
                 <label
                   htmlFor="oldPassword"
@@ -501,7 +505,7 @@ export const Settings = () => {
 
               <button
                 type="submit"
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 mt-auto"
               >
                 <svg
                   className="w-5 h-5"
@@ -525,7 +529,7 @@ export const Settings = () => {
           </div>
 
           {/* Account Deletion */}
-          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-red-200 dark:border-red-700 p-6">
+          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-red-200 dark:border-red-700 p-6 flex flex-col h-full">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full mb-3">
                 <svg
@@ -553,7 +557,7 @@ export const Settings = () => {
             </div>
 
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
-              <div className="flex items-start space-x-3">
+              <div className="flex items-start space-x-3 py-4">
                 <svg
                   className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
                   fill="currentColor"
@@ -567,8 +571,7 @@ export const Settings = () => {
                 </svg>
                 <div className="text-sm">
                   <p className="text-red-800 dark:text-red-200 font-medium">
-                    {translations.content.settings.warningTitle ||
-                      "Warning!"}
+                    {translations.content.settings.warningTitle || "Warning!"}
                   </p>
                   <p className="text-red-700 dark:text-red-300 mt-1">
                     {translations.content.settings.warningDescription ||
@@ -581,7 +584,7 @@ export const Settings = () => {
             <button
               type="button"
               onClick={() => setShow(true)}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2"
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 mt-auto"
             >
               <svg
                 className="w-5 h-5"
@@ -596,7 +599,7 @@ export const Settings = () => {
                   d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                 />
               </svg>
-              <span>{translations.content.settings.deleteBtn}</span>
+              <span>{translations.content.settings.deleteBtn || "Delete"}</span>
             </button>
           </div>
         </div>
@@ -625,24 +628,25 @@ export const Settings = () => {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {translations.content.settings.prompt.title}
+                {translations.content.settings.prompt.title ||
+                  "Delete Account?"}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                This action cannot be undone. All your data will be permanently
-                deleted.
+                {translations.content.settings.prompt.description ||
+                  "Are you sure you want to delete your account? This action cannot be undone."}
               </p>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShow(false)}
                   className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg font-medium transition-colors"
                 >
-                  {translations.content.settings.prompt.cancelBtn}
+                  {translations.content.settings.prompt.cancelBtn || "Cancel"}
                 </button>
                 <button
                   onClick={() => deleteAccountMutation.mutate()}
                   className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                 >
-                  {translations.content.settings.prompt.deleteBtn}
+                  {translations.content.settings.prompt.deleteBtn || "Delete"}
                 </button>
               </div>
             </div>

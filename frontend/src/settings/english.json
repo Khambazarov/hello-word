@@ -603,7 +603,7 @@
         "en": "EN",
         "de": "DE"
       },
-      "volumeTitle": "Audio Volume",
+      "volumeTitle": "Select Audio Volume",
       "adjustVolume": "Adjust the volume for notification sounds.",
       "volume": {
         "silent": "Silent",
@@ -621,9 +621,10 @@
       "deleteAccountDescription": "Permanently delete your account and all data.",
       "warningTitle": "Warning!",
       "warningDescription": "This action cannot be undone. All your chats, messages, and account data will be permanently deleted.",
-      "deleteBtn": "Delete",
+      "deleteBtn": "Delete Account",
       "prompt": {
         "title": "Delete Account?",
+        "description": "Are you sure you want to delete your account? This action cannot be undone.",
         "deleteBtn": "Delete",
         "cancelBtn": "Cancel"
       }
