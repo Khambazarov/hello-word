@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", "VITE_");
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), "prettier-plugin-tailwindcss"],
     server: {
       port: 5174,
       proxy: {
