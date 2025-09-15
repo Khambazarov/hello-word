@@ -122,7 +122,7 @@ export const Profile = () => {
             <div className="flex items-center space-x-0 flex-1 justify-end">
               <button
                 onClick={() => navigate("/settings")}
-                className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="p-3 sm:p-4 text-gray-500ray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                 title="Account Settings"
               >
                 {/* Settings-Icon */}
@@ -177,7 +177,7 @@ export const Profile = () => {
           <div className="flex items-center space-x-0 flex-1 justify-end">
             <button
               onClick={() => navigate("/chatarea")}
-              className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-3 sm:p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title="Back to Chats"
             >
               <BackButtonIcon />
