@@ -52,12 +52,12 @@ export default (io) => {
       }
 
       message.content = content;
-      
+
       // Reset edit seen flags when message is edited
       message.editSeenBy = []; // Clear group chat seen list
       message.editSeenByOwner = false; // Reset owner seen flag for 1-to-1 chats
       message.editSeenByPartner = false; // Reset partner seen flag for 1-to-1 chats
-      
+
       await message.save();
 
       await Message.populate(message, {
@@ -101,33 +101,31 @@ export default (io) => {
       } else {
         // Für Gruppenchats: erweiterte Berechtigungen prüfen
         const isOwnMessage = message.sender.toString() === currentUserId;
-        const isCreator =
-          chatroom.creator && chatroom.creator.toString() === currentUserId;
+        const isOwner =
+          chatroom.owner && chatroom.owner.toString() === currentUserId;
         const isAdmin =
           chatroom.admins && chatroom.admins.includes(currentUserId);
 
-        // Creator kann alle Nachrichten löschen
-        // Admin kann Nachrichten von normalen Members löschen (nicht von anderen Admins oder Creator)
+        // owner kann alle Nachrichten löschen
+        // Admin kann Nachrichten von normalen Members löschen (nicht von anderen Admins oder owner)
         // Members können nur ihre eigenen Nachrichten löschen
         if (!isOwnMessage) {
-          if (isCreator) {
-            // Creator kann alle Nachrichten löschen
+          if (isOwner) {
+            // owner kann alle Nachrichten löschen
           } else if (isAdmin) {
             // Admin kann nur Nachrichten von normalen Members löschen
             const messageAuthorIsAdmin = chatroom.admins.includes(
               message.sender.toString()
             );
-            const messageAuthorIsCreator =
-              chatroom.creator &&
-              chatroom.creator.toString() === message.sender.toString();
+            const messageAuthorisOwner =
+              chatroom.owner &&
+              chatroom.owner.toString() === message.sender.toString();
 
-            if (messageAuthorIsAdmin || messageAuthorIsCreator) {
-              return res
-                .status(403)
-                .json({
-                  errorMessage:
-                    "Admins cannot delete messages from other admins or the creator",
-                });
+            if (messageAuthorIsAdmin || messageAuthorisOwner) {
+              return res.status(403).json({
+                errorMessage:
+                  "Admins cannot delete messages from other admins or the owner",
+              });
             }
           } else {
             // Normale Members können nur ihre eigenen Nachrichten löschen
@@ -160,19 +158,21 @@ export default (io) => {
       const { messageId } = req.body;
       const userId = req.session.user.id;
 
-      const message = await Message.findById(messageId).populate('chatroom');
+      const message = await Message.findById(messageId).populate("chatroom");
       if (!message) {
         return res.status(404).json({ errorMessage: "Message not found" });
       }
 
       const chatroom = message.chatroom;
-      
+
       // Check if user is part of the chatroom
       if (chatroom.isGroupChat) {
-        if (!chatroom.users.some(user => user._id.toString() === userId)) {
-          return res.status(403).json({ errorMessage: "Not authorized to access this chatroom" });
+        if (!chatroom.users.some((user) => user._id.toString() === userId)) {
+          return res
+            .status(403)
+            .json({ errorMessage: "Not authorized to access this chatroom" });
         }
-        
+
         // For group chats: add user to editSeenBy array if not already present
         if (!message.editSeenBy) {
           message.editSeenBy = [];
@@ -182,10 +182,12 @@ export default (io) => {
         }
       } else {
         // For 1-to-1 chats: check if user is part of the chat
-        if (!chatroom.users.some(user => user._id.toString() === userId)) {
-          return res.status(403).json({ errorMessage: "Not authorized to access this chatroom" });
+        if (!chatroom.users.some((user) => user._id.toString() === userId)) {
+          return res
+            .status(403)
+            .json({ errorMessage: "Not authorized to access this chatroom" });
         }
-        
+
         // Determine if user is the message owner or partner
         const isOwner = message.sender.toString() === userId;
         if (isOwner) {
@@ -196,16 +198,17 @@ export default (io) => {
       }
 
       await message.save();
-      
+
       // Emit update to all users in the chatroom
-      const updatedMessage = await Message.findById(messageId).populate('sender');
-      io.to(chatroom._id.toString()).emit("message-update", { 
-        updatedMessage 
+      const updatedMessage =
+        await Message.findById(messageId).populate("sender");
+      io.to(chatroom._id.toString()).emit("message-update", {
+        updatedMessage,
       });
 
-      res.status(200).json({ 
+      res.status(200).json({
         message: "Edit marked as seen",
-        updatedMessage 
+        updatedMessage,
       });
     } catch (error) {
       console.error("Error marking edit as seen:", error);
