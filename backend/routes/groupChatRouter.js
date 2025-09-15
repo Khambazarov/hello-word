@@ -38,7 +38,7 @@ export default (io) => {
         isGroupChat: true,
         groupName: groupName.trim(),
         groupDescription: groupDescription?.trim() || "",
-        creator: currentUserId,
+        owner: currentUserId,
         admins: [currentUserId],
         users: [currentUserId],
         lastSeen: new Map([[currentUserId.toString(), new Date()]]),
@@ -160,7 +160,7 @@ export default (io) => {
       const groupChat = await Chatroom.findById(groupId)
         .populate("users", "username email avatar createdAt")
         .populate("admins", "username avatar")
-        .populate("creator", "username avatar");
+        .populate("owner", "username avatar");
 
       if (!groupChat || !groupChat.isGroupChat) {
         return res.status(404).json({ errorMessage: "Group chat not found" });
@@ -180,7 +180,7 @@ export default (io) => {
           name: groupChat.groupName,
           description: groupChat.groupDescription,
           image: groupChat.groupImage,
-          creator: groupChat.creator,
+          owner: groupChat.owner,
           createdAt: groupChat.createdAt,
           lastActivity: groupChat.lastActivity,
         },
@@ -206,10 +206,10 @@ export default (io) => {
         return res.status(404).json({ errorMessage: "Group chat not found" });
       }
 
-      // Nur Creator kann Admins ernennen
-      if (groupChat.creator.toString() !== currentUserId) {
+      // Nur owner kann Admins ernennen
+      if (groupChat.owner.toString() !== currentUserId) {
         return res.status(403).json({
-          errorMessage: "Only the creator can promote members to admin",
+          errorMessage: "Only the owner can promote members to admin",
         });
       }
 
@@ -278,11 +278,11 @@ export default (io) => {
         return res.status(404).json({ errorMessage: "Group chat not found" });
       }
 
-      // Nur Creator kann Admins degradieren
-      const isCreator = groupChat.creator.toString() === currentUserId;
-      if (!isCreator) {
+      // Nur owner kann Admins degradieren
+      const isOwner = groupChat.owner.toString() === currentUserId;
+      if (!isOwner) {
         return res.status(403).json({
-          errorMessage: "Only the group creator can demote admins",
+          errorMessage: "Only the group owner can demote admins",
         });
       }
 
@@ -301,10 +301,10 @@ export default (io) => {
         });
       }
 
-      // Creator kann sich nicht selbst degradieren
-      if (userToDemote._id.toString() === groupChat.creator.toString()) {
+      // Owner kann sich nicht selbst degradieren
+      if (userToDemote._id.toString() === groupChat.owner.toString()) {
         return res.status(400).json({
-          errorMessage: "Cannot demote the group creator",
+          errorMessage: "Cannot demote the group owner",
         });
       }
 
@@ -366,11 +366,11 @@ export default (io) => {
           .json({ errorMessage: "Only admins can remove members" });
       }
 
-      // Creator kann nicht entfernt werden
-      if (userToRemove._id.toString() === groupChat.creator.toString()) {
+      // Owner kann nicht entfernt werden
+      if (userToRemove._id.toString() === groupChat.owner.toString()) {
         return res
           .status(400)
-          .json({ errorMessage: "Cannot remove the group creator" });
+          .json({ errorMessage: "Cannot remove the group owner" });
       }
 
       // User aus Gruppe entfernen
@@ -432,11 +432,11 @@ export default (io) => {
           .json({ errorMessage: "You are not a member of this group" });
       }
 
-      // Creator kann nicht verlassen (muss Gruppe löschen)
-      if (groupChat.creator.toString() === currentUserId) {
+      // Owner kann nicht verlassen (muss Gruppe löschen)
+      if (groupChat.owner.toString() === currentUserId) {
         return res.status(400).json({
           errorMessage:
-            "Group creator cannot leave. Transfer ownership or delete the group instead.",
+            "Group owner cannot leave. Transfer ownership or delete the group instead.",
         });
       }
 
