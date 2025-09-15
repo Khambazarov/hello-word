@@ -111,7 +111,7 @@ export default (io) => {
           select: "username email avatar",
           options: { lean: false }, // Verhindert Mongoose-Caching
         })
-        .populate("creator", "username avatar")
+        .populate("owner", "username avatar")
         .populate("admins", "username avatar")
         .lean(false); // Verhindert Lean-Modus für frische Daten
 
@@ -155,7 +155,7 @@ export default (io) => {
               groupName: chat.groupName,
               groupDescription: chat.groupDescription,
               groupImage: chat.groupImage,
-              creator: chat.creator,
+              owner: chat.owner,
               admins: chat.admins,
               memberCount: chat.users.length,
               lastMessage,
@@ -284,7 +284,7 @@ export default (io) => {
 
       const chatroom = await Chatroom.findOne({ _id: id })
         .populate("users", "username email avatar")
-        .populate("creator", "username avatar")
+        .populate("owner", "username avatar")
         .populate("admins", "username avatar");
 
       if (!chatroom) {
@@ -322,7 +322,7 @@ export default (io) => {
         const isAdmin = chatroom.admins.some(
           (admin) => admin._id.toString() === currentUserId
         );
-        const isCreator = chatroom.creator._id.toString() === currentUserId;
+        const isOwner = chatroom.owner._id.toString() === currentUserId;
 
         return res.json({
           chatroomMessages,
@@ -336,7 +336,7 @@ export default (io) => {
             name: chatroom.groupName,
             description: chatroom.groupDescription,
             image: chatroom.groupImage,
-            creator: chatroom.creator,
+            owner: chatroom.owner,
             memberCount: chatroom.users.length,
             lastActivity: chatroom.lastActivity,
           },
@@ -344,11 +344,11 @@ export default (io) => {
           admins: chatroom.admins,
           userPermissions: {
             isAdmin,
-            isCreator,
+            isOwner,
             canInvite: isAdmin,
             canRemoveMembers: isAdmin,
             canEditGroup: isAdmin,
-            canPromoteMembers: isCreator,
+            canPromoteMembers: isOwner,
           },
         });
       }
@@ -429,13 +429,13 @@ export default (io) => {
         return res.status(400).json({ errorMessage: "Not a group chat" });
       }
 
-      // Check if user has permission to invite (is admin or creator)
-      const isCreator = chatroom.creator.toString() === currentUserId;
+      // Check if user has permission to invite (is admin or owner)
+      const isOwner = chatroom.owner.toString() === currentUserId;
       const isAdmin = chatroom.admins.some(
         (admin) => admin._id.toString() === currentUserId
       );
 
-      if (!isCreator && !isAdmin) {
+      if (!isOwner && !isAdmin) {
         return res.status(403).json({
           errorMessage: "No permission to invite users",
         });
@@ -488,7 +488,7 @@ export default (io) => {
 
       const chatroom = await Chatroom.findById(id)
         .populate("users", "username email avatar")
-        .populate("creator", "username avatar")
+        .populate("owner", "username avatar")
         .populate("admins", "username avatar");
 
       if (!chatroom) {
@@ -507,7 +507,7 @@ export default (io) => {
         return res.status(403).json({ errorMessage: "Access denied" });
       }
 
-      const isCreator = chatroom.creator._id.toString() === currentUserId;
+      const isOwner = chatroom.owner._id.toString() === currentUserId;
       const isAdmin = chatroom.admins.some(
         (admin) => admin._id.toString() === currentUserId
       );
@@ -518,18 +518,18 @@ export default (io) => {
           name: chatroom.groupName,
           description: chatroom.groupDescription,
           image: chatroom.groupImage,
-          creator: chatroom.creator,
+          owner: chatroom.owner,
           memberCount: chatroom.users.length,
         },
         members: chatroom.users,
         admins: chatroom.admins,
         userPermissions: {
           isAdmin,
-          isCreator,
+          isOwner,
           canInvite: isAdmin,
           canRemoveMembers: isAdmin,
           canEditGroup: isAdmin,
-          canPromoteMembers: isCreator,
+          canPromoteMembers: isOwner,
         },
       });
     } catch (error) {
@@ -555,13 +555,13 @@ export default (io) => {
         return res.status(400).json({ errorMessage: "Not a group chat" });
       }
 
-      // Check if user has permission to edit (is admin or creator)
-      const isCreator =
-        chatroom.creator && chatroom.creator.toString() === currentUserId;
+      // Check if user has permission to edit (is admin or owner)
+      const isOwner =
+        chatroom.owner && chatroom.owner.toString() === currentUserId;
       const isAdmin =
         chatroom.admins && chatroom.admins.includes(currentUserId);
 
-      if (!isCreator && !isAdmin) {
+      if (!isOwner && !isAdmin) {
         return res.status(403).json({
           errorMessage: "No permission to edit group description",
         });
@@ -605,11 +605,11 @@ export default (io) => {
         return res.status(400).json({ errorMessage: "Not a group chat" });
       }
 
-      // Only creator can promote users
-      const isCreator = chatroom.creator.toString() === currentUserId;
-      if (!isCreator) {
+      // Only owner can promote users
+      const isOwner = chatroom.owner.toString() === currentUserId;
+      if (!isOwner) {
         return res.status(403).json({
-          errorMessage: "Only the group creator can promote users",
+          errorMessage: "Only the group owner can promote users",
         });
       }
 
@@ -639,10 +639,10 @@ export default (io) => {
         });
       }
 
-      // Check if trying to promote the creator
-      if (userToPromote._id.toString() === chatroom.creator.toString()) {
+      // Check if trying to promote the owner
+      if (userToPromote._id.toString() === chatroom.owner.toString()) {
         return res.status(400).json({
-          errorMessage: "Cannot promote the group creator",
+          errorMessage: "Cannot promote the group owner",
         });
       }
 
@@ -676,11 +676,11 @@ export default (io) => {
         return res.status(400).json({ errorMessage: "Not a group chat" });
       }
 
-      // Only creator can delete the group
-      const isCreator = chatroom.creator.toString() === currentUserId;
-      if (!isCreator) {
+      // Only owner can delete the group
+      const isOwner = chatroom.owner.toString() === currentUserId;
+      if (!isOwner) {
         return res.status(403).json({
-          errorMessage: "Only the group creator can delete this group",
+          errorMessage: "Only the group owner can delete this group",
         });
       }
 
@@ -712,11 +712,9 @@ export default (io) => {
       }
 
       if (chatroom.isGroupChat) {
-        return res
-          .status(400)
-          .json({
-            errorMessage: "Use group chat deletion endpoint for group chats",
-          });
+        return res.status(400).json({
+          errorMessage: "Use group chat deletion endpoint for group chats",
+        });
       }
 
       // Check if user is a participant in this chat
