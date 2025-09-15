@@ -162,7 +162,7 @@
       "searchPlaceholder": "Benutzer suchen...",
       "inviteButton": "In Gruppe einladen",
       "failedToCreate": "Gruppe konnte nicht erstellt werden",
-      "nameRequired": "Gruppenname ist erforderlich",
+      "groupNameIsRequired": "Gruppenname ist erforderlich",
       "nameTooLong": "Gruppenname zu lang (max. 50 Zeichen)",
       "descriptionTooLong": "Beschreibung zu lang (max. 200 Zeichen)",
 
@@ -182,7 +182,7 @@
       "sendingInvitations": "Einladungen werden gesendet...",
       "sendInvitations": "Einladungen senden",
 
-      "creator": "Ersteller",
+      "owner": "Ersteller",
       "admin": "Admin",
 
       "loadingGroupData": "Gruppendaten werden geladen...",
@@ -197,7 +197,7 @@
       "basicGroupDetails": "Grundlegende Gruppendetails und Einstellungen",
 
       "adminPrivileges": "Admin-Rechte",
-      "creatorPrivileges": "Als Gruppenersteller hast du volle Kontrolle: Gruppeninfos bearbeiten, alle Mitglieder verwalten, Admins befördern/zurückstufen und die Gruppe löschen.",
+      "ownerPrivileges": "Als Gruppenersteller hast du volle Kontrolle: Gruppeninfos bearbeiten, alle Mitglieder verwalten, Admins befördern/zurückstufen und die Gruppe löschen.",
       "adminRights": "Du kannst Gruppeninfos bearbeiten, normale Mitglieder verwalten und neue Benutzer einladen. Nur der Ersteller kann andere Admins verwalten.",
 
       "nameIsRequired": "Name ist erforderlich",
@@ -206,6 +206,7 @@
       "descriptionPlaceholder": "Gruppenbeschreibung eingeben...",
 
       "promote": "Befördern",
+      "promoteToAdmin": "{user} zum Admin befördern",
       "demote": "Zurückstufen",
       "remove": "Entfernen",
 
@@ -215,7 +216,7 @@
       "cancelButton": "Abbrechen",
 
       "confirmLeaveGroup": "Möchtest du diese Gruppe wirklich verlassen?",
-      "leaveGroup": "Gruppe verlassen",
+      "leaveGroupBtn": "Gruppe verlassen",
       "leaveButton": "Verlassen",
 
       "confirmDeleteGroup": "Möchtest du diese Gruppe wirklich löschen?",
@@ -243,8 +244,8 @@
       "actionsSubtitle": "Verwalte deine Gruppenmitgliedschaft",
       "leaveGroupTitle": "Gruppe verlassen",
       "leaveGroupText": "Du kannst danach nicht mehr auf diese Gruppe oder ihre Nachrichten zugreifen.",
-      "creatorPrivilegesTitle": "Rechte des Erstellers",
-      "creatorPrivilegesText": "Als Ersteller kannst du die Gruppe nicht verlassen. Du kannst die Inhaberschaft übertragen oder die Gruppe löschen.",
+      "ownerPrivilegesTitle": "Rechte des Erstellers",
+      "ownerPrivilegesText": "Als Ersteller kannst du die Gruppe nicht verlassen. Du kannst die Inhaberschaft übertragen oder die Gruppe löschen.",
       "deleteGroupTitle": "Gruppe löschen",
       "deleteGroupText": "Diese Gruppe und alle Nachrichten werden dauerhaft gelöscht.",
       "deleteGroupQuestion": "Möchtest du „{name}“ wirklich dauerhaft löschen?",
@@ -393,7 +394,7 @@
         "groupNameRequired": "Gruppenname ist erforderlich",
         "groupNameTooLong": "Gruppenname zu lang (max. 50 Zeichen)",
         "groupDescriptionTooLong": "Beschreibung zu lang (max. 200 Zeichen)",
-        "groupNameTwoCharacters": "Gruppenname muss mindestens 2 Zeichen lang sein",
+        "nameMustBeTwoChars": "Gruppenname muss mindestens 2 Zeichen lang sein",
         "groupNameFiftyCharacters": "Gruppenname darf 50 Zeichen nicht überschreiten",
         "enterUsernamesPlaceholder": "Bitte Benutzernamen zum Einladen eingeben",
         "enterValidUsernames": "Bitte gültige Benutzernamen eingeben"
@@ -702,7 +703,6 @@
       "member": "Mitglied",
       "guest": "Gast",
       "owner": "Inhaber",
-      "creator": "Ersteller",
       "canRead": "Darf lesen",
       "canWrite": "Darf schreiben",
       "canEdit": "Darf bearbeiten",

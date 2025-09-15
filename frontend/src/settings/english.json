@@ -162,7 +162,7 @@
       "searchPlaceholder": "Search users...",
       "inviteButton": "Invite to Group",
       "failedToCreate": "Failed to create group",
-      "nameRequired": "Group name is required",
+      "groupNameIsRequired": "Group name is required",
       "nameTooLong": "Group name too long (max. 50 characters)",
       "descriptionTooLong": "Description too long (max. 200 characters)",
 
@@ -182,7 +182,7 @@
       "sendingInvitations": "Sending invitations...",
       "sendInvitations": "Send Invitations",
 
-      "creator": "Creator",
+      "owner": "Owner",
       "admin": "Admin",
 
       "loadingGroupData": "Loading group data...",
@@ -197,8 +197,8 @@
       "basicGroupDetails": "Basic group details and settings",
 
       "adminPrivileges": "Admin Privileges",
-      "creatorPrivileges": "As group creator you have full control: edit group info, manage all members, promote/demote admins and delete the group.",
-      "adminRights": "You can edit group info, manage regular members and invite new users. Only the creator can manage other admins.",
+      "ownerPrivileges": "As group owner you have full control: edit group info, manage all members, promote/demote admins and delete the group.",
+      "adminRights": "You can edit group info, manage regular members and invite new users. Only the owner can manage other admins.",
 
       "nameIsRequired": "Name is required",
       "nameMustBeTwoChars": "Name must be at least 2 characters",
@@ -206,6 +206,7 @@
       "descriptionPlaceholder": "Enter group description...",
 
       "promote": "Promote",
+      "promotedToAdmin": "{user} promoted to admin",
       "demote": "Demote",
       "remove": "Remove",
 
@@ -215,7 +216,7 @@
       "cancelButton": "Cancel",
 
       "confirmLeaveGroup": "Are you sure you want to leave this group?",
-      "leaveGroup": "Leave Group",
+      "leaveGroupBtn": "Leave Group",
       "leaveButton": "Leave",
 
       "confirmDeleteGroup": "Are you sure you want to delete this group?",
@@ -243,8 +244,8 @@
       "actionsSubtitle": "Manage your group membership",
       "leaveGroupTitle": "Leave Group",
       "leaveGroupText": "You will no longer be able to access this group or its messages.",
-      "creatorPrivilegesTitle": "Creator Privileges",
-      "creatorPrivilegesText": "As the group creator, you cannot leave the group. You can transfer ownership or delete the group.",
+      "ownerPrivilegesTitle": "owner Privileges",
+      "ownerPrivilegesText": "As the group owner, you cannot leave the group. You can transfer ownership or delete the group.",
       "deleteGroupTitle": "Delete Group",
       "deleteGroupText": "Permanently delete this group and all its messages.",
       "deleteGroupQuestion": "Are you sure you want to permanently delete “{name}”?",
@@ -393,7 +394,7 @@
         "groupNameRequired": "Group name is required",
         "groupNameTooLong": "Group name too long (max. 50 characters)",
         "groupDescriptionTooLong": "Description too long (max. 200 characters)",
-        "groupNameTwoCharacters": "Group name must be at least 2 characters",
+        "nameMustBeTwoChars": "Group name must be at least 2 characters",
         "groupNameFiftyCharacters": "Group name cannot exceed 50 characters",
         "enterUsernamesPlaceholder": "Please enter usernames to invite",
         "enterValidUsernames": "Please enter valid usernames"
@@ -702,7 +703,6 @@
       "member": "Member",
       "guest": "Guest",
       "owner": "Owner",
-      "creator": "Creator",
       "canRead": "Can read",
       "canWrite": "Can write",
       "canEdit": "Can edit",
