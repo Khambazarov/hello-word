@@ -25,7 +25,7 @@ const chatroomSchema = new Schema(
     groupImage: {
       type: String, // Cloudinary URL
     },
-    creator: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
