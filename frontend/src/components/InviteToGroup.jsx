@@ -124,12 +124,13 @@ export const InviteToGroup = () => {
                     />
                   </svg>
                 </button>
-                <div>                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {translations.groupChat.inviteMembers}
-                </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {translations.groupChat.loadingGroupInfo}
-                </p>
+                <div>
+                  <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                    {translations.groupChat.inviteMembers}
+                  </h1>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {translations.groupChat.loadingGroupInfo}
+                  </p>
                 </div>
               </div>
 
@@ -273,8 +274,8 @@ export const InviteToGroup = () => {
                 const memberIsAdmin = groupData?.admins?.some(
                   (admin) => admin._id === member._id
                 );
-                const memberIsCreator =
-                  groupData?.groupInfo?.creator?._id === member._id;
+                const memberIsOwner =
+                  groupData?.groupInfo?.owner?._id === member._id;
 
                 return (
                   <div
@@ -317,7 +318,7 @@ export const InviteToGroup = () => {
                     </div>
 
                     <div className="flex space-x-1">
-                      {memberIsCreator && (
+                      {memberIsOwner && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
                           <svg
                             className="w-3 h-3 mr-1"
@@ -330,10 +331,10 @@ export const InviteToGroup = () => {
                               clipRule="evenodd"
                             />
                           </svg>
-                          Creator
+                          Owner
                         </span>
                       )}
-                      {memberIsAdmin && !memberIsCreator && (
+                      {memberIsAdmin && !memberIsOwner && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
                           <svg
                             className="w-3 h-3 mr-1"
@@ -484,7 +485,10 @@ export const InviteToGroup = () => {
                         d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
                       />
                     </svg>
-                    <span>{translations.groupChat?.sendInvitations || "Send Invitations"}</span>
+                    <span>
+                      {translations.groupChat?.sendInvitations ||
+                        "Send Invitations"}
+                    </span>
                   </>
                 )}
               </button>
