@@ -13,6 +13,10 @@ const fmt = (s, dict) =>
     ? s.replace(/\{(\w+)\}/g, (_, k) => dict?.[k] ?? "")
     : s;
 
+// sicheres i18n mit Fallback und leeren Strings
+const i18n = (tpl, fallback, vars = {}) =>
+  typeof tpl === "string" && tpl.trim() ? fmt(tpl, vars) : fallback;
+
 export const GroupSettings = () => {
   // --------------------------- i18n ---------------------------
   const [language, setLanguage] = useState("en");
@@ -122,10 +126,19 @@ export const GroupSettings = () => {
       return response.json();
     },
     onSuccess: (data) => {
+      const username = data?.newAdmin ?? "User";
       toast.success(
-        fmt(t.group?.settings?.promotedToAdmin, { user: data.newAdmin }) ||
-          `${data.newAdmin} promoted to admin`
+        i18n(
+          t.group?.settings?.promotedToAdmin,
+          `${username} promoted to admin`,
+          { user: username }
+        )
       );
+
+      // toast.success(
+      //   fmt(t.group?.settings?.promotedToAdmin, { user: data.newAdmin }) ||
+      //     `${data.newAdmin} promoted to adminxxx`
+      // );
       queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
     },
     onError: (error) => toast.error(error.message),
@@ -146,11 +159,19 @@ export const GroupSettings = () => {
       return response.json();
     },
     onSuccess: (data) => {
+      const demoted = data?.demotedAdmin ?? "User";
       toast.success(
-        fmt(t.group?.settings?.demotedToMember, {
-          user: data.demotedAdmin,
-        }) || `${data.demotedAdmin} demoted to member`
+        i18n(
+          t.group?.settings?.demotedToMember,
+          `${demoted} demoted to member`,
+          { user: demoted }
+        )
       );
+      // toast.success(
+      //   fmt(t.group?.settings?.demotedToMember, {
+      //     user: data.demotedAdmin,
+      //   }) || `${data.demotedAdmin} demoted to member`
+      // );
       queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
     },
     onError: (error) => toast.error(error.message),
@@ -169,10 +190,16 @@ export const GroupSettings = () => {
       return response.json();
     },
     onSuccess: (data) => {
+      const removed = data?.removedUser ?? "User";
       toast.success(
-        fmt(t.group?.settings?.removedUser, { user: data.removedUser }) ||
-          `${data.removedUser} removed from group`
+        i18n(t.group?.settings?.removedUser, `${removed} removed from group`, {
+          user: removed,
+        })
       );
+      // toast.success(
+      //   fmt(t.group?.settings?.removedUser, { user: data.removedUser }) ||
+      //     `${data.removedUser} removed from group`
+      // );
       queryClient.invalidateQueries({ queryKey: ["groupMembers", groupId] });
     },
     onError: (error) => toast.error(error.message),
@@ -258,7 +285,7 @@ export const GroupSettings = () => {
 
     if (trimmedGroupName.length < 2) {
       toast.error(
-        t.feedback?.errors?.group?.nameTooShort ||
+        t.feedback?.errors?.group?.nameMustBeTwoChars ||
           "Group name must be at least 2 characters long"
       );
       return;
@@ -283,10 +310,14 @@ export const GroupSettings = () => {
     if (Object.keys(updates).length > 0) {
       updateGroupMutation.mutate(updates);
     } else {
-      toast(t.common?.noChangesToSave || "No changes to save", {
-        icon: "ℹ️",
-        style: { background: "#3b82f6", color: "#ffffff" },
-      });
+      // toast(t.common?.noChangesToSave || "No changes to save", {
+      toast(
+        t.feedback?.errors?.general?.noChangesToSave || "No changes to save",
+        {
+          icon: "ℹ️",
+          style: { background: "#3b82f6", color: "#ffffff" },
+        }
+      );
     }
   };
 
@@ -351,8 +382,8 @@ export const GroupSettings = () => {
 
   // --------------------------- Derived ---------------------------
   const userPermissions = chatData?.userPermissions || {};
-  const isCreator = userPermissions.isCreator;
-  const isAdmin = userPermissions.isAdmin;
+  const isOwner = !!(userPermissions.isOwner || userPermissions.isOwner);
+  const isAdmin = !!userPermissions.isAdmin;
 
   // --------------------------- UI ---------------------------
   return (
@@ -461,7 +492,7 @@ export const GroupSettings = () => {
                   {t.group?.settings?.groupInformation || "Group Information"}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {t.group?.settings?.groupInformationSubtitle ||
+                  {t.group?.settings?.basicGroupDetails ||
                     "Basic group details and settings"}
                 </p>
               </div>
@@ -563,8 +594,8 @@ export const GroupSettings = () => {
                               )}
                             {newGroupName.trim().length === 0 && (
                               <span className="text-red-500">
-                                {t.feedback?.errors?.group?.nameRequired ||
-                                  "Name is required"}
+                                {t.feedback?.errors?.group
+                                  ?.groupNameIsRequired || "Name is required"}
                               </span>
                             )}
                           </div>
@@ -743,8 +774,20 @@ export const GroupSettings = () => {
                 const memberIsAdmin = groupData?.admins?.some(
                   (admin) => admin._id === member._id
                 );
-                const memberIsCreator =
-                  groupData?.groupInfo?.creator?._id === member._id;
+                const memberIsOwner =
+                  groupData?.groupInfo?.owner?._id === member._id;
+
+                const labels = {
+                  owner:
+                    t.group?.settings?.owner ||
+                    t.system?.permissions?.owner ||
+                    "Owner",
+                  admin:
+                    t.group?.settings?.admin ||
+                    t.system?.permissions?.admin ||
+                    "Admin",
+                  member: t.system?.permissions?.member || "Member",
+                };
 
                 return (
                   <div
@@ -759,7 +802,7 @@ export const GroupSettings = () => {
                           className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-white dark:border-gray-600 shadow-sm"
                           onError={createAvatarErrorHandler(member.username)}
                         />
-                        {memberIsCreator && (
+                        {memberIsOwner && (
                           <div className="absolute -top-1 -right-1 bg-yellow-500 text-white rounded-full p-0.5 sm:p-1">
                             <svg
                               className="w-2.5 h-2.5 sm:w-3 sm:h-3"
@@ -776,17 +819,17 @@ export const GroupSettings = () => {
                           {member.username}
                         </p>
                         <div className="flex flex-wrap gap-1 sm:gap-2 mt-1">
-                          {memberIsCreator && (
+                          {memberIsOwner && (
                             <span className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 px-2 py-0.5 sm:py-1 rounded-full font-medium">
-                              {t.roles?.creator || "Creator"}
+                              {t.roles?.owner || "Owner"}
                             </span>
                           )}
-                          {memberIsAdmin && !memberIsCreator && (
+                          {memberIsAdmin && !memberIsOwner && (
                             <span className="text-xs bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400 px-2 py-0.5 sm:py-1 rounded-full font-medium">
                               {t.roles?.admin || "Admin"}
                             </span>
                           )}
-                          {!memberIsAdmin && !memberIsCreator && (
+                          {!memberIsAdmin && !memberIsOwner && (
                             <span className="text-xs bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300 px-2 py-0.5 sm:py-1 rounded-full font-medium">
                               {t.roles?.member || "Member"}
                             </span>
@@ -796,10 +839,10 @@ export const GroupSettings = () => {
                     </div>
 
                     {/* Actions */}
-                    {((isCreator && !memberIsCreator) ||
-                      (isAdmin && !memberIsAdmin && !memberIsCreator)) && (
+                    {((isOwner && !memberIsOwner) ||
+                      (isAdmin && !memberIsAdmin && !memberIsOwner)) && (
                       <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                        {isCreator && !memberIsAdmin && !memberIsCreator && (
+                        {isOwner && !memberIsAdmin && !memberIsOwner && (
                           <button
                             onClick={() =>
                               promoteMutation.mutate(member.username)
@@ -825,7 +868,7 @@ export const GroupSettings = () => {
                           </button>
                         )}
 
-                        {isCreator && memberIsAdmin && !memberIsCreator && (
+                        {isOwner && memberIsAdmin && !memberIsOwner && (
                           <button
                             onClick={() =>
                               demoteMutation.mutate(member.username)
@@ -909,7 +952,7 @@ export const GroupSettings = () => {
             </div>
 
             <div className="space-y-3 sm:space-y-4">
-              {!isCreator && (
+              {!isOwner && (
                 <>
                   <div className="p-3 sm:p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
                     <div className="flex items-start space-x-3">
@@ -939,6 +982,7 @@ export const GroupSettings = () => {
                     onClick={() => {
                       // Native confirm, lokalisiert:
                       const question =
+                        t.group?.settings?.confirmLeaveGroup ||
                         t.group?.settings?.confirmLeave ||
                         "Are you sure you want to leave this group?";
                       if (confirm(question)) {
@@ -967,7 +1011,7 @@ export const GroupSettings = () => {
                 </>
               )}
 
-              {isCreator && (
+              {isOwner && (
                 <>
                   <div className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
                     <div className="flex items-start space-x-3">
@@ -984,12 +1028,12 @@ export const GroupSettings = () => {
                       </svg>
                       <div className="text-xs sm:text-sm">
                         <p className="text-gray-800 dark:text-gray-200 font-medium mb-1">
-                          {t.group?.settings?.creatorPrivilegesTitle ||
-                            "Creator Privileges"}
+                          {t.group?.settings?.ownerPrivilegesTitle ||
+                            "Owner Privileges"}
                         </p>
                         <p className="text-gray-600 dark:text-gray-400">
-                          {t.group?.settings?.creatorPrivilegesText ||
-                            "As the group creator, you cannot leave the group. You can transfer ownership or delete the group."}
+                          {t.group?.settings?.ownerPrivilegesText ||
+                            "As the group Owner, you cannot leave the group. You can transfer ownership or delete the group."}
                         </p>
                       </div>
                     </div>
@@ -1105,7 +1149,7 @@ export const GroupSettings = () => {
                     id="remove-dialog-desc"
                     className="text-sm text-gray-600 dark:text-gray-400"
                   >
-                    {t.group?.settings?.irreversible ||
+                    {t.group?.settings?.thisActionCannotBeUndone ||
                       "This action cannot be undone"}
                   </p>
                 </div>
@@ -1220,7 +1264,7 @@ export const GroupSettings = () => {
                     id="delete-dialog-desc"
                     className="text-sm text-gray-600 dark:text-gray-400"
                   >
-                    {t.group?.settings?.irreversible ||
+                    {t.group?.settings?.thisActionCannotBeUndone ||
                       "This action cannot be undone"}
                   </p>
                 </div>
