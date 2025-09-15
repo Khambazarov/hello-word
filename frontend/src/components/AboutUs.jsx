@@ -171,7 +171,7 @@ export const AboutUs = () => {
           <button
             type="button"
             onClick={() => navigate("/chatarea")}
-            className="p-2 sm:p-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-3 sm:p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             title="Back to Chat"
             aria-label="Back to Chat"
           >
@@ -184,7 +184,7 @@ export const AboutUs = () => {
         {/* Hero Section */}
         <section className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-2">
-            {t.title ?? "About Us"}
+            {t.title || "About Us"}
           </h1>
           <div className="w-48 md:w-72 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full" />
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -506,13 +506,13 @@ export const AboutUs = () => {
                       aria-label={l.label}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="h-11 w-11 sm:h-12 sm:w-12 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 duration-200 transform hover:-translate-y-1 transition-transform ease-out transform-gpu focus-visible:-translate-y-1"
+                      className="h-11 w-11 sm:h-13 sm:w-13 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 duration-200 transform hover:-translate-y-1 transition-transform ease-out transform-gpu focus-visible:-translate-y-1"
                     >
                       <img
                         src={l.icon}
                         alt=""
                         aria-hidden="true"
-                        className="w-5 h-5 sm:w-6 sm:h-6"
+                        className="w-6 h-6 sm:w-8 sm:h-8"
                         loading="lazy"
                         decoding="async"
                       />
