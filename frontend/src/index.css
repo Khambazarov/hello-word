@@ -4,3 +4,37 @@
 body {
   touch-action: manipulation;
 }
+
+@layer utilities {
+  @keyframes fade-out-collapse {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 999px; /* groß genug für beliebige Höhe */
+      margin-bottom: 1rem; /* entspricht mb-4 */
+    }
+    99% {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-8px);
+      max-height: 0;
+      margin-bottom: 0;
+      visibility: hidden; /* optional: ausblenden */
+    }
+  }
+
+  .animate-fade-out-collapse {
+    overflow: hidden;
+    animation: fade-out-collapse 600ms ease-out 1000ms forwards;
+    will-change: opacity, transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-out-collapse {
+      animation: none;
+    }
+  }
+}
