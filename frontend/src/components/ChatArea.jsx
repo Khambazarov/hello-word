@@ -354,7 +354,7 @@ export const ChatArea = () => {
                   id="user-menu"
                   role="menu"
                   aria-label="User menu"
-                  className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                  className="absolute right-0 mt-2 w-42 sm:w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
                 >
                   {/* Header */}
                   <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
@@ -576,7 +576,7 @@ export const ChatArea = () => {
         ) : (
           <div className="space-y-4">
             {/* Header Section */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_600ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">
                 {t.chat?.area?.title || "Your Conversations"}
               </h2>
