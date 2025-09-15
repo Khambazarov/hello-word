@@ -99,7 +99,9 @@ export const Chatroom = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["chatroom", id],
     queryFn: async () => {
-      const response = await fetch(`/api/chatrooms/chats/${id}`);
+      const response = await fetch(`/api/chatrooms/chats/${id}`, {
+        credentials: "include",
+      });
       return response.json();
     },
   });
@@ -114,6 +116,13 @@ export const Chatroom = () => {
       setTranslations(getTranslations(language));
     }
   }, [language]);
+
+  if (data?.errorMessage === "User is not Authenticated") {
+    return <Navigate to="/login" />;
+  }
+  if ((data === undefined && !isLoading) || data?.errorMessage) {
+    return <Navigate to={"/404"} />;
+  }
 
   const volume = data?.volume;
   audioSend.volume = volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
@@ -424,9 +433,12 @@ export const Chatroom = () => {
     ) {
       e.target.textarea.value = "";
       toast.dismiss();
-      toast.error(translations.feedback.toast.chat.existChatroom.errorDeletedUser, {
-        position: "bottom-center",
-      });
+      toast.error(
+        translations.feedback.toast.chat.existChatroom.errorDeletedUser,
+        {
+          position: "bottom-center",
+        }
+      );
       return;
     }
 
@@ -801,7 +813,6 @@ export const Chatroom = () => {
 
           {/* Right section - Settings */}
           <div className="flex items-center space-x-0 sm:space-x-4 flex-1 justify-end">
-
             {/* Settings Button - für Gruppenchats und 1-zu-1 Chats */}
             <button
               onClick={() =>
@@ -811,7 +822,7 @@ export const Chatroom = () => {
                     : `/chatarea/chats/${id}/settings`
                 )
               }
-              className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-3 sm:p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title={
                 isGroupChat
                   ? translations.ui.tooltips.groupSettings || "Group Settings"
@@ -834,7 +845,7 @@ export const Chatroom = () => {
 
             <button
               onClick={() => navigate("/chatarea")}
-              className="p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              className="p-3 sm:p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
               title="Back to Chat List"
             >
               <BackButtonIcon />
@@ -893,7 +904,7 @@ export const Chatroom = () => {
                 </div>
                 {(userPermissions?.canEdit ||
                   userPermissions?.isAdmin ||
-                  userPermissions?.isCreator) && (
+                  userPermissions?.isOwner) && (
                   <button
                     onClick={handleEditDescription}
                     className="ml-3 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
@@ -1120,14 +1131,14 @@ export const Chatroom = () => {
 
                         const canDelete =
                           isOwnMessage || // Eigene Nachrichten
-                          userPermissions.isCreator || // Creator kann alle löschen
+                          userPermissions.isOwner || // Owner kann alle löschen
                           (userPermissions.isAdmin &&
                             !admins.some(
                               (admin) =>
                                 admin.username === message.sender.username
                             ) &&
                             message.sender.username !==
-                              groupInfo?.creator?.username); // Admin kann Member-Nachrichten löschen
+                              groupInfo?.owner?.username); // Admin kann Member-Nachrichten löschen
 
                         return canEdit || canDelete;
                       })() && (
@@ -1165,14 +1176,14 @@ export const Chatroom = () => {
 
                             const canDelete =
                               isOwnMessage || // Eigene Nachrichten
-                              userPermissions.isCreator || // Creator kann alle löschen
+                              userPermissions.isOwner || // Owner kann alle löschen
                               (userPermissions.isAdmin &&
                                 !admins.some(
                                   (admin) =>
                                     admin.username === message.sender.username
                                 ) &&
                                 message.sender.username !==
-                                  groupInfo?.creator?.username); // Admin kann Member-Nachrichten löschen
+                                  groupInfo?.owner?.username); // Admin kann Member-Nachrichten löschen
 
                             return canDelete;
                           })() && (
@@ -1183,16 +1194,16 @@ export const Chatroom = () => {
                                 isOwnMessage
                                   ? translations.ui.tooltips.deleteMessage ||
                                     "Delete message"
-                                  : isGroupChat && userPermissions.isCreator
+                                  : isGroupChat && userPermissions.isOwner
                                     ? translations.chatroom
-                                        ?.deleteMessageCreator ||
-                                      "Delete message (Creator privilege)"
+                                        ?.deleteMessageOwner ||
+                                      "Delete message (Owner privilege)"
                                     : isGroupChat && userPermissions.isAdmin
                                       ? translations.chatroom
                                           ?.deleteMessageAdmin ||
                                         "Delete message (Admin privilege)"
-                                      : translations.ui.tooltips.deleteMessage ||
-                                        "Delete message"
+                                      : translations.ui.tooltips
+                                          .deleteMessage || "Delete message"
                               }
                             >
                               <DeleteMessageIcon />
