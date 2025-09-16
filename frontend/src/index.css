@@ -22,7 +22,7 @@ body {
       transform: translateY(-8px);
       max-height: 0;
       margin-bottom: 0;
-      visibility: hidden; /* optional: ausblenden */
+      visibility: hidden;
     }
   }
 
