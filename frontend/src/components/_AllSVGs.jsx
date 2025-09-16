@@ -1,6 +1,6 @@
-export const BackButtonIcon = () => (
+export const BackButtonIcon = ({ className = "" }) => (
   <svg
-    className="w-6 h-6 text-white hover:text-gray-400 duration-200"
+    className={`w-6 h-6 text-white hover:text-gray-400 duration-200 ${className}`}
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -16,9 +16,25 @@ export const BackButtonIcon = () => (
   </svg>
 );
 
-export const UserIcon = () => (
+export const BackToChatIcon = ({ className = "" }) => (
   <svg
-    className="w-5 h-5 text-gray-400"
+    className={`w-5 h-5 mr-2 ${className}`}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+    />
+  </svg>
+);
+
+export const UserIcon = ({ className = "" }) => (
+  <svg
+    className={`w-5 h-5 text-gray-400 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -32,9 +48,77 @@ export const UserIcon = () => (
   </svg>
 );
 
-export const EmailIcon = () => (
+export const SettingsIcon = ({ className = "" }) => (
   <svg
-    className="w-5 h-5 text-gray-400"
+    className={`w-6 h-6 ${className}`}
+    // className="w-6 h-6 text-white hover:text-gray-400 duration-200"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+  </svg>
+);
+
+export const LanguageIcon = ({ className = "" }) => (
+  <svg
+    className={`w-6 h-6 ${className}`}
+    // className="w-6 h-6 text-purple-600 dark:text-purple-400"
+    fill="currentColor"
+    viewBox="0 0 20 20"
+  >
+    <path
+      fillRule="evenodd"
+      d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const AudioVolumeIcon = ({ className = "" }) => (
+  <svg
+    className={`w-6 h-6 text-green-600 dark:text-green-400 ${className}`}
+    fill="currentColor"
+    viewBox="0 0 20 20"
+  >
+    <path
+      fillRule="evenodd"
+      d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.824L4.168 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.168l4.215-3.824zm2.344 2.443a1 1 0 011.273-.983 6.002 6.002 0 010 10.928 1 1 0 11-.95-1.764 4.002 4.002 0 000-7.404 1 1 0 01-.323-1.777z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const WarningIcon = ({ className = "" }) => (
+  <svg
+    className={className}
+    fill="currentColor"
+    viewBox="0 0 20 20"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fillRule="evenodd"
+      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+      clipRule="evenodd"
+    />
+  </svg>
+);
+
+export const EmailIcon = ({ className = "" }) => (
+  <svg
+    className={`w-5 h-5 text-gray-400 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -48,9 +132,9 @@ export const EmailIcon = () => (
   </svg>
 );
 
-export const PasswordIcon = () => (
+export const PasswordIcon = ({ className = "" }) => (
   <svg
-    className="w-5 h-5 text-gray-400"
+    className={`w-5 h-5 text-gray-400 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -64,9 +148,42 @@ export const PasswordIcon = () => (
   </svg>
 );
 
-export const EyeOpenedIcon = () => (
+export const ChangePasswordIcon = ({ className = "" }) => (
   <svg
-    className="w-5 h-5 text-gray-400"
+    className={`w-5 h-5 ${className}`}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+    />
+  </svg>
+);
+
+export const TrashIcon = ({ className = "" }) => (
+  <svg
+    className={`w-5 h-5 ${className}`}
+    // className={`w-5 h-5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 duration-200 ${className}`}
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+    />
+  </svg>
+);
+
+export const EyeOpenedIcon = ({ className = "" }) => (
+  <svg
+    className={`w-5 h-5 text-gray-400 cursor-pointer ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -86,9 +203,9 @@ export const EyeOpenedIcon = () => (
   </svg>
 );
 
-export const EyeClosedIcon = () => (
+export const EyeClosedIcon = ({ className = "" }) => (
   <svg
-    className="w-5 h-5 text-gray-400"
+    className={`w-5 h-5 text-gray-400 cursor-pointer ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -116,9 +233,9 @@ export const EyeClosedIcon = () => (
   </svg>
 );
 
-export const KeyIcon = () => (
+export const KeyIcon = ({ className = "" }) => (
   <svg
-    className="w-5 h-5 text-gray-400"
+    className={`w-5 h-5 text-gray-400 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -132,9 +249,9 @@ export const KeyIcon = () => (
   </svg>
 );
 
-export const SendMessageIcon = () => (
+export const SendMessageIcon = ({ className = "" }) => (
   <svg
-    className="w-8 h-8 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-[rgb(255,50,54)] duration-200"
+    className={`w-8 h-8 rotate-90 rtl:-rotate-90 hover:scale-120  hover:text-[rgb(255,50,54)] duration-200 ${className}`}
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
@@ -144,9 +261,9 @@ export const SendMessageIcon = () => (
   </svg>
 );
 
-export const EditMessageIcon = () => (
+export const EditMessageIcon = ({ className = "" }) => (
   <svg
-    className="w-4 h-4"
+    className={`w-4 h-4 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -160,9 +277,9 @@ export const EditMessageIcon = () => (
   </svg>
 );
 
-export const DeleteMessageIcon = () => (
+export const DeleteMessageIcon = ({ className = "" }) => (
   <svg
-    className="w-4 h-4"
+    className={`w-4 h-4 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -176,8 +293,9 @@ export const DeleteMessageIcon = () => (
   </svg>
 );
 
-export const GermanFlag = () => (
+export const GermanFlag = ({ className = "" }) => (
   <svg
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -202,8 +320,9 @@ export const GermanFlag = () => (
   </svg>
 );
 
-export const UkFlag = () => (
+export const UkFlag = ({ className = "" }) => (
   <svg
+    className={className}
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
@@ -265,9 +384,9 @@ export const UkFlag = () => (
   </svg>
 );
 
-export const LoginTabIcon = () => (
+export const LoginTabIcon = ({ className = "" }) => (
   <svg
-    className="w-4 h-4"
+    className={`w-4 h-4 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -281,9 +400,9 @@ export const LoginTabIcon = () => (
   </svg>
 );
 
-export const RegisterTabIcon = () => (
+export const RegisterTabIcon = ({ className = "" }) => (
   <svg
-    className="w-4 h-4"
+    className={`w-4 h-4 ${className}`}
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -299,10 +418,10 @@ export const RegisterTabIcon = () => (
 
 // Modern Chat App Logo for Hello, Word!
 // Sleek group icon with modern chat bubble design
-export const AppLogo = ({ className = "w-12 h-12", showAnimation = false }) => {
+export const AppLogo = ({ className = "", showAnimation = false }) => {
   return (
     <svg
-      className={`${className}`}
+      className={`w-12 h-12 ${className}`}
       viewBox="0 0 120 80"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
