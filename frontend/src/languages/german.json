@@ -462,7 +462,7 @@
     "toast": {
       "settings": {
         "loading": "Lädt...",
-        "successUpdate": "Erfolgreich geändert!",
+        "successUpdate": "Erfolgreich aktualisiert!",
         "successAccountDelete": "Benutzerkonto gelöscht!",
         "errorAccountDelete": "Fehler beim Löschen, bitte erneut versuchen!",
         "errorFailedChange": "Beim Ändern ist ein Fehler aufgetreten!"

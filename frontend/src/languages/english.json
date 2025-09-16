@@ -462,7 +462,7 @@
     "toast": {
       "settings": {
         "loading": "Loading...",
-        "successUpdate": "Successfully changed!",
+        "successUpdate": "Updated successfully!",
         "successAccountDelete": "User account deleted!",
         "errorAccountDelete": "Error deleting, please try again!",
         "errorFailedChange": "Error occurred during change!"
