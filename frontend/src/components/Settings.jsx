@@ -8,13 +8,24 @@ import { getTranslations } from "../utils/languageHelper.js";
 
 import robot from "../assets/robot.png";
 import {
-  BackButtonIcon,
-  EyeClosedIcon,
-  EyeOpenedIcon,
   PasswordIcon,
   UkFlag,
   GermanFlag,
+  TrashIcon,
+  SettingsIcon,
+  LanguageIcon,
+  AudioVolumeIcon,
+  WarningIcon,
 } from "./_AllSVGs";
+
+import {
+  BackBtnHeader,
+  BackToChatBtn,
+  ChangePasswordBtn,
+  DeleteAccountBtn,
+  EyeToggleIcon,
+} from "./_Buttons.jsx";
+import { RadioInput } from "./_Inputs.jsx";
 
 export const Settings = () => {
   const navigate = useNavigate();
@@ -78,7 +89,10 @@ export const Settings = () => {
     },
     onSuccess: (data) => {
       setVolume(data.volume || "middle");
-      toast.success(translations.feedback.toast.settings.successUpdate);
+      toast.success(
+        translations.feedback.toast.settings.successUpdate ||
+          "Updated successfully!"
+      );
       queryClient.invalidateQueries(["userSettings"]);
     },
     onError: () => {
@@ -93,17 +107,20 @@ export const Settings = () => {
   const handleLanguageChange = useMutation({
     mutationFn: updateUserLanguage,
     onSuccess: (data) => {
-      setLanguage(data.language || "en");
-      setTranslations(getTranslations(data.language || "en"));
-      queryClient.invalidateQueries(["userSettings"]);
+      const newLang = data.language || "en";
+      const newTranslations = getTranslations(newLang);
+      setLanguage(newLang);
+      setTranslations(newTranslations);
       toast.success(
-        getTranslations(data.language || "en").toast.settings.successUpdate
+        newTranslations.feedback.toast.settings.successUpdate ||
+          "Updated successfully!"
       );
+      queryClient.invalidateQueries(["userSettings"]);
     },
     onError: (data) => {
-      toast.error(
-        getTranslations(data.language || "en").toast.settings.errorFailedChange
-      );
+      const newLang = data.language || "en";
+      const newTranslations = getTranslations(newLang);
+      toast.error(newTranslations.feedback.toast.settings.errorFailedChange);
     },
   });
 
@@ -179,13 +196,9 @@ export const Settings = () => {
             </div>
             {/* Buttons rechts */}
             <div className="flex items-center space-x-0 flex-1 justify-end">
-              <button
-                onClick={() => navigate("/chatarea")}
-                className="p-3 sm:p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                title="Back to Chats"
-              >
-                <BackButtonIcon />
-              </button>
+              <div className="flex items-center space-x-0 flex-1 justify-end">
+                <BackBtnHeader />
+              </div>
             </div>
           </div>
         </header>
@@ -224,13 +237,7 @@ export const Settings = () => {
           </div>
           {/* Buttons rechts */}
           <div className="flex items-center space-x-0 flex-1 justify-end">
-            <button
-              onClick={() => navigate("/chatarea")}
-              className="p-3 sm:p-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-              title="Back to Chats"
-            >
-              <BackButtonIcon />
-            </button>
+            <BackBtnHeader />
           </div>
         </div>
       </header>
@@ -239,25 +246,7 @@ export const Settings = () => {
         {/* Header Section */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-full mb-4">
-            <svg
-              className="w-8 h-8 text-blue-600 dark:text-blue-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
+            <SettingsIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
             {/* {translations.settings.selectLangTitle || "Settings"} */}
@@ -273,18 +262,9 @@ export const Settings = () => {
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-3">
-                <svg
-                  className="w-6 h-6 text-purple-600 dark:text-purple-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <LanguageIcon className="text-purple-600 dark:text-purple-400" />
               </div>
+
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                 {translations.content.settings.selectLangTitle ||
                   "Language Settings"}
@@ -297,13 +277,12 @@ export const Settings = () => {
 
             <div className="space-y-3">
               <label className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <input
-                  type="radio"
+                <RadioInput
                   name="language"
                   value="en"
                   checked={language === "en"}
-                  onChange={(e) => handleLanguageSelection(e.target.value)}
-                  className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 focus:ring-2"
+                  onChange={handleLanguageSelection}
+                  className="text-purple-600 focus:ring-purple-500"
                 />
                 <div className="ml-3 flex items-center gap-3">
                   <UkFlag />
@@ -314,13 +293,12 @@ export const Settings = () => {
               </label>
 
               <label className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                <input
-                  type="radio"
+                <RadioInput
                   name="language"
                   value="de"
                   checked={language === "de"}
-                  onChange={(e) => handleLanguageSelection(e.target.value)}
-                  className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 focus:ring-2"
+                  onChange={handleLanguageSelection}
+                  className="text-purple-600 focus:ring-purple-500"
                 />
                 <div className="ml-3 flex items-center gap-3">
                   <GermanFlag />
@@ -336,17 +314,7 @@ export const Settings = () => {
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full mb-3">
-                <svg
-                  className="w-6 h-6 text-green-600 dark:text-green-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.824L4.168 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.168l4.215-3.824zm2.344 2.443a1 1 0 011.273-.983 6.002 6.002 0 010 10.928 1 1 0 11-.95-1.764 4.002 4.002 0 000-7.404 1 1 0 01-.323-1.777z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <AudioVolumeIcon />
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                 {translations.content.settings.volumeTitle ||
@@ -380,13 +348,12 @@ export const Settings = () => {
                   key={vol.value}
                   className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <input
-                    type="radio"
+                  <RadioInput
                     name="audioVolume"
                     value={vol.value}
                     checked={volume === vol.value}
-                    onChange={(e) => handleVolumeChange(e.target.value)}
-                    className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 focus:ring-2"
+                    onChange={handleVolumeChange}
+                    className="text-green-600 focus:ring-green-500"
                   />
                   <div className="ml-3 flex items-center gap-3">
                     <span className="text-xl">{vol.icon}</span>
@@ -406,19 +373,7 @@ export const Settings = () => {
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col h-full">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-orange-100 dark:bg-orange-900/20 rounded-full mb-3">
-                <svg
-                  className="w-6 h-6 text-orange-600 dark:text-orange-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
+                <PasswordIcon className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
                 {translations.content.settings.changePwTitle ||
@@ -459,13 +414,10 @@ export const Settings = () => {
                     className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
                   />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOpenedIcon /> : <EyeClosedIcon />}
-                  </button>
+                  <EyeToggleIcon
+                    toggled={showPassword}
+                    onToggle={() => setShowPassword(!showPassword)}
+                  />
                 </div>
               </div>
 
@@ -493,38 +445,16 @@ export const Settings = () => {
                     className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
                   />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOpenedIcon /> : <EyeClosedIcon />}
-                  </button>
+                  <EyeToggleIcon
+                    toggled={showPassword}
+                    onToggle={() => setShowPassword(!showPassword)}
+                  />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 mt-auto"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-                <span>
-                  {translations.content.settings.changePwBtn ||
-                    "Change Password"}
-                </span>
-              </button>
+              <ChangePasswordBtn>
+                {translations.content.settings.changePwBtn || "Change Password"}
+              </ChangePasswordBtn>
             </form>
           </div>
 
@@ -532,19 +462,7 @@ export const Settings = () => {
           <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl border border-red-200 dark:border-red-700 p-6 flex flex-col h-full">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full mb-3">
-                <svg
-                  className="w-6 h-6 text-red-600 dark:text-red-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+                <TrashIcon className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">
                 {translations.content.settings.deleteAccountTitle ||
@@ -558,17 +476,8 @@ export const Settings = () => {
 
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
               <div className="flex items-start space-x-3 py-4">
-                <svg
-                  className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <WarningIcon className="w-8 h-8 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+
                 <div className="text-sm">
                   <p className="text-red-800 dark:text-red-200 font-medium">
                     {translations.content.settings.warningTitle || "Warning!"}
@@ -581,27 +490,17 @@ export const Settings = () => {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShow(true)}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 mt-auto"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-              <span>{translations.content.settings.deleteBtn || "Delete"}</span>
-            </button>
+            <DeleteAccountBtn onClick={() => setShow(true)}>
+              {translations.content.settings.deleteBtn || "Delete Account"}
+            </DeleteAccountBtn>
           </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="flex justify-center mt-8 pt-6 border-t w-full border-gray-200 dark:border-gray-600">
+          <BackToChatBtn>
+            {translations.content.profile.backToChat || "Back to Chat"}
+          </BackToChatBtn>
         </div>
 
         <Toaster position="bottom-center" />
@@ -613,19 +512,7 @@ export const Settings = () => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
             <div className="text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full mb-4">
-                <svg
-                  className="w-8 h-8 text-red-600 dark:text-red-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.863-.833-2.634 0L3.5 16.5c-.77.833.192 2.5 1.732 2.5z"
-                  />
-                </svg>
+                <WarningIcon className="w-16 h-16 text-red-600 dark:text-red-400 animate-bounce" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                 {translations.content.settings.prompt.title ||
@@ -638,7 +525,8 @@ export const Settings = () => {
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShow(false)}
-                  className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg font-medium transition-colors"
+                  className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg font-medium transition-colors     focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
+                  autoFocus
                 >
                   {translations.content.settings.prompt.cancelBtn || "Cancel"}
                 </button>
