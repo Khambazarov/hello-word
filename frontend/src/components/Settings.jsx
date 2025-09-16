@@ -249,7 +249,6 @@ export const Settings = () => {
             <SettingsIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-            {/* {translations.settings.selectLangTitle || "Settings"} */}
           </h1>
           <p className="text-balance text-gray-600 dark:text-gray-400">
             {translations.content.settings?.description ||
