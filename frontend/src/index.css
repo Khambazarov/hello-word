@@ -11,7 +11,7 @@ body {
       opacity: 1;
       transform: translateY(0);
       max-height: 999px; /* groß genug für beliebige Höhe */
-      margin-bottom: 1rem; /* entspricht mb-4 */
+      margin-bottom: 1rem;
     }
     99% {
       opacity: 0;
@@ -28,7 +28,7 @@ body {
 
   .animate-fade-out-collapse {
     overflow: hidden;
-    animation: fade-out-collapse 600ms ease-out 1000ms forwards;
+    animation: fade-out-collapse 1000ms ease-out 1000ms forwards;
     will-change: opacity, transform;
   }
 

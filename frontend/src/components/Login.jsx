@@ -6,8 +6,8 @@ import { getTranslations } from "../utils/languageHelper.js";
 import { fetchBrowserLanguage } from "../utils/browserLanguage.js";
 
 import robot from "../assets/robot.png";
-import AppLogo from "./AppLogo.jsx";
 import {
+  AppLogo,
   EmailIcon,
   EyeClosedIcon,
   EyeOpenedIcon,

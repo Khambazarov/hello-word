@@ -206,9 +206,11 @@
       "descriptionPlaceholder": "Gruppenbeschreibung eingeben...",
 
       "promote": "Befördern",
-      "promoteToAdmin": "{user} zum Admin befördern",
       "demote": "Zurückstufen",
       "remove": "Entfernen",
+      "promotedToAdmin": "{user} zum Admin befördern",
+      "demotedToMember": "{user} zum Mitglied zurückgestuft",
+      "removedUser": "{user} aus der Gruppe entfernt",
 
       "removeMember": "Mitglied entfernen",
       "confirmRemoveMember": "Möchtest du dieses Mitglied wirklich aus der Gruppe entfernen?",
@@ -552,7 +554,8 @@
       "sourceCode": "Quellcode",
       "ourContacts": "Team & Kontakt",
       "feedback": "Wir freuen uns über Feedback und Contributions — euer Input fließt direkt in unsere Roadmap ein. Kontaktiert uns gerne über die oben genannten Links.",
-      "thanks": "Danke, dass ihr Hello, Word! erkundet. Wir hoffen, es macht euch genauso viel Spaß wie uns die Entwicklung."
+      "thanks": "Danke, dass ihr Hello, Word! erkundet. Wir hoffen, es macht euch genauso viel Spaß wie uns die Entwicklung.",
+      "errorLoadingAboutUs": "Konnte deine Spracheinstellung nicht laden werden. Bitte versuch es erneut."
     },
     "privacy": {
       "loading": "Lädt...",

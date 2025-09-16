@@ -206,9 +206,11 @@
       "descriptionPlaceholder": "Enter group description...",
 
       "promote": "Promote",
-      "promotedToAdmin": "{user} promoted to admin",
       "demote": "Demote",
       "remove": "Remove",
+      "promotedToAdmin": "{user} promoted to admin",
+      "demotedToMember": "{user} demoted to member",
+      "removedUser": "{user} removed from group",
 
       "removeMember": "Remove Member",
       "confirmRemoveMember": "Are you sure you want to remove this member from the group?",
@@ -552,7 +554,8 @@
       "sourceCode": "Source Code",
       "ourContacts": "Team & Contact",
       "feedback": "We welcome feedback and contributions — your input directly informs our roadmap. Feel free to reach out via the links above.",
-      "thanks": "Thank you for exploring Hello, Word! We hope you enjoy it as much as we enjoyed building it."
+      "thanks": "Thank you for exploring Hello, Word! We hope you enjoy it as much as we enjoyed building it.",
+      "errorLoadingAboutUs": "Could not load your language preference. Please try again."
     },
     "privacy": {
       "loading": "Loading...",

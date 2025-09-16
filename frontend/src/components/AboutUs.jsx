@@ -26,29 +26,6 @@ export const AboutUs = () => {
   const translations = useMemo(() => getTranslations(lang), [lang]);
   const t = translations?.content?.aboutUs ?? {};
 
-  // const projectLinks = [
-  //   {
-  //     label: "Live Demo:",
-  //     href: "https://hello-word-6z2bg.ondigitalocean.app/",
-  //     text: "Hello-Word – Olivia",
-  //   },
-  //   {
-  //     label: `${t.sourceCode || "Source Code"}:`,
-  //     href: "https://github.com/final-project-real-time-chat/realtime-chat",
-  //     text: "GitHub Repo",
-  //   },
-  //   {
-  //     label: "Live Demo:",
-  //     href: "https://hello-word.khambazarov.dev/",
-  //     text: "Hello-Word – Renat",
-  //   },
-  //   {
-  //     label: `${t.sourceCode || "Source Code"}:`,
-  //     href: "https://github.com/Khambazarov/hello-word",
-  //     text: "GitHub Repo",
-  //   },
-  // ];
-
   const projectCards = [
     {
       title: "Hello, Word! — Olivia",
@@ -132,7 +109,7 @@ export const AboutUs = () => {
             className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"
           />
           <p className="text-gray-600 dark:text-gray-400 font-medium">
-            {translations?.loading || "Loading..."}
+            {translations?.common?.loading || "Loading..."}
           </p>
         </div>
       </div>
@@ -143,7 +120,7 @@ export const AboutUs = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <p className="text-gray-700 dark:text-gray-300">
-          {t.error ||
+          {t.errorLoadingAboutUs ||
             "Could not load your language preference. Please try again."}
         </p>
       </div>
@@ -161,13 +138,9 @@ export const AboutUs = () => {
             loading="lazy"
             decoding="async"
           />
-          <div
-            className="text-xl font-bold text-gray-900 dark:text-white tracking-wider"
-            aria-hidden="true"
-          >
+          <div className="text-xl font-bold text-gray-900 dark:text-white tracking-wider">
             {t.branding || "Hello, Word!"}
           </div>
-
           <button
             type="button"
             onClick={() => navigate("/chatarea")}
@@ -506,7 +479,7 @@ export const AboutUs = () => {
                       aria-label={l.label}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="h-11 w-11 sm:h-13 sm:w-13 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 duration-200 transform hover:-translate-y-1 transition-transform ease-out transform-gpu focus-visible:-translate-y-1"
+                      className="h-11 w-11 sm:h-13 sm:w-13 inline-flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-transform duration-200 ease-out hover:-translate-y-1 focus-visible:-translate-y-1 transform-gpu focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 motion-reduce:transform-none motion-reduce:transition-none"
                     >
                       <img
                         src={l.icon}
@@ -524,16 +497,16 @@ export const AboutUs = () => {
           </div>
         </section>
 
-        {/* Feedback Section */}
+        {/* Feedback & Thanks Section */}
         <section className="text-center">
-          <h3 className="text-balance text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
-            {t.thanks ||
-              "Thank you for exploring Hello, Word! with us. We hope you enjoy using the app as much as we enjoyed building it."}
-          </h3>
-          <div className="w-48 md:w-72 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto my-8 rounded-full" />
           <h3 className="text-balance text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
             {t.feedback ||
               "We welcome feedback and contributions — your input directly informs our roadmap. Feel free to reach out via the links above."}
+          </h3>
+          <div className="w-48 md:w-72 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto my-8 rounded-full" />
+          <h3 className="text-balance text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
+            {t.thanks ||
+              "Thank you for exploring Hello, Word! with us. We hope you enjoy using the app as much as we enjoyed building it."}
           </h3>
         </section>
       </main>

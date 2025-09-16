@@ -576,7 +576,7 @@ export const ChatArea = () => {
         ) : (
           <div className="space-y-4">
             {/* Header Section */}
-            <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_600ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
+            <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_1000ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">
                 {t.chat?.area?.title || "Your Conversations"}
               </h2>
