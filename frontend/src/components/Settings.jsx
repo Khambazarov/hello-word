@@ -16,6 +16,7 @@ import {
   LanguageIcon,
   AudioVolumeIcon,
   WarningIcon,
+  RussianFlag,
 } from "./_AllSVGs";
 
 import {
@@ -346,6 +347,21 @@ export const Settings = () => {
                   <GermanFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
                     {translations?.content?.settings?.lang?.de ?? "DE"}
+                  </span>
+                </div>
+              </label>
+              <label className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <RadioInput
+                  name="language"
+                  value="ru"
+                  checked={language === "ru"}
+                  onChange={handleLanguageSelection}
+                  className="text-purple-600 focus:ring-purple-500"
+                />
+                <div className="ml-3 flex items-center gap-3">
+                  <RussianFlag />
+                  <span className="text-gray-700 dark:text-gray-200 font-medium">
+                    {translations?.content?.settings?.lang?.ru ?? "RU"}
                   </span>
                 </div>
               </label>

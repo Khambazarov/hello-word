@@ -423,7 +423,7 @@ export default (io) => {
         return res.status(401).json({ errorMessage: "Not authenticated" });
       }
 
-      if (!["en", "de"].includes(language)) {
+      if (!["en", "de", "ru"].includes(language)) {
         return res.status(400).json({ errorMessage: "Invalid language" });
       }
 

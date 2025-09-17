@@ -384,6 +384,41 @@ export const UkFlag = ({ className = "" }) => (
   </svg>
 );
 
+export const RussianFlag = ({ className = "" }) => (
+  <svg
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 32 32"
+  >
+    <rect x="1" y="8" width="30" height="5" fill="#fff" />
+    <rect x="1" y="13" width="30" height="5" fill="#0033a0" />
+    <rect x="1" y="18" width="30" height="5" fill="#d52b1e" />
+    <rect
+      x="1"
+      y="8"
+      width="30"
+      height="15"
+      rx="4"
+      ry="4"
+      fill="none"
+      stroke="#000"
+      strokeOpacity="0.08"
+    />
+    <rect
+      x="1"
+      y="8"
+      width="30"
+      height="15"
+      rx="4"
+      ry="4"
+      fill="#000"
+      opacity="0.05"
+    />
+  </svg>
+);
+
 export const LoginTabIcon = ({ className = "" }) => (
   <svg
     className={`w-4 h-4 ${className}`}

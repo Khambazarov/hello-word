@@ -354,7 +354,7 @@ export const ChatArea = () => {
                   id="user-menu"
                   role="menu"
                   aria-label="User menu"
-                  className="absolute right-0 mt-2 w-42 sm:w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                  className="absolute right-0 mt-2 w-60 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
                 >
                   {/* Header */}
                   <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
