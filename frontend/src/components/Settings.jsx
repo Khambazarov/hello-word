@@ -65,7 +65,6 @@ export const Settings = () => {
   }, [userSettings]);
 
   // --- Mutations ---------------------------
-
   // --- Volume ---------------------------
   const mVolume = useMutation({
     mutationFn: async (newVolume) => {
