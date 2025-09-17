@@ -10,9 +10,3 @@ export const fetchBrowserLanguage = () => {
     return (browserLanguage = "en");
   }
 };
-
-/** REFACTORING */
-// export const fetchBrowserLanguage = () => {
-//   const language = navigator.language || navigator.userLanguage;
-//   return language.startsWith("de") ? "de" : "en";
-// };
