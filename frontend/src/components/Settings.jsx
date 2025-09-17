@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
@@ -25,153 +25,199 @@ import {
   DeleteAccountBtn,
   EyeToggleIcon,
 } from "./_Buttons.jsx";
-import { RadioInput } from "./_Inputs.jsx";
+import { PasswordInput, RadioInput } from "./_Inputs.jsx";
 
 export const Settings = () => {
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [volume, setVolume] = useState(null);
   const queryClient = useQueryClient();
 
+  // UI & form state
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+  // settings state
+  const [volume, setVolume] = useState("middle");
   const [language, setLanguage] = useState("en");
-  const [translations, setTranslations] = useState(getTranslations("en"));
 
-  function changePassword(e) {
-    e.preventDefault();
-    const oldPassword = e.target.oldPassword.value.trim();
-    const newPassword = e.target.newPassword.value.trim();
-    newPasswordMutation.mutate({ oldPassword, newPassword });
-    e.target.oldPassword.value = "";
-    e.target.newPassword.value = "";
-  }
+  const translations = useMemo(() => getTranslations(language), [language]);
 
+  // --- Query: initial settings --------------
   const { data: userSettings, isLoading } = useQuery({
     queryKey: ["userSettings"],
     queryFn: fetchUserLanguage,
-    onSuccess: (data) => {
-      setVolume(data.volume || "middle");
-      setLanguage(data.language || "en");
-      setTranslations(getTranslations(data.language || "en"));
+    staleTime: 60 * 1000, // 1 minute
+    refetchOnMount: "always",
+    refetchOnWindowFocus: false,
+    onError: () => {
+      const t = getTranslations("en");
+      toast.error(
+        t.feedback.toast.settings.errorFailedLoad ?? "Failed to load settings."
+      );
     },
   });
 
   useEffect(() => {
-    if (userSettings && userSettings.volume) {
-      setVolume(userSettings.volume);
-    }
+    if (!userSettings) return;
+    setVolume(userSettings.volume ?? "middle");
+    setLanguage(userSettings.language ?? "en");
   }, [userSettings]);
 
-  useEffect(() => {
-    if (userSettings && userSettings.language) {
-      setLanguage(userSettings.language);
-    }
-  }, [userSettings]);
+  // --- Mutations ---------------------------
 
-  useEffect(() => {
-    if (language) {
-      const loadedTranslations = getTranslations(language);
-      setTranslations(loadedTranslations);
-    }
-  }, [language]);
-
-  const handleAudioVolume = useMutation({
+  // --- Volume ---------------------------
+  const mVolume = useMutation({
     mutationFn: async (newVolume) => {
       const response = await fetch(`/api/users/volume`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ volume: newVolume }),
       });
       if (!response.ok) throw new Error("Failed to change volume.");
       return response.json();
     },
-    onSuccess: (data) => {
-      setVolume(data.volume || "middle");
+    onSuccess: (data, variables) => {
+      const nextVolume = data?.volume ?? variables;
+      setVolume(nextVolume);
+
+      const t = getTranslations(language);
       toast.success(
-        translations.feedback.toast.settings.successUpdate ||
-          "Updated successfully!"
+        t.feedback.toast.settings.successUpdate ?? "Updated successfully!"
       );
-      queryClient.invalidateQueries(["userSettings"]);
+      queryClient.setQueryData(["userSettings"], (prev) => ({
+        ...(prev ?? {}),
+        volume: nextVolume,
+      }));
+      queryClient.invalidateQueries({ queryKey: ["userSettings"] });
     },
     onError: () => {
-      toast.error(translations.feedback.toast.settings.errorFailedChange);
-    },
-  });
-
-  const handleVolumeChange = (newVolume) => {
-    handleAudioVolume.mutate(newVolume);
-  };
-
-  const handleLanguageChange = useMutation({
-    mutationFn: updateUserLanguage,
-    onSuccess: (data) => {
-      const newLang = data.language || "en";
-      const newTranslations = getTranslations(newLang);
-      setLanguage(newLang);
-      setTranslations(newTranslations);
-      toast.success(
-        newTranslations.feedback.toast.settings.successUpdate ||
-          "Updated successfully!"
+      const t = getTranslations(language);
+      toast.error(
+        t.feedback.toast.settings.errorFailedChange ?? "Update failed."
       );
-      queryClient.invalidateQueries(["userSettings"]);
-    },
-    onError: (data) => {
-      const newLang = data.language || "en";
-      const newTranslations = getTranslations(newLang);
-      toast.error(newTranslations.feedback.toast.settings.errorFailedChange);
     },
   });
 
-  const handleLanguageSelection = (newLanguage) => {
-    handleLanguageChange.mutate(newLanguage);
-  };
+  function handleVolumeChange(newVolume) {
+    mVolume.mutate(newVolume);
+  }
 
-  const newPasswordMutation = useMutation({
+  // --- Language ---------------------------
+  const mLanguage = useMutation({
+    mutationFn: updateUserLanguage,
+
+    onSuccess: (data, variables) => {
+      const candidate =
+        data?.language ??
+        (typeof variables === "string" ? variables : variables?.language);
+      const newLang = candidate ?? language;
+
+      setLanguage(newLang);
+      const t = getTranslations(newLang);
+      toast.success(
+        t.feedback.toast.settings.successUpdate ?? "Updated successfully!"
+      );
+      queryClient.setQueryData(["userSettings"], (prev) => ({
+        ...(prev ?? {}),
+        language: newLang,
+      }));
+
+      queryClient.invalidateQueries({ queryKey: ["userSettings"] });
+    },
+    onError: () => {
+      const t = getTranslations(language);
+      toast.error(
+        t.feedback.toast.settings.errorFailedChange ?? "Update failed."
+      );
+    },
+  });
+
+  function handleLanguageSelection(newLanguage) {
+    mLanguage.mutate(newLanguage);
+  }
+
+  // --- Password ---------------------------
+  const mPassword = useMutation({
     mutationFn: async ({ oldPassword, newPassword }) => {
       const response = await fetch(`/api/users/update`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ oldPassword, newPassword }),
       });
       if (!response.ok) throw new Error("Failed to change password.");
       return response.json();
     },
     onSuccess: () => {
-      toast.success(translations.feedback.toast.settings.successUpdate);
+      const t = getTranslations(language);
+      toast.success(
+        t.feedback.toast.settings.successUpdate ?? "Updated successfully!"
+      );
+      setCurrentPassword("");
+      setNewPassword("");
+      setShowPassword(false);
     },
     onError: () => {
-      toast.error(translations.feedback.toast.settings.errorFailedChange);
+      const t = getTranslations(language);
+      toast.error(
+        t.feedback.toast.settings.errorFailedChange ?? "Update failed."
+      );
     },
   });
 
-  const deleteAccountMutation = useMutation({
+  // --- Account Deletion ---------------------------
+  const mDeleteAccount = useMutation({
     mutationFn: async () => {
       const response = await fetch(`/api/users/delete`, {
         method: "DELETE",
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to delete account");
       return response.json();
     },
     onSuccess: () => {
-      toast.success(translations.feedback.toast.settings.successAccountDelete);
-      setShow(false);
+      const t = getTranslations(language);
+      toast.success(
+        t.feedback.toast.settings.successAccountDelete ??
+          "Account deleted successfully!"
+      );
+      setShowConfirm(false);
       navigate("/");
     },
     onError: () => {
-      toast.error(translations.feedback.toast.settings.errorAccountDelete);
+      const t = getTranslations(language);
+      toast.error(
+        t.feedback.toast.settings.errorAccountDelete ??
+          "Account deletion failed."
+      );
     },
   });
 
-  if (
-    isLoading ||
-    volume === null ||
-    language === null ||
-    translations === null
-  ) {
+  // --- Handlers ---------------------------
+  function changePassword(e) {
+    e.preventDefault();
+    const oldPassword = currentPassword.trim();
+    const nextPassword = newPassword.trim();
+
+    if (nextPassword.length < 6) {
+      toast.error(
+        translations.feedback.toast.settings.errorInvalidPassword ??
+          "Password is too short (6+ characters)."
+      );
+      return;
+    }
+
+    mPassword.mutate({ oldPassword, newPassword: nextPassword });
+  }
+
+  // --- Loading ---------------------------
+  if (isLoading) {
     return (
       <div className="min-h-svh flex flex-col dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
         <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
@@ -191,21 +237,19 @@ export const Settings = () => {
             {/* Titel mittig */}
             <div className="flex-1 flex justify-center">
               <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight text-center">
-                {translations.content.settings.title || "Settings"}
+                {translations.content?.settings?.title ?? "Settings"}
               </h1>
             </div>
             {/* Buttons rechts */}
             <div className="flex items-center space-x-0 flex-1 justify-end">
-              <div className="flex items-center space-x-0 flex-1 justify-end">
-                <BackBtnHeader />
-              </div>
+              <BackBtnHeader />
             </div>
           </div>
         </header>
         <div className="flex flex-col items-center justify-center flex-1 p-6">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">
-            {translations.content.settings.loadingSettings ||
+            {translations?.content?.settings?.loadingSettings ??
               "Loading settings..."}
           </p>
         </div>
@@ -213,6 +257,7 @@ export const Settings = () => {
     );
   }
 
+  // --- Main Render ---------------------------
   return (
     <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm">
@@ -232,7 +277,7 @@ export const Settings = () => {
           {/* Titel mittig */}
           <div className="flex-1 flex justify-center">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white leading-tight text-center">
-              {translations.content.settings?.title || "Settings"}
+              {translations?.content?.settings?.title ?? "Settings"}
             </h1>
           </div>
           {/* Buttons rechts */}
@@ -248,10 +293,9 @@ export const Settings = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/20 rounded-full mb-4">
             <SettingsIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
-          </h1>
+          {/* <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2"></h1> */}
           <p className="text-balance text-gray-600 dark:text-gray-400">
-            {translations.content.settings?.description ||
+            {translations?.content?.settings?.description ??
               "Set up your preferences and manage your account with ease."}
           </p>
         </div>
@@ -265,11 +309,11 @@ export const Settings = () => {
               </div>
 
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.content.settings.selectLangTitle ||
+                {translations?.content?.settings?.selectLangTitle ??
                   "Language Settings"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {translations.content.settings.selectLangDescription ||
+                {translations?.content?.settings?.selectLangDescription ??
                   "Choose your preferred language for the app interface."}
               </p>
             </div>
@@ -286,7 +330,7 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <UkFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations.content.settings.lang.en || "EN"}
+                    {translations?.content?.settings?.lang?.en ?? "EN"}
                   </span>
                 </div>
               </label>
@@ -302,7 +346,7 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <GermanFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations.content.settings.lang.de || "DE"}
+                    {translations?.content?.settings?.lang?.de ?? "DE"}
                   </span>
                 </div>
               </label>
@@ -316,11 +360,11 @@ export const Settings = () => {
                 <AudioVolumeIcon />
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.content.settings.volumeTitle ||
+                {translations?.content?.settings?.volumeTitle ??
                   "Select Audio Volume"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {translations.content.settings.adjustVolume ||
+                {translations?.content?.settings?.adjustVolume ??
                   "Adjust the volume for notification sounds."}
               </p>
             </div>
@@ -330,17 +374,20 @@ export const Settings = () => {
                 {
                   value: "silent",
                   icon: "🔇",
-                  label: translations.content.settings.volume.silent,
+                  label:
+                    translations?.content?.settings?.volume?.silent ?? "Silent",
                 },
                 {
                   value: "middle",
                   icon: "🔉",
-                  label: translations.content.settings.volume.middle,
+                  label:
+                    translations?.content?.settings?.volume?.middle ?? "Normal",
                 },
                 {
                   value: "full",
                   icon: "🔊",
-                  label: translations.content.settings.volume.loud,
+                  label:
+                    translations?.content?.settings?.volume?.loud ?? "Loud",
                 },
               ].map((vol) => (
                 <label
@@ -375,11 +422,11 @@ export const Settings = () => {
                 <PasswordIcon className="w-6 h-6 text-orange-600 dark:text-orange-400" />
               </div>
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                {translations.content.settings.changePwTitle ||
+                {translations?.content?.settings?.changePwTitle ??
                   "Change Password"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {translations.content.settings.changePwDescription ||
+                {translations?.content?.settings?.changePwDescription ??
                   "6+ characters, incl. uppercase, lowercase & numbers"}
               </p>
             </div>
@@ -393,29 +440,35 @@ export const Settings = () => {
                   htmlFor="oldPassword"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
-                  {translations.content.settings.currentPwTitle ||
+                  {translations?.content?.settings?.currentPwTitle ??
                     "Current Password"}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <PasswordIcon />
                   </div>
-                  <input
+                  <PasswordInput
                     type={showPassword ? "text" : "password"}
                     name="oldPassword"
                     id="oldPassword"
                     autoComplete="current-password"
                     placeholder={
-                      translations.content.settings.currentPwPlaceholder ||
+                      translations?.content?.settings?.currentPwPlaceholder ??
                       "Current Password"
                     }
+                    value={currentPassword}
+                    onChange={setCurrentPassword}
                     minLength={6}
-                    className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
                   />
                   <EyeToggleIcon
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     toggled={showPassword}
-                    onToggle={() => setShowPassword(!showPassword)}
+                    onToggle={() =>
+                      setShowPassword((showPassword) => !showPassword)
+                    }
                   />
                 </div>
               </div>
@@ -425,34 +478,44 @@ export const Settings = () => {
                   htmlFor="newPassword"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
-                  {translations.content.settings.newPwTitle || "New Password"}
+                  {translations?.content?.settings?.newPwTitle ??
+                    "New Password"}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <PasswordIcon />
                   </div>
-                  <input
+                  <PasswordInput
                     type={showPassword ? "text" : "password"}
                     name="newPassword"
                     id="newPassword"
                     autoComplete="new-password"
                     placeholder={
-                      translations.content.settings.newPwPlaceholder ||
+                      translations?.content?.settings?.newPwPlaceholder ??
                       "Strong Password"
                     }
+                    value={newPassword}
+                    onChange={setNewPassword}
                     minLength={6}
-                    className="w-full pl-10 pr-10 py-3 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
                     required
                   />
                   <EyeToggleIcon
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     toggled={showPassword}
-                    onToggle={() => setShowPassword(!showPassword)}
+                    onToggle={() =>
+                      setShowPassword((showPassword) => !showPassword)
+                    }
                   />
                 </div>
               </div>
 
-              <ChangePasswordBtn>
-                {translations.content.settings.changePwBtn || "Change Password"}
+              <ChangePasswordBtn disabled={mPassword.isPending}>
+                {mPassword.isPending
+                  ? (translations?.content?.saving ?? "Saving...") // .saving
+                  : (translations?.content?.settings?.changePwBtn ??
+                    "Change Password")}
               </ChangePasswordBtn>
             </form>
           </div>
@@ -464,11 +527,11 @@ export const Settings = () => {
                 <TrashIcon className="w-6 h-6 text-red-600 dark:text-red-400" />
               </div>
               <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">
-                {translations.content.settings.deleteAccountTitle ||
+                {translations?.content?.settings?.deleteAccountTitle ??
                   "Delete Account"}
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {translations.content.settings.deleteAccountDescription ||
+                {translations?.content?.settings?.deleteAccountDescription ??
                   "Permanently delete your account and all associated data."}
               </p>
             </div>
@@ -479,18 +542,22 @@ export const Settings = () => {
 
                 <div className="text-sm">
                   <p className="text-red-800 dark:text-red-200 font-medium">
-                    {translations.content.settings.warningTitle || "Warning!"}
+                    {translations?.content?.settings?.warningTitle ??
+                      "Warning!"}
                   </p>
                   <p className="text-red-700 dark:text-red-300 mt-1">
-                    {translations.content.settings.warningDescription ||
+                    {translations?.content?.settings?.warningDescription ??
                       "This action cannot be undone. All your chats, messages, and account data will be permanently deleted."}
                   </p>
                 </div>
               </div>
             </div>
 
-            <DeleteAccountBtn onClick={() => setShow(true)}>
-              {translations.content.settings.deleteBtn || "Delete Account"}
+            <DeleteAccountBtn
+              onClick={() => setShowConfirm(true)}
+              disabled={mDeleteAccount.isPending}
+            >
+              {translations?.content?.settings?.deleteBtn ?? "Delete Account"}
             </DeleteAccountBtn>
           </div>
         </div>
@@ -498,7 +565,7 @@ export const Settings = () => {
         {/* Quick Actions */}
         <div className="flex justify-center mt-8 pt-6 border-t w-full border-gray-200 dark:border-gray-600">
           <BackToChatBtn>
-            {translations.content.profile.backToChat || "Back to Chat"}
+            {translations?.content?.profile?.backToChat ?? "Back to Chat"}
           </BackToChatBtn>
         </div>
 
@@ -506,7 +573,7 @@ export const Settings = () => {
       </div>
 
       {/* Confirmation Modal */}
-      {show && (
+      {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
             <div className="text-center">
@@ -514,26 +581,29 @@ export const Settings = () => {
                 <WarningIcon className="w-16 h-16 text-red-600 dark:text-red-400 animate-bounce" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                {translations.content.settings.prompt.title ||
+                {translations?.content?.settings?.prompt?.title ??
                   "Delete Account?"}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {translations.content.settings.prompt.description ||
+                {translations?.content?.settings?.prompt?.description ??
                   "Are you sure you want to delete your account? This action cannot be undone."}
               </p>
               <div className="flex space-x-3">
                 <button
-                  onClick={() => setShow(false)}
+                  onClick={() => setShowConfirm(false)}
                   className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg font-medium transition-colors     focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700"
                   autoFocus
                 >
-                  {translations.content.settings.prompt.cancelBtn || "Cancel"}
+                  {translations?.content?.settings?.prompt?.cancelBtn ??
+                    "Cancel"}
                 </button>
                 <button
-                  onClick={() => deleteAccountMutation.mutate()}
+                  onClick={() => mDeleteAccount.mutate()}
+                  disabled={mDeleteAccount.isPending}
                   className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
                 >
-                  {translations.content.settings.prompt.deleteBtn || "Delete"}
+                  {translations?.content?.settings?.prompt?.deleteBtn ??
+                    "Delete"}
                 </button>
               </div>
             </div>
