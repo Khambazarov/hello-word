@@ -11,7 +11,7 @@ export const fetchUserLanguage = async () => {
 };
 
 export const updateUserLanguage = async (language) => {
-  const response = await fetch("api/users/language", {
+  const response = await fetch("/api/users/language", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
