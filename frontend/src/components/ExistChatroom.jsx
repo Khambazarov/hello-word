@@ -1,14 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
-
 import toast, { Toaster } from "react-hot-toast";
-
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchUserLanguage } from "../utils/api.js";
-
-// import robot from "../assets/robot.png";
-
 import { BackButtonIcon, UserIcon } from "./_AllSVGs";
 
 export const ExistChatroom = (e) => {
@@ -21,15 +16,10 @@ export const ExistChatroom = (e) => {
     queryFn: fetchUserLanguage,
   });
 
-  const [translations, setTranslations] = useState(
-    getTranslations(data?.language || "en")
-  );
-
+  const [translations, setTranslations] = useState(getTranslations("en"));
   useEffect(() => {
-    if (data?.language) {
-      setTranslations(getTranslations(data.language));
-    }
-  }, [data]);
+    setTranslations(getTranslations(data?.language || "en"));
+  }, [data?.language]);
 
   const existChatroomMutation = useMutation({
     mutationFn: async (username) => {
@@ -43,27 +33,28 @@ export const ExistChatroom = (e) => {
 
       if (response.status === 404) {
         toast.dismiss();
-        toast.error(translations.feedback.toast.chat.existChatroom.errorUserNotFound);
-
+        toast.error(
+          translations.feedback.toast.chat.existChatroom.errorUserNotFound
+        );
         throw new Error("Failed to create chatroom");
       }
 
       if (response.status === 401) {
         toast.dismiss();
-        toast.error(translations.feedback.toast.chat.existChatroom.errorSearchYourself);
-
+        toast.error(
+          translations.feedback.toast.chat.existChatroom.errorSearchYourself
+        );
         throw new Error("Failed to create chatroom");
       }
 
       if (!response.ok) {
         toast.dismiss();
-        toast.error(translations.feedback.toast.chat.existChatroom.errorFailedToFind);
-
+        toast.error(
+          translations.feedback.toast.chat.existChatroom.errorFailedToFind
+        );
         throw new Error("Failed to create chatroom");
       }
-
       const result = await response.json();
-
       return result;
     },
     onSuccess: (data) => {
@@ -89,7 +80,9 @@ export const ExistChatroom = (e) => {
     const username = e.target.username.value.trim();
     if (username === "") {
       toast.dismiss();
-      toast.error(translations.feedback.toast.chat.existChatroom.errorNameRequired);
+      toast.error(
+        translations.feedback.toast.chat.existChatroom.errorNameRequired
+      );
       return;
     }
     existChatroomMutation.mutate(username);
@@ -118,7 +111,7 @@ export const ExistChatroom = (e) => {
             <button
               onClick={() => navigate("/chatarea")}
               className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all duration-200 group"
-              title="Back to Chat Area"
+              title={translations.ui.buttons.backToChatroom || "Back to Chats"}
             >
               <svg
                 className="w-5 h-5 transform group-hover:-translate-x-0.5 transition-transform duration-200"
@@ -135,8 +128,8 @@ export const ExistChatroom = (e) => {
               </svg>
             </button>
 
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white absolute left-1/2 transform -translate-x-1/2">
-              Start New Chat
+            <h1 className="font-bold text-gray-900 dark:text-white absolute left-1/2 transform -translate-x-1/2">
+              {translations?.chat?.existing?.title ?? "Start New Chat"}
             </h1>
           </div>
         </div>
@@ -162,7 +155,7 @@ export const ExistChatroom = (e) => {
               </svg>
             </div>
             <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              {translations.existChatroom?.subtitle ||
+              {translations?.chat?.area?.subtitle ??
                 "Connect with friends by searching their username"}
             </p>
           </div>
@@ -188,22 +181,24 @@ export const ExistChatroom = (e) => {
                 </svg>
                 <div className="text-sm">
                   <p className="text-blue-800 dark:text-blue-200 font-medium mb-1">
-                    {translations.existChatroom?.howItWorksTitle ||
+                    {translations?.chat?.existing?.howItWorksTitle ??
                       "How it works:"}
                   </p>
                   <ul className="text-balance text-blue-700 dark:text-blue-300 space-y-1">
                     <li>
                       •{" "}
-                      {translations.existChatroom?.step1 ||
+                      {translations?.chat?.existing?.step1 ??
                         "Enter the exact username of the person you want to chat with"}
                     </li>
                     <li>
                       •{" "}
-                      {translations.existChatroom?.step2 ||
+                      {translations?.chat?.existing?.step2 ??
                         "If you've chatted before, you'll go to your existing conversation"}
                     </li>
                     <li>
-                      • If it&apos;s a new contact, a fresh chat will be created
+                      •{" "}
+                      {translations?.chat?.existing?.step3 ??
+                        "If you already have a chat with this user, you will be redirected to it"}
                     </li>
                   </ul>
                 </div>
@@ -214,10 +209,12 @@ export const ExistChatroom = (e) => {
             <div>
               <label
                 htmlFor="username"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
-                Username
-                <span className="text-xs text-gray-500"> (Required)</span>
+                {`${translations?.chat?.existing?.searchUserTitle ?? "Search by Username"} `}
+                <span className="text-xs text-gray-500">
+                  ({translations?.ui?.forms?.required ?? "(required)"})
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -227,7 +224,14 @@ export const ExistChatroom = (e) => {
                   type="text"
                   name="username"
                   id="username"
-                  placeholder="Enter username (e.g., john-doe)"
+                  placeholder={
+                    translations?.chat?.existing?.placeholder ??
+                    "e.g., John.Doe"
+                  }
+                  autoComplete="off"
+                  spellCheck="false"
+                  autoCapitalize="none"
+                  autoCorrect="off"
                   minLength={2}
                   maxLength={30}
                   className="w-full pl-10 pr-4 py-3 text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
@@ -239,7 +243,8 @@ export const ExistChatroom = (e) => {
                 />
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Username must be at least 2 characters long
+                {translations?.chat?.existing?.placeholderHelpText ??
+                  "Make sure to enter the exact username."}
               </p>
             </div>
 
@@ -290,7 +295,10 @@ export const ExistChatroom = (e) => {
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     />
                   </svg>
-                  <span>Find & Start Chat</span>
+                  <span>
+                    {translations?.chat?.existing?.createChatroomBtn ??
+                      "Start Chat"}
+                  </span>
                 </>
               )}
             </button>
@@ -299,7 +307,8 @@ export const ExistChatroom = (e) => {
           {/* Help Text */}
           <div className="text-center my-4">
             <p className="text-sm text-balance text-gray-500 dark:text-gray-400">
-              Need help? Make sure you have the correct username spelling.
+              {translations?.chat?.existing?.needHelpText ??
+                "Need help? Make sure you have the correct username spelling."}
             </p>
           </div>
         </div>

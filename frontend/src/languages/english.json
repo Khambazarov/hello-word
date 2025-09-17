@@ -135,10 +135,18 @@
       "backToGroup": "Back to Group"
     },
     "existing": {
+      "title": "Start New Chat",
+      "subtitle": "Stay connected with friends",
+      "howItWorksTitle": "How it works:",
+      "step1": "Enter the exact username of the person you want to chat with",
+      "step2": "If the user exists, you can start a chat",
+      "step3": "If you already have a chat with this user, you will be redirected to it",
       "loading": "Loading...",
-      "searchUserTitle": "Search User",
-      "placeholder": "John.Doe",
-      "createChatroomBtn": "Start Chat"
+      "searchUserTitle": "Search by Username",
+      "placeholder": "e.g., John.Doe",
+      "placeholderHelpText": "Make sure to enter the exact username.",
+      "createChatroomBtn": "Start Chat",
+      "needHelpText": "Need help? Make sure you have the correct username spelling."
     },
     "new": {
       "loading": "Loading...",
@@ -504,6 +512,8 @@
       },
       "chat": {
         "existChatroom": {
+          "loading": "Loading...",
+          "success": "Chat started!",
           "alreadyChatted": "You are already chatting with ",
           "errorUserNotFound": "User not found",
           "errorSearchYourself": "You cannot chat with yourself",
