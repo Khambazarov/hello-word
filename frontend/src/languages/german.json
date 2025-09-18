@@ -21,9 +21,10 @@
     "welcomeMessage": "Willkommen bei",
     "welcomeBack": "Willkommen zurück bei",
     "online": "Online",
-    "relogin": "Erneut anmelden",
     "loggingOut": "Melde ab…",
-    "processing": "Wird verarbeitet..."
+    "processing": "Wird verarbeitet...",
+    "loginRequired": "Du musst dich erneut anmelden.",
+    "relogin": "Erneut anmelden"
   },
 
   "auth": {
@@ -410,7 +411,7 @@
         "enterValidUsernames": "Bitte gültige Benutzernamen eingeben"
       },
       "media": {
-        "audioNotSupported": "Sprachaufnahme auf diesem Gerät nicht unterstützt",
+        "audioNotSupported": "Dein Browser unterstützt das Audio-Element nicht.",
         "fileTooLarge": "Datei zu groß",
         "unsupportedFileType": "Dateityp wird nicht unterstützt",
         "uploadFailed": "Upload fehlgeschlagen",
@@ -521,7 +522,8 @@
           "errorFailedToFind": "Benutzer nicht gefunden",
           "errorNameRequired": "Bitte Benutzernamen eingeben",
           "errorDeletedUser": "Dieser Benutzer existiert nicht mehr",
-          "errorServer": "Fehler beim Laden"
+          "errorServer": "Fehler beim Laden",
+          "errorNotLoggedIn": "Du musst eingeloggt sein"
         },
         "chatroom": {
           "audioNotSupported": "Sprachaufnahme nicht verfügbar"

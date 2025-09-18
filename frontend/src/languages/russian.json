@@ -21,9 +21,10 @@
     "welcomeMessage": "Добро пожаловать в",
     "welcomeBack": "С возвращением в",
     "online": "Онлайн",
-    "relogin": "Войти снова",
     "loggingOut": "Выход...",
-    "processing": "Обработка..."
+    "processing": "Обработка...",
+    "loginRequired": "Требуется повторный вход.",
+    "relogin": "Войти снова"
   },
 
   "auth": {
@@ -410,7 +411,7 @@
         "enterValidUsernames": "Введите действительные имена пользователей"
       },
       "media": {
-        "audioNotSupported": "Голосовая запись не поддерживается на этом устройстве",
+        "audioNotSupported": "Ваш браузер не поддерживает аудиоэлемент.",
         "fileTooLarge": "Файл слишком большой",
         "unsupportedFileType": "Неподдерживаемый тип файла",
         "uploadFailed": "Ошибка загрузки",
@@ -521,7 +522,8 @@
           "errorFailedToFind": "Пользователь не найден",
           "errorNameRequired": "Введите имя пользователя",
           "errorDeletedUser": "Этот пользователь больше не существует",
-          "errorServer": "Ошибка загрузки"
+          "errorServer": "Ошибка загрузки",
+          "errorNotLoggedIn": "Пожалуйста, войдите в систему"
         },
         "chatroom": {
           "audioNotSupported": "Голосовая запись недоступна"

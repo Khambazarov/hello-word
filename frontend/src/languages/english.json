@@ -21,9 +21,10 @@
     "welcomeMessage": "Welcome to",
     "welcomeBack": "Welcome back to",
     "online": "Online",
-    "relogin": "Sign in again",
     "loggingOut": "Logging out…",
-    "processing": "Processing..."
+    "processing": "Processing...",
+    "loginRequired": "You need to log in again.",
+    "relogin": "Sign in again"
   },
 
   "auth": {
@@ -410,7 +411,7 @@
         "enterValidUsernames": "Please enter valid usernames"
       },
       "media": {
-        "audioNotSupported": "Voice recording not supported on this device",
+        "audioNotSupported": "Your browser does not support the audio element.",
         "fileTooLarge": "File too large",
         "unsupportedFileType": "Unsupported file type",
         "uploadFailed": "Upload failed",
@@ -520,7 +521,9 @@
           "errorFailedToFind": "User not found",
           "errorNameRequired": "Please enter a username",
           "errorDeletedUser": "This user no longer exists",
-          "errorServer": "Error loading"
+          "errorServer": "Error loading",
+          "errorFailedCreate": "Failed to create chatroom",
+          "errorNotLoggedIn": "You need to log in again"
         },
         "chatroom": {
           "audioNotSupported": "Voice recording not available"
