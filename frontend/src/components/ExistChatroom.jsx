@@ -5,13 +5,14 @@ import toast, { Toaster } from "react-hot-toast";
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchUserLanguage } from "../utils/api.js";
 import { BackButtonIcon, UserIcon } from "./_AllSVGs";
+import { AuthError } from "./AuthError.jsx";
 
 export const ExistChatroom = (e) => {
   const navigate = useNavigate();
   const partnerNameRef = useRef(null);
   const [username, setUsername] = useState("");
 
-  const { data, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["existChatroom"],
     queryFn: fetchUserLanguage,
   });
@@ -100,6 +101,15 @@ export const ExistChatroom = (e) => {
       </div>
     );
   }
+
+  if (
+      (error &&
+        (String(error.message || "").includes("(401)") ||
+          error.status === 401)) ||
+      data?.errorMessage === "User is not Authenticated"
+    ) {
+      return <AuthError translations={translations} />;
+    }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
