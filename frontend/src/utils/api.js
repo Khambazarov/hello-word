@@ -5,7 +5,18 @@ export const fetchUserLanguage = async () => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch user language");
+    // try to get a more specific error message from the response
+    let msg = "Failed to fetch user";
+    try {
+      const json = await response.json();
+      if (json?.errorMessage) msg = json.errorMessage;
+    } catch {
+      // intentionally ignored
+    }
+    const err = new Error(`${msg} (${response.status})`);
+    // Add a status property to the error object
+    err.status = response.status;
+    throw err;
   }
   return response.json();
 };
@@ -17,6 +28,7 @@ export const updateUserLanguage = async (language) => {
     credentials: "include",
     body: JSON.stringify({ language }),
   });
+
   if (!response.ok) {
     throw new Error("Failed to update user language");
   }
