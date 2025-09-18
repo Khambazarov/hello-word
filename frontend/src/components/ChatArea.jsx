@@ -566,7 +566,7 @@ export const ChatArea = () => {
             {/* Optional: 401 → Login */}
             {String(chatroomsError.message || "").includes("(401)") && (
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/")}
                 className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
               >
                 {t.common?.relogin || "Sign in again"}
