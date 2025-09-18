@@ -9,12 +9,17 @@ import { formatTimestamp } from "../utils/formatTimestamp";
 
 import robot from "../assets/robot.png";
 import { BackButtonIcon } from "./_AllSVGs";
+import { AuthError } from "./AuthError.jsx";
 
 export const Profile = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data, isLoading: isProfileLoading } = useQuery({
+  const {
+    data,
+    error,
+    isLoading: isProfileLoading,
+  } = useQuery({
     queryKey: ["profile"],
     queryFn: fetchUserLanguage,
   });
@@ -91,6 +96,15 @@ export const Profile = () => {
   const userRegisteredAt = dateOfRegistration
     ? formatTimestamp(dateOfRegistration, language)
     : translations.content.profile.dateNotAvailable || "Date not available";
+
+  if (
+    (error &&
+      (String(error.message || "").includes("(401)") ||
+        error.status === 401)) ||
+    data?.errorMessage === "User is not Authenticated"
+  ) {
+    return <AuthError translations={translations} />;
+  }
 
   if (isProfileLoading) {
     return (
@@ -309,7 +323,7 @@ export const Profile = () => {
                     {translations.content.profile.username || "Username"}
                   </p>
                   <p className="text-xs font-semibold text-gray-900 dark:text-white break-all">
-                    {username || "failed_to_load username"}
+                    {username || "–"}
                   </p>
                 </div>
 
@@ -334,7 +348,7 @@ export const Profile = () => {
                     {translations.content.profile.email || "Email"}
                   </p>
                   <p className="text-xs font-semibold text-gray-900 dark:text-white break-all">
-                    {usermail || "Failed to load email"}
+                    {usermail || "–"}
                   </p>
                 </div>
 
@@ -359,7 +373,7 @@ export const Profile = () => {
                     {translations.content.profile.registered || "Member Since"}
                   </p>
                   <p className="text-xs font-semibold text-gray-900 dark:text-white">
-                    {userRegisteredAt || "failed to load date"}
+                    {userRegisteredAt || "–"}
                   </p>
                 </div>
               </div>
