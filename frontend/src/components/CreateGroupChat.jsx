@@ -5,7 +5,6 @@ import toast, { Toaster } from "react-hot-toast";
 
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchUserLanguage } from "../utils/api.js";
-import { BackButtonIcon, SendMessageIcon } from "./_AllSVGs";
 import { AuthError } from "./AuthError.jsx";
 
 export const CreateGroupChat = () => {
