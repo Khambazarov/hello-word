@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import toast, { Toaster } from "react-hot-toast";
@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { getTranslations } from "../utils/languageHelper.js";
 import { fetchUserLanguage } from "../utils/api.js";
 import { BackButtonIcon, SendMessageIcon } from "./_AllSVGs";
+import { AuthError } from "./AuthError.jsx";
 
 export const CreateGroupChat = () => {
   const [groupName, setGroupName] = useState("");
@@ -16,12 +17,15 @@ export const CreateGroupChat = () => {
   const navigate = useNavigate();
   const formRef = useRef(null);
 
-  const { data } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["userLanguage"],
     queryFn: fetchUserLanguage,
   });
 
-  const translations = getTranslations(data?.language || "en");
+  const [translations, setTranslations] = useState(getTranslations("en"));
+  useEffect(() => {
+    setTranslations(getTranslations(data?.language || "en"));
+  }, [data?.language]);
 
   const createGroupMutation = useMutation({
     mutationFn: async (groupData) => {
@@ -34,6 +38,11 @@ export const CreateGroupChat = () => {
       });
 
       if (!response.ok) {
+        toast.dismiss();
+        toast.error(
+          translations?.feedback?.toast?.chat?.existChatroom
+            ?.errorFailedToFind || "Failed to create group"
+        );
         const error = await response.json();
         throw new Error(error.errorMessage || "Failed to create group");
       }
@@ -75,6 +84,15 @@ export const CreateGroupChat = () => {
       initialMessage: initialMessage.trim(),
     });
   };
+
+  if (
+    (error &&
+      (String(error.message || "").includes("(401)") ||
+        error.status === 401)) ||
+    data?.errorMessage === "User is not Authenticated"
+  ) {
+    return <AuthError translations={translations} />;
+  }
 
   return (
     <div className="min-h-screen dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300">
