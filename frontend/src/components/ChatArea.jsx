@@ -15,6 +15,7 @@ import robot from "../assets/robot.png";
 import notification from "../assets/positive-notification.wav";
 import { formatTimestamp } from "../utils/formatTimestamp.js";
 import { truncateText } from "../utils/truncateText.js";
+import { AuthError } from "./AuthError.jsx";
 
 /* ----------------------------- Helpers (local) ---------------------------- */
 
@@ -85,7 +86,6 @@ export const ChatArea = () => {
   const audioReceiveRef = useRef(null);
   const menuRef = useRef(null);
 
-  /* ------------------------------- i18n load ------------------------------ */
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -125,7 +125,7 @@ export const ChatArea = () => {
       return response.json();
     },
     // Stabilität & Nutzererlebnis
-    staleTime: 15_000, // 15s
+    staleTime: 15 * 1000,
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: "always",
     refetchOnReconnect: true,
@@ -267,6 +267,55 @@ export const ChatArea = () => {
   const t = translations; // Alias
 
   /* --------------------------------- Render ------------------------------- */
+  if (chatroomsError) {
+        if (
+          String(chatroomsError.message || "").includes("(401)") ||
+          chatroomsError.status === 401 ||
+          data.errorMessage === "User is not Authenticated"
+        ) {
+          return <AuthError translations={translations} />;
+        }
+        return (
+          <div className="flex flex-col items-center justify-center py-12">
+           <svg
+              className="w-16 h-16 text-red-500 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p className="text-red-600 dark:text-red-400 mb-4">
+              {t.chat?.area?.errorLoadingChatrooms ||
+                "Could not load conversations."}
+            </p>
+          </div>
+      )
+    }
+
+    if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8">
+        <div
+          className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-6"
+          aria-label="Loading"
+        />
+        <p className="text-gray-600 dark:text-gray-300">
+          {t.chat?.area?.loading || "Loading…"}
+        </p>
+        <div className="mt-6 w-full">
+          <ListSkeleton rows={6} />
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
       {/* Header */}
@@ -530,50 +579,6 @@ export const ChatArea = () => {
 
       {/* Main */}
       <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-8">
-            <div
-              className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-6"
-              aria-label="Loading"
-            />
-            <p className="text-gray-600 dark:text-gray-300">
-              {t.chat?.area?.loading || "Loading…"}
-            </p>
-            <div className="mt-6 w-full">
-              <ListSkeleton rows={6} />
-            </div>
-          </div>
-        ) : chatroomsError ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <svg
-              className="w-16 h-16 text-red-500 mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p className="text-red-600 dark:text-red-400 mb-4">
-              {t.chat?.area?.errorLoadingChatrooms ||
-                "Could not load conversations."}
-            </p>
-            {/* Optional: 401 → Login */}
-            {String(chatroomsError.message || "").includes("(401)") && (
-              <button
-                onClick={() => navigate("/")}
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
-              >
-                {t.common?.relogin || "Sign in again"}
-              </button>
-            )}
-          </div>
-        ) : (
           <div className="space-y-4">
             {/* Header Section */}
             <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_1000ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
