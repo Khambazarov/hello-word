@@ -27,6 +27,7 @@ import {
   EyeToggleIcon,
 } from "./_Buttons.jsx";
 import { PasswordInput, RadioInput } from "./_Inputs.jsx";
+import { AuthError } from "./AuthError.jsx";
 
 export const Settings = () => {
   const navigate = useNavigate();
@@ -45,7 +46,11 @@ export const Settings = () => {
   const translations = useMemo(() => getTranslations(language), [language]);
 
   // --- Query: initial settings --------------
-  const { data: userSettings, isLoading } = useQuery({
+  const {
+    data: userSettings,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ["userSettings"],
     queryFn: fetchUserLanguage,
     staleTime: 60 * 1000, // 1 minute
@@ -255,6 +260,15 @@ export const Settings = () => {
         </div>
       </div>
     );
+  }
+
+  if (
+    (error &&
+      (String(error.message || "").includes("(401)") ||
+        error.status === 401)) ||
+    userSettings?.errorMessage === "User is not Authenticated"
+  ) {
+    return <AuthError translations={translations} />;
   }
 
   // --- Main Render ---------------------------
