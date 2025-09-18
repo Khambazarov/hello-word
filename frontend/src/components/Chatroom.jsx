@@ -23,6 +23,8 @@ import {
   SendMessageIcon,
 } from "./_AllSVGs.jsx";
 
+import { AuthError } from "./AuthError.jsx";
+
 import robot from "../assets/robot.png";
 import Emojis from "../assets/add_reaction.svg";
 import fingerSnap from "../assets/finger-snap.mp3";
@@ -102,6 +104,9 @@ export const Chatroom = () => {
       const response = await fetch(`/api/chatrooms/chats/${id}`, {
         credentials: "include",
       });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch chatroom (${response.status})`);
+      }
       return response.json();
     },
   });
@@ -116,13 +121,6 @@ export const Chatroom = () => {
       setTranslations(getTranslations(language));
     }
   }, [language]);
-
-  if (data?.errorMessage === "User is not Authenticated") {
-    return <Navigate to="/login" />;
-  }
-  if ((data === undefined && !isLoading) || data?.errorMessage) {
-    return <Navigate to={"/404"} />;
-  }
 
   const volume = data?.volume;
   audioSend.volume = volume === "silent" ? 0 : volume === "middle" ? 0.5 : 1;
@@ -146,6 +144,7 @@ export const Chatroom = () => {
     mutationFn: async () => {
       const response = await fetch(`/api/chatrooms/chats/${id}/mark-as-read`, {
         method: "POST",
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Failed to mark messages as read");
@@ -165,6 +164,7 @@ export const Chatroom = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ chatroom: id, content: userInput }),
       });
       if (!response.ok) {
@@ -187,6 +187,7 @@ export const Chatroom = () => {
       const response = await fetch(`/api/upload/audio`, {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Failed to upload audio");
@@ -207,6 +208,7 @@ export const Chatroom = () => {
       const response = await fetch(`/api/upload/image`, {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Failed to upload image");
@@ -229,6 +231,7 @@ export const Chatroom = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ messageId, content }),
       });
       if (!response.ok) {
@@ -254,6 +257,7 @@ export const Chatroom = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ messageId, content }),
       });
       if (!response.ok) {
@@ -276,6 +280,7 @@ export const Chatroom = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ description }),
       });
       if (!response.ok) {
@@ -626,6 +631,7 @@ export const Chatroom = () => {
         const response = await fetch(`/api/messages/mark-edit-seen`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ messageId }),
         });
 
@@ -713,10 +719,6 @@ export const Chatroom = () => {
     setTempDescription("");
   }
 
-  if ((data === undefined && !isLoading) || data?.errorMessage) {
-    return <Navigate to={"/404"}></Navigate>;
-  }
-
   function handleEmojiPicker() {
     setShowEmojiPicker(!showEmojiPicker);
   }
@@ -766,6 +768,15 @@ export const Chatroom = () => {
         </div>
       </div>
     );
+  }
+
+  if (
+    (error &&
+      (String(error.message || "").includes("(401)") ||
+        error.status === 401)) ||
+    data.errorMessage === "User is not Authenticated"
+  ) {
+    return <AuthError translations={translations} />;
   }
 
   return (
@@ -894,11 +905,11 @@ export const Chatroom = () => {
                 <div className="flex-1">
                   {groupInfo?.description ? (
                     <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                      {groupInfo.description}
+                      {groupInfo.description || "No description yet."}
                     </p>
                   ) : (
                     <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                      No group description yet.
+                      {groupInfo?.description || "No description yet."}
                     </p>
                   )}
                 </div>
@@ -962,8 +973,8 @@ export const Chatroom = () => {
                 </svg>
                 <span>
                   {unreadMessagesCount === 1
-                    ? `${unreadMessagesCount} ${translations.chat.room.unreadMessage}`
-                    : `${unreadMessagesCount} ${translations.chat.room.unreadMessages}`}
+                    ? `${unreadMessagesCount} ${translations.chat.room.unreadMessage || "unread message"}`
+                    : `${unreadMessagesCount} ${translations.chat.room.unreadMessages || "unread messages"}`}
                 </span>
               </button>
             </div>
@@ -1060,7 +1071,7 @@ export const Chatroom = () => {
                       {/* Für Gruppenchats: Sender-Name anzeigen */}
                       {isGroupChat && !isOwnMessage && message.sender && (
                         <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
-                          {message.sender.username}
+                          {message.sender.username || "Unknown User"}
                         </div>
                       )}
 
@@ -1071,11 +1082,12 @@ export const Chatroom = () => {
                               src={message.content}
                               type={getMimeType(message.content)}
                             />
-                            Your browser does not support the audio element.
+                            {translations.chat.room.audioNotSupported ||
+                              "Your browser does not support the audio element."}
                           </audio>
                         ) : isImage ? (
                           <img
-                            src={message.content}
+                            src={message.content || ""}
                             alt="uploaded"
                             className="max-w-full h-auto rounded-lg"
                           />
