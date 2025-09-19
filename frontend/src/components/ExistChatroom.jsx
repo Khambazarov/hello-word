@@ -35,7 +35,8 @@ export const ExistChatroom = (e) => {
       if (response.status === 404) {
         toast.dismiss();
         toast.error(
-          translations.feedback.toast.chat.existChatroom.errorUserNotFound
+          translations.feedback.toast.chat.existChatroom.errorUserNotFound ||
+            "User not found. Please check the username and try again."
         );
         throw new Error("Failed to create chatroom");
       }
