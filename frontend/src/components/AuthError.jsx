@@ -21,8 +21,8 @@ export const AuthError = ({ translations }) => {
       </svg>
 
       <p className="text-red-600 dark:text-red-400 mb-4">
-        {translations.feedback?.errors?.general?.unauthorized ||
-          translations.common?.loginRequired ||
+        {translations?.feedback?.errors?.general?.unauthorized ||
+          translations?.common?.loginRequired ||
           "You are not authorized to view this page."}
       </p>
 
@@ -30,7 +30,7 @@ export const AuthError = ({ translations }) => {
         onClick={() => navigate("/")}
         className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
       >
-        {translations.common?.relogin || "Log in again"}
+        {translations?.common?.relogin || "Log in again"}
       </button>
     </div>
   );
