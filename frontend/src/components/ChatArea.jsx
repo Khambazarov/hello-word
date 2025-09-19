@@ -268,38 +268,38 @@ export const ChatArea = () => {
 
   /* --------------------------------- Render ------------------------------- */
   if (chatroomsError) {
-        if (
-          String(chatroomsError.message || "").includes("(401)") ||
-          chatroomsError.status === 401 ||
-          data.errorMessage === "User is not Authenticated"
-        ) {
-          return <AuthError translations={translations} />;
-        }
-        return (
-          <div className="flex flex-col items-center justify-center py-12">
-           <svg
-              className="w-16 h-16 text-red-500 mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p className="text-red-600 dark:text-red-400 mb-4">
-              {t.chat?.area?.errorLoadingChatrooms ||
-                "Could not load conversations."}
-            </p>
-          </div>
-      )
+    if (
+      String(chatroomsError.message || "").includes("(401)") ||
+      chatroomsError.status === 401 ||
+      data.errorMessage === "User is not Authenticated"
+    ) {
+      return <AuthError translations={translations} />;
     }
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <svg
+          className="w-16 h-16 text-red-500 mb-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <p className="text-red-600 dark:text-red-400 mb-4">
+          {t.chat?.area?.errorLoadingChatrooms ||
+            "Could not load conversations."}
+        </p>
+      </div>
+    );
+  }
 
-    if (isLoading) {
+  if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-8">
         <div
@@ -315,7 +315,7 @@ export const ChatArea = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="[scrollbar-width:thin] dark:bg-base-100 dark:bg-none bg-gradient-to-r from-amber-100 to-blue-300 pb-16 xl:pb-20">
       {/* Header */}
@@ -579,217 +579,245 @@ export const ChatArea = () => {
 
       {/* Main */}
       <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="space-y-4">
-            {/* Header Section */}
-            <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_1000ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">
-                {t.chat?.area?.title || "Your Conversations"}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                {t.chat?.area?.subtitle || "Stay connected with friends"}
-                {isFetching && (
-                  <span className="ml-2 text-xs opacity-70">(refreshing…)</span>
-                )}
-              </p>
-            </div>
+        <div className="space-y-4">
+          {/* Header Section */}
+          <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_1000ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">
+              {t.chat?.area?.title || "Your Conversations"}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              {t.chat?.area?.subtitle || "Stay connected with friends"}
+              {isFetching && (
+                <span className="ml-2 text-xs opacity-70">(refreshing…)</span>
+              )}
+            </p>
+          </div>
 
-            {/* Chat List */}
-            {chatroomsData?.chatrooms?.length > 0 ? (
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-                {chatroomsData.chatrooms.map((chatroom, index) => {
-                  const title = chatroom.isGroupChat
-                    ? chatroom.groupName
-                    : chatroom.usernames?.join(", ") ||
-                      t.chat?.area?.noUsername ||
-                      "Chat";
-                  const latestTs = getLatestTimestamp(chatroom.timestamps);
-                  const lastContent = chatroom?.lastMessage?.content;
+          {/* Chat List */}
+          {chatroomsData?.chatrooms?.length > 0 ? (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              {chatroomsData.chatrooms.map((chatroom, index) => {
+                const title = chatroom.isGroupChat
+                  ? chatroom.groupName
+                  : chatroom.usernames?.join(", ") ||
+                    t.chat?.area?.noUsername ||
+                    "Chat";
+                const latestTs = getLatestTimestamp(chatroom.timestamps);
+                const lastContent = chatroom?.lastMessage?.content;
 
-                  return (
-                    <Link
-                      key={chatroom.chatId}
-                      to={`/chatarea/chats/${chatroom.chatId}`}
-                      className="block hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                return (
+                  <Link
+                    key={chatroom.chatId}
+                    to={`/chatarea/chats/${chatroom.chatId}`}
+                    className="block hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                  >
+                    <div
+                      className={cn(
+                        "flex items-center p-4",
+                        index !== chatroomsData.chatrooms.length - 1 &&
+                          "border-b border-gray-200 dark:border-gray-700"
+                      )}
                     >
-                      <div
-                        className={cn(
-                          "flex items-center p-4",
-                          index !== chatroomsData.chatrooms.length - 1 &&
-                            "border-b border-gray-200 dark:border-gray-700"
-                        )}
-                      >
-                        {/* Avatar */}
-                        <div className="relative flex-shrink-0">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
-                            <img
-                              className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
-                              src={getAvatarUrl(
-                                chatroom.isGroupChat
-                                  ? chatroom.groupImage
-                                  : chatroom.partnerAvatar,
-                                title
-                              )}
-                              alt="Chat Avatar"
-                              onError={createAvatarErrorHandler(title)}
-                              loading="lazy"
-                            />
-                            {chatroom.isGroupChat && (
-                              <span
-                                className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-green-600 text-white ring-2 ring-white dark:ring-gray-900 shadow text-[10px] font-semibold leading-none select-none"
-                                aria-label={`${chatroom.memberCount} members`}
-                                title={`${chatroom.memberCount} members`}
-                              >
-                                <svg
-                                  className="w-3.5 h-3.5"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                  aria-hidden="true"
-                                >
-                                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
-                                </svg>
-                                <span>
-                                  {chatroom.memberCount > 9
-                                    ? "9+"
-                                    : chatroom.memberCount}
-                                </span>
-                              </span>
+                      {/* Avatar */}
+                      <div className="relative flex-shrink-0">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
+                          <img
+                            className="w-full h-full rounded-full object-cover bg-white dark:bg-gray-800"
+                            src={getAvatarUrl(
+                              chatroom.isGroupChat
+                                ? chatroom.groupImage
+                                : chatroom.partnerAvatar,
+                              title
                             )}
-                          </div>
-
-                          {chatroom.unreadMessagesCount > 0 && (
-                            <div
-                              className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-medium"
-                              aria-label={`${chatroom.unreadMessagesCount} unread`}
+                            alt="Chat Avatar"
+                            onError={createAvatarErrorHandler(title)}
+                            loading="lazy"
+                          />
+                          {chatroom.isGroupChat && (
+                            <span
+                              className="absolute -bottom-1 -right-1 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-green-600 text-white ring-2 ring-white dark:ring-gray-900 shadow text-[10px] font-semibold leading-none select-none"
+                              aria-label={`${chatroom.memberCount} members`}
+                              title={`${chatroom.memberCount} members`}
                             >
-                              {chatroom.unreadMessagesCount > 99
-                                ? "99+"
-                                : chatroom.unreadMessagesCount}
-                            </div>
+                              <svg
+                                className="w-3.5 h-3.5"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                                aria-hidden="true"
+                              >
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                              </svg>
+                              <span>
+                                {chatroom.memberCount > 9
+                                  ? "9+"
+                                  : chatroom.memberCount}
+                              </span>
+                            </span>
                           )}
                         </div>
 
-                        {/* Info */}
-                        <div className="flex-1 ml-4 min-w-0">
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
-                              {title}
-                            </h3>
-                            <div className="flex items-center space-x-2 flex-shrink-0">
-                              {latestTs && (
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                  {formatTimestamp(latestTs, language)}
-                                </span>
-                              )}
-                            </div>
+                        {chatroom.unreadMessagesCount > 0 && (
+                          <div
+                            className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-medium"
+                            aria-label={`${chatroom.unreadMessagesCount} unread`}
+                          >
+                            {chatroom.unreadMessagesCount > 99
+                              ? "99+"
+                              : chatroom.unreadMessagesCount}
                           </div>
+                        )}
+                      </div>
 
-                          {/* Last Message */}
-                          <div className="flex items-center">
-                            {chatroom.isDeletedAccount ? (
-                              <span className="text-sm text-red-500 italic">
-                                {t.chat?.area?.deletedAccount}
+                      {/* Info */}
+                      <div className="flex-1 ml-4 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">
+                            {title}
+                          </h3>
+                          <div className="flex items-center space-x-2 flex-shrink-0">
+                            {latestTs && (
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {formatTimestamp(latestTs, language)}
                               </span>
-                            ) : chatroom.lastMessage ? (
-                              <div className="flex items-center space-x-2 flex-1 min-w-0">
-                                {chatroom.currentUserId ===
-                                  chatroom.lastMessage.sender && (
-                                  <svg
-                                    className="w-4 h-4 text-gray-400 flex-shrink-0"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                    aria-hidden="true"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                                    />
-                                  </svg>
-                                )}
-                                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                                  {isImageUrl(lastContent) ? (
-                                    <span className="inline-flex items-center space-x-1">
-                                      <svg
-                                        className="w-4 h-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        aria-hidden="true"
-                                      >
-                                        <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          strokeWidth={2}
-                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                        />
-                                      </svg>
-                                      <span>
-                                        {t.chat?.area?.sentImage ||
-                                          "Sent an image"}
-                                      </span>
-                                    </span>
-                                  ) : isAudioUrl(lastContent) ? (
-                                    <span className="inline-flex items-center space-x-1">
-                                      <svg
-                                        className="w-4 h-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                        aria-hidden="true"
-                                      >
-                                        <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          strokeWidth={2}
-                                          d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                                        />
-                                      </svg>
-                                      <span>
-                                        {t.chat?.area?.sentAudioMessage ||
-                                          "Sent an audio message"}
-                                      </span>
-                                    </span>
-                                  ) : (
-                                    truncateText(lastContent || "", maxLength)
-                                  )}
-                                </p>
-                              </div>
-                            ) : (
-                              <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                                {t.chat?.area?.noMessages || "No messages yet"}
-                              </p>
                             )}
                           </div>
                         </div>
 
-                        {/* Arrow */}
-                        <div className="ml-2 flex-shrink-0" aria-hidden="true">
-                          <svg
-                            className="w-5 h-5 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
+                        {/* Last Message */}
+                        <div className="flex items-center">
+                          {chatroom.isDeletedAccount ? (
+                            <span className="text-sm text-red-500 italic">
+                              {t.chat?.area?.deletedAccount}
+                            </span>
+                          ) : chatroom.lastMessage ? (
+                            <div className="flex items-center space-x-2 flex-1 min-w-0">
+                              {chatroom.currentUserId ===
+                                chatroom.lastMessage.sender && (
+                                <svg
+                                  className="w-4 h-4 text-gray-400 flex-shrink-0"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                  />
+                                </svg>
+                              )}
+                              <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                                {isImageUrl(lastContent) ? (
+                                  <span className="inline-flex items-center space-x-1">
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                      aria-hidden="true"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                    <span>
+                                      {t.chat?.area?.sentImage ||
+                                        "Sent an image"}
+                                    </span>
+                                  </span>
+                                ) : isAudioUrl(lastContent) ? (
+                                  <span className="inline-flex items-center space-x-1">
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                      aria-hidden="true"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                                      />
+                                    </svg>
+                                    <span>
+                                      {t.chat?.area?.sentAudioMessage ||
+                                        "Sent an audio message"}
+                                    </span>
+                                  </span>
+                                ) : (
+                                  truncateText(lastContent || "", maxLength)
+                                )}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                              {t.chat?.area?.noMessages || "No messages yet"}
+                            </p>
+                          )}
                         </div>
                       </div>
-                    </Link>
-                  );
-                })}
+
+                      {/* Arrow */}
+                      <div className="ml-2 flex-shrink-0" aria-hidden="true">
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full mb-4">
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
               </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                {t.chat?.area?.noConversationsTitle || "No conversations yet"}
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                {t.chat?.area?.noConversationsText ||
+                  "Start your first conversation or create a group chat"}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => navigate("/chatarea/exist")}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  title={t.chat?.area?.startNewChat || "Start New Chat"}
+                >
                   <svg
-                    className="w-8 h-8 text-gray-400"
+                    className="w-4 h-4 mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -802,113 +830,84 @@ export const ChatArea = () => {
                       d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     />
                   </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  {t.chat?.area?.noConversationsTitle || "No conversations yet"}
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  {t.chat?.area?.noConversationsText ||
-                    "Start your first conversation or create a group chat"}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <button
-                    onClick={() => navigate("/chatarea/exist")}
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    title={t.chat?.area?.startNewChat || "Start New Chat"}
+                  {t.chat?.area?.startNewChat || "Start New Chat"}
+                </button>
+                <button
+                  onClick={() => navigate("/chatarea/groups/create")}
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  title={t.chat?.area?.createGroup || "Create Group"}
+                >
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                      />
-                    </svg>
-                    {t.chat?.area?.startNewChat || "Start New Chat"}
-                  </button>
-                  <button
-                    onClick={() => navigate("/chatarea/groups/create")}
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    title={t.chat?.area?.createGroup || "Create Group"}
-                  >
-                    <svg
-                      className="w-4 h-4 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    {t.chat?.area?.createGroup || "Create Group"}
-                  </button>
-                </div>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  {t.chat?.area?.createGroup || "Create Group"}
+                </button>
               </div>
-            )}
-
-            {/* Floating Actions */}
-            <div className="fixed bottom-6 right-6 flex flex-col space-y-3 z-50">
-              <button
-                onClick={() => navigate("/chatarea/groups/create")}
-                className="group w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-green-500"
-                title={
-                  t.chat?.area?.createGroupChatTooltip || "Create Group Chat"
-                }
-                aria-label={
-                  t.chat?.area?.createGroupChatTooltip || "Create Group Chat"
-                }
-              >
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
-              </button>
-
-              <button
-                onClick={() => navigate("/chatarea/exist")}
-                className="group w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500"
-                title={t.chat?.area?.addPerson || "Add Person"}
-                aria-label={t.chat?.area?.addPerson || "Add Person"}
-              >
-                <svg
-                  className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </button>
             </div>
+          )}
+
+          {/* Floating Actions */}
+          <div className="fixed bottom-6 right-6 flex flex-col space-y-3 z-50">
+            <button
+              onClick={() => navigate("/chatarea/groups/create")}
+              className="group w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-green-500"
+              title={
+                t.chat?.area?.createGroupChatTooltip || "Create Group Chat"
+              }
+              aria-label={
+                t.chat?.area?.createGroupChatTooltip || "Create Group Chat"
+              }
+            >
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+            </button>
+
+            <button
+              onClick={() => navigate("/chatarea/exist")}
+              className="group w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title={t.chat?.area?.addPerson || "Add Person"}
+              aria-label={t.chat?.area?.addPerson || "Add Person"}
+            >
+              <svg
+                className="w-6 h-6 group-hover:scale-110 transition-transform duration-200"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </button>
           </div>
-        )}
+        </div>
       </main>
     </div>
   );

@@ -97,7 +97,7 @@ export default (io) => {
         return res.status(404).json({ errorMessage: "Group chat not found" });
       }
 
-      // Prüfen ob User Admin ist
+      // check if current user is an admin
       const isAdmin = groupChat.admins.some(
         (adminId) => adminId.toString() === currentUserId
       );
