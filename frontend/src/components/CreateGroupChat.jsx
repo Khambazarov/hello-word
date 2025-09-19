@@ -38,12 +38,21 @@ export const CreateGroupChat = () => {
 
       if (!response.ok) {
         toast.dismiss();
-        toast.error(
-          translations?.feedback?.toast?.chat?.existChatroom
-            ?.errorFailedToFind || "Failed to create group"
-        );
         const error = await response.json();
-        throw new Error(error.errorMessage || "Failed to create group");
+
+        if (
+          error?.errorCode === "GROUP_EXISTS" ||
+          error?.errorMessage === "A group with this name already exists"
+        ) {
+          toast.error(
+            translations?.feedback?.toast?.chat?.existChatroom
+              ?.errorGroupExists || "A group with this name already exists"
+          );
+        }
+        throw new Error(
+          translations?.feedback?.toast?.chat?.existChatroom?.errorGroupName ||
+            "Please choose another group name."
+        );
       }
 
       return response.json();
