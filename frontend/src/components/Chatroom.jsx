@@ -439,7 +439,8 @@ export const Chatroom = () => {
       e.target.textarea.value = "";
       toast.dismiss();
       toast.error(
-        translations.feedback.toast.chat.existChatroom.errorDeletedUser,
+        translations.feedback.toast.chat.existChatroom.errorDeletedUser ||
+          "Cannot send message: The chat partner has deleted their account.",
         {
           position: "bottom-center",
         }
@@ -773,8 +774,8 @@ export const Chatroom = () => {
   if (
     (error &&
       (String(error.message || "").includes("(401)") ||
-        error.status === 401)) ||
-    data.errorMessage === "User is not Authenticated"
+        error?.status === 401)) ||
+    data?.errorMessage === "User is not Authenticated"
   ) {
     return <AuthError translations={translations} />;
   }
