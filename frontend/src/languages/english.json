@@ -523,7 +523,9 @@
           "errorDeletedUser": "This user no longer exists",
           "errorServer": "Error loading",
           "errorFailedCreate": "Failed to create chatroom",
-          "errorNotLoggedIn": "You need to log in again"
+          "errorNotLoggedIn": "You need to log in again",
+          "errorGroupExists": "A group with this name already exists",
+          "errorGroupName": "Please choose another group name"
         },
         "chatroom": {
           "audioNotSupported": "Voice recording not available"

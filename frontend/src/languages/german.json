@@ -523,7 +523,9 @@
           "errorNameRequired": "Bitte Benutzernamen eingeben",
           "errorDeletedUser": "Dieser Benutzer existiert nicht mehr",
           "errorServer": "Fehler beim Laden",
-          "errorNotLoggedIn": "Du musst eingeloggt sein"
+          "errorNotLoggedIn": "Du musst eingeloggt sein",
+          "errorGroupExists": "Eine Gruppe mit diesem Namen existiert bereits",
+          "errorGroupName": "Bitte einen anderen Gruppennamen wählen"
         },
         "chatroom": {
           "audioNotSupported": "Sprachaufnahme nicht verfügbar"

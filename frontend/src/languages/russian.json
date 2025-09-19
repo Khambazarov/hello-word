@@ -523,7 +523,9 @@
           "errorNameRequired": "Введите имя пользователя",
           "errorDeletedUser": "Этот пользователь больше не существует",
           "errorServer": "Ошибка загрузки",
-          "errorNotLoggedIn": "Пожалуйста, войдите в систему"
+          "errorNotLoggedIn": "Пожалуйста, войдите в систему",
+          "errorGroupExists": "Группа с таким именем уже существует",
+          "errorGroupName": "Пожалуйста, выберите другое название группы."
         },
         "chatroom": {
           "audioNotSupported": "Голосовая запись недоступна"
