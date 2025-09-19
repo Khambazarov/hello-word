@@ -34,6 +34,23 @@ export default (io) => {
           .json({ errorMessage: "Group name too long (max 50 characters)" });
       }
 
+      const existingGroup = await Chatroom.findOne({
+        isGroupChat: true,
+        groupName: groupName.trim(),
+      });
+      if (existingGroup) {
+        return res.status(400).json({
+          errorCode: "GROUP_EXISTS",
+          errorMessage: "A group with this name already exists",
+        });
+      }
+
+      if (groupDescription && groupDescription.length > 200) {
+        return res.status(400).json({
+          errorMessage: "Group description too long (max 200 characters)",
+        });
+      }
+
       const newGroupChat = await Chatroom.create({
         isGroupChat: true,
         groupName: groupName.trim(),
