@@ -293,128 +293,173 @@ export const DeleteMessageIcon = ({ className = "" }) => (
   </svg>
 );
 
+export const CircassianFlag = ({
+  className = "",
+  width = 48,
+  height = 32,
+  border = true,
+}) => {
+  const SCALE = width / 3932;
+  const tx = width / 2;
+  const ty = 4;
+
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="Circassian Flag"
+    >
+      <rect x="0" y="0" width={width} height={height} fill="#296912" />
+      {border && (
+        <rect
+          x="0"
+          y="0"
+          width={width}
+          height={height}
+          fill="none"
+          stroke="#000"
+          strokeOpacity="0.08"
+        />
+      )}
+
+      <g transform={`translate(${tx},${ty}) scale(${SCALE})`} fill="#FDFC02">
+        <defs>
+          <path
+            id="star"
+            d="M0 488l22.96 70.67h74.3L37.15 602.34 60.11 673 0 629.33-60.11 673l22.96-70.66-60.11-43.67h74.3Z"
+          />
+          <path
+            id="arrow"
+            d="M0 781 32 963 11 983v687l22 23v171L0 1831l-33 33V1693l22-23V983l-21-20Z"
+          />
+        </defs>
+        <use xlinkHref="#star" y="-392" />
+        <g id="half">
+          <use xlinkHref="#star" x="486" />
+          <use xlinkHref="#star" y="0" />
+          <use xlinkHref="#star" x="486" y="-314" />
+          <use xlinkHref="#star" x="923" y="-93" />
+          <use xlinkHref="#star" x="1271" y="255" />
+          <use xlinkHref="#star" x="1494" y="693" />
+          <use xlinkHref="#arrow" transform="rotate(40,0,1326)" />
+        </g>
+        <use xlinkHref="#half" transform="scale(-1,1)" />
+        <use xlinkHref="#arrow" />
+      </g>
+    </svg>
+  );
+};
+
 export const GermanFlag = ({ className = "" }) => (
   <svg
     className={className}
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 32 32"
+    width="48"
+    height="32"
+    viewBox="0 0 32 24"
   >
-    <path fill="#cc2b1d" d="M1 11H31V21H1z"></path>
-    <path d="M5,4H27c2.208,0,4,1.792,4,4v4H1v-4c0-2.208,1.792-4,4-4Z"></path>
-    <path
-      d="M5,20H27c2.208,0,4,1.792,4,4v4H1v-4c0-2.208,1.792-4,4-4Z"
-      transform="rotate(180 16 24)"
-      fill="#f8d147"
-    ></path>
-    <path
-      d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z"
-      opacity=".15"
-    ></path>
-    <path
-      d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z"
-      fill="#fff"
-      opacity=".2"
-    ></path>
+    <rect x="0" y="0" width="32" height="8" fill="#000" />
+    <rect x="0" y="8" width="32" height="8" fill="#cc2b1d" />
+    <rect x="0" y="16" width="32" height="8" fill="#f8d147" />
+    <rect
+      x="0"
+      y="0"
+      width="32"
+      height="24"
+      fill="none"
+      stroke="#000"
+      strokeOpacity="0.08"
+    />
   </svg>
 );
 
-export const UkFlag = ({ className = "" }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 32 32"
-  >
-    <rect
-      x="1"
-      y="4"
-      width="30"
-      height="24"
-      rx="4"
-      ry="4"
-      fill="#071b65"
-    ></rect>
-    <path
-      d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z"
-      fill="#fff"
-    ></path>
-    <path
-      d="M22.25,19h-2.5l9.934,7.947c.387-.353,.704-.777,.929-1.257l-8.363-6.691Z"
-      fill="#b92932"
-    ></path>
-    <path
-      d="M1.387,6.309l8.363,6.691h2.5L2.316,5.053c-.387,.353-.704,.777-.929,1.257Z"
-      fill="#b92932"
-    ></path>
-    <path
-      d="M5,28h.101L30.933,7.334c-.318-1.891-1.952-3.334-3.933-3.334h-.101L1.067,24.666c.318,1.891,1.952,3.334,3.933,3.334Z"
-      fill="#fff"
-    ></path>
-    <rect x="13" y="4" width="6" height="24" fill="#fff"></rect>
-    <rect x="1" y="13" width="30" height="6" fill="#fff"></rect>
-    <rect x="14" y="4" width="4" height="24" fill="#b92932"></rect>
-    <rect
-      x="14"
-      y="1"
-      width="4"
-      height="30"
-      transform="translate(32) rotate(90)"
-      fill="#b92932"
-    ></rect>
-    <path
-      d="M28.222,4.21l-9.222,7.376v1.414h.75l9.943-7.94c-.419-.384-.918-.671-1.471-.85Z"
-      fill="#b92932"
-    ></path>
-    <path
-      d="M2.328,26.957c.414,.374,.904,.656,1.447,.832l9.225-7.38v-1.408h-.75L2.328,26.957Z"
-      fill="#b92932"
-    ></path>
-    <path
-      d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z"
-      opacity=".15"
-    ></path>
-    <path
-      d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z"
-      fill="#fff"
-      opacity=".2"
-    ></path>
-  </svg>
-);
+export const UkFlag = ({
+  className = "",
+  width = 48,
+  height = 32,
+  diagWhite = 8,
+  diagRed = 4,
+  crossWhite = 8,
+  crossRed = 4,
+}) => {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 48 32"
+      width={width}
+      height={height}
+      aria-label="Flag of the United Kingdom"
+    >
+      <rect width="48" height="32" fill="#012169" />
+
+      <g stroke="#FFFFFF" strokeLinecap="square" fill="none">
+        <line x1="-4" y1="0" x2="52" y2="32" strokeWidth={diagWhite} />
+        <line x1="52" y1="0" x2="-4" y2="32" strokeWidth={diagWhite} />
+      </g>
+
+      <g stroke="#C8102E" strokeLinecap="square" fill="none">
+        <line x1="-4" y1="0" x2="52" y2="32" strokeWidth={diagRed} />
+        <line x1="52" y1="0" x2="-4" y2="32" strokeWidth={diagRed} />
+      </g>
+
+      <rect
+        x={(48 - crossWhite) / 2}
+        y="0"
+        width={crossWhite}
+        height="32"
+        fill="#FFFFFF"
+      />
+      <rect
+        x="0"
+        y={(32 - crossWhite) / 2}
+        width="48"
+        height={crossWhite}
+        fill="#FFFFFF"
+      />
+
+      <rect
+        x={(48 - crossRed) / 2}
+        y="0"
+        width={crossRed}
+        height="32"
+        fill="#C8102E"
+      />
+      <rect
+        x="0"
+        y={(32 - crossRed) / 2}
+        width="48"
+        height={crossRed}
+        fill="#C8102E"
+      />
+    </svg>
+  );
+};
 
 export const RussianFlag = ({ className = "" }) => (
   <svg
     className={className}
     xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 32 32"
+    width="48"
+    height="32"
+    viewBox="0 0 32 24"
   >
-    <rect x="1" y="8" width="30" height="5" fill="#fff" />
-    <rect x="1" y="13" width="30" height="5" fill="#0033a0" />
-    <rect x="1" y="18" width="30" height="5" fill="#d52b1e" />
+    <rect x="0" y="0" width="32" height="8" fill="#fff" />
+    <rect x="0" y="8" width="32" height="8" fill="#0033a0" />
+    <rect x="0" y="16" width="32" height="8" fill="#d52b1e" />
     <rect
-      x="1"
-      y="8"
-      width="30"
-      height="15"
-      rx="4"
-      ry="4"
+      x="0"
+      y="0"
+      width="48"
+      height="32"
       fill="none"
       stroke="#000"
       strokeOpacity="0.08"
-    />
-    <rect
-      x="1"
-      y="8"
-      width="30"
-      height="15"
-      rx="4"
-      ry="4"
-      fill="#000"
-      opacity="0.05"
     />
   </svg>
 );
@@ -451,8 +496,6 @@ export const RegisterTabIcon = ({ className = "" }) => (
   </svg>
 );
 
-// Modern Chat App Logo for Hello, Word!
-// Sleek group icon with modern chat bubble design
 export const AppLogo = ({ className = "", showAnimation = false }) => {
   return (
     <svg
@@ -476,9 +519,7 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
         </filter>
       </defs>
 
-      {/* Modern User Group - Sleeker design */}
       <g transform="translate(35, 12)">
-        {/* Central user - modern avatar */}
         <g filter="url(#softShadow)">
           <circle cx="25" cy="15" r="7" fill="url(#userGradient)" />
           <path
@@ -487,7 +528,6 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
           />
         </g>
 
-        {/* Left user - sleeker positioning */}
         <g filter="url(#softShadow)">
           <circle
             cx="8"
@@ -503,7 +543,6 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
           />
         </g>
 
-        {/* Right user - balanced design */}
         <g filter="url(#softShadow)">
           <circle
             cx="42"
@@ -520,10 +559,8 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
         </g>
       </g>
 
-      {/* Ultra-Modern Chat Bubble */}
       <g transform="translate(55, 8)">
         <g filter="url(#softShadow)">
-          {/* Modern bubble with rounded corners */}
           <path
             d="M15 10 
                C15 5, 19 3, 26 3
@@ -534,10 +571,8 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
             fill="url(#bubbleGradient)"
             rx="8"
           />
-          {/* Sleek bubble tail */}
           <path d="M13 12 L15 10 L15 14 Z" fill="url(#bubbleGradient)" />
 
-          {/* Modern typing indicator dots */}
           <circle cx="21" cy="10" r="1.5" fill="white" opacity="0.95">
             {showAnimation && (
               <animate
@@ -573,7 +608,6 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
         </g>
       </g>
 
-      {/* Modern Typography */}
       <g transform="translate(60, 62)">
         <text
           fontSize="11"
@@ -597,10 +631,8 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
         </text>
       </g>
 
-      {/* Ambient connection effects */}
       {showAnimation && (
         <g opacity="0.3">
-          {/* Floating particles */}
           <circle cx="45" cy="25" r="1" fill="currentColor" opacity="0.4">
             <animate
               attributeName="cy"
@@ -633,7 +665,6 @@ export const AppLogo = ({ className = "", showAnimation = false }) => {
             />
           </circle>
 
-          {/* Connecting energy */}
           <circle cx="60" cy="40" r="3" fill="currentColor" opacity="0.15">
             <animate
               attributeName="r"
