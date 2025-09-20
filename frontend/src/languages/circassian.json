@@ -104,8 +104,8 @@
   "chat": {
     "room": {
       "loading": "Загрузка чата...",
-      "unreadMessage": "новое сообщение ↓",
-      "unreadMessages": "новых сообщений ↓",
+      "unreadMessage": "xъыбарыщӀэ ↓",
+      "unreadMessages": "xъыбарыщӀy ↓",
       "timestampUpdateText": "изменено",
       "failedToFindUser": "Пользователь не найден"
     },
