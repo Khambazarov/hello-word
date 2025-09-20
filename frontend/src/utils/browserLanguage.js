@@ -6,7 +6,11 @@ export const fetchBrowserLanguage = () => {
   }
   if (browserLanguage === "ru") {
     return (browserLanguage = "ru");
-  } else {
+  }
+  if (browserLanguage === "en") {
     return (browserLanguage = "en");
+  }
+  else {
+    return (browserLanguage = "ci");
   }
 };
