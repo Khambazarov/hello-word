@@ -1,4 +1,3 @@
-// userRouter.js (ganz oben bei den Imports)
 import {
   renderVerificationEmail,
   renderResetEmail,
@@ -423,7 +422,7 @@ export default (io) => {
         return res.status(401).json({ errorMessage: "Not authenticated" });
       }
 
-      if (!["en", "de", "ru"].includes(language)) {
+      if (!["en", "de", "ru", "ci"].includes(language)) {
         return res.status(400).json({ errorMessage: "Invalid language" });
       }
 
