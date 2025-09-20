@@ -8,15 +8,16 @@ import { getTranslations } from "../utils/languageHelper.js";
 
 import robot from "../assets/robot.png";
 import {
-  PasswordIcon,
+  CircassianFlag,
   UkFlag,
   GermanFlag,
+  RussianFlag,
+  PasswordIcon,
   TrashIcon,
   SettingsIcon,
   LanguageIcon,
   AudioVolumeIcon,
   WarningIcon,
-  RussianFlag,
 } from "./_AllSVGs";
 
 import {
@@ -333,7 +334,7 @@ export const Settings = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <label className="flex items-center p-2 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <RadioInput
                   name="language"
                   value="en"
@@ -344,12 +345,12 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <UkFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations?.content?.settings?.lang?.en ?? "EN"}
+                    {translations?.content?.settings?.lang?.en ?? "English"}
                   </span>
                 </div>
               </label>
 
-              <label className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <label className="flex items-center p-2 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <RadioInput
                   name="language"
                   value="de"
@@ -360,11 +361,11 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <GermanFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations?.content?.settings?.lang?.de ?? "DE"}
+                    {translations?.content?.settings?.lang?.de ?? "Deutsch"}
                   </span>
                 </div>
               </label>
-              <label className="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <label className="flex items-center p-2 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                 <RadioInput
                   name="language"
                   value="ru"
@@ -375,7 +376,23 @@ export const Settings = () => {
                 <div className="ml-3 flex items-center gap-3">
                   <RussianFlag />
                   <span className="text-gray-700 dark:text-gray-200 font-medium">
-                    {translations?.content?.settings?.lang?.ru ?? "RU"}
+                    {translations?.content?.settings?.lang?.ru ?? "Русский"}
+                  </span>
+                </div>
+              </label>
+              <label className="flex items-center p-2 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <RadioInput
+                  name="language"
+                  value="ci"
+                  checked={language === "ci"}
+                  onChange={handleLanguageSelection}
+                  className="text-purple-600 focus:ring-purple-500"
+                />
+                <div className="ml-3 flex items-center gap-3">
+                  <CircassianFlag />
+                  <span className="text-gray-700 dark:text-gray-200 font-medium">
+                    {translations?.content?.settings?.lang?.ci ??
+                      "Адыгэбзэ"}
                   </span>
                 </div>
               </label>
