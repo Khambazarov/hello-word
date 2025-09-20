@@ -166,7 +166,7 @@ export const ExistChatroom = (e) => {
               </svg>
             </div>
             <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              {translations?.chat?.area?.subtitle ??
+              {translations?.chat?.existing?.subtitle ??
                 "Connect with friends by searching their username"}
             </p>
           </div>

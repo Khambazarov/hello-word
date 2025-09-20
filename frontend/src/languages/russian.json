@@ -110,6 +110,7 @@
       "failedToFindUser": "Пользователь не найден"
     },
     "area": {
+      "branding": "Hello, Word!",
       "title": "Твои беседы",
       "subtitle": "Оставайся на связи с друзьями",
       "createGroupChatTooltip": "Создать групповой чат",

@@ -271,7 +271,7 @@ export const ChatArea = () => {
     if (
       String(chatroomsError.message || "").includes("(401)") ||
       chatroomsError.status === 401 ||
-      data.errorMessage === "User is not Authenticated"
+      chatroomsError?.errorMessage === "User is not Authenticated"
     ) {
       return <AuthError translations={translations} />;
     }
@@ -339,7 +339,7 @@ export const ChatArea = () => {
                     aria-label="Application Name"
                     className="text-xl font-bold text-gray-900 dark:text-white tracking-wide"
                   >
-                    {t.common?.appName || "Hello Word"}
+                    {t?.chat?.area?.branding || "Hello Word"}
                   </h1>
                 </div>
               </div>

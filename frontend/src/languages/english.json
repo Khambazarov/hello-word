@@ -110,6 +110,7 @@
       "failedToFindUser": "User not found"
     },
     "area": {
+      "branding": "Hello, Word!",
       "title": "Your Conversations",
       "subtitle": "Stay connected with friends",
       "createGroupChatTooltip": "Create Group Chat",
