@@ -110,7 +110,7 @@
       "failedToFindUser": "Пользователь не найден"
     },
     "area": {
-      "title": "Ваши беседы",
+      "title": "Уи ныбжьэгъухэр",
       "subtitle": "Оставайся на связи с друзьями",
       "createGroupChatTooltip": "Создать групповой чат",
       "loading": "Загрузка...",
@@ -619,7 +619,7 @@
       "title": "Настройки",
       "description": "Настройте свои предпочтения и управляйте аккаунтом легко.",
       "loadingSettings": "Загрузка настроек...",
-      "selectLangTitle": "Выбор языка",
+      "selectLangTitle": "Бзэр къыхэх",
       "selectLangDescription": "Выберите предпочитаемый язык интерфейса.",
       "lang": {
         "en": "English",
