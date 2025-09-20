@@ -622,9 +622,10 @@
       "selectLangTitle": "Select Language",
       "selectLangDescription": "Choose your preferred language for the app interface.",
       "lang": {
-        "en": "EN",
-        "de": "DE",
-        "ru": "RU"
+        "en": "English",
+        "de": "Deutsch",
+        "ru": "Русский",
+        "ci": "Адыгэбзэ (in progress)"
       },
       "volumeTitle": "Select Audio Volume",
       "adjustVolume": "Adjust the volume for notification sounds.",

@@ -622,9 +622,10 @@
       "selectLangTitle": "Sprache wählen",
       "selectLangDescription": "Wähle deine bevorzugte Sprache für die Benutzeroberfläche.",
       "lang": {
-        "en": "EN",
-        "de": "DE",
-        "ru": "RU"
+        "en": "English",
+        "de": "Deutsch",
+        "ru": "Русский",
+        "ci": "Адыгэбзэ (in Entwicklung)"
       },
       "volumeTitle": "Lautstärke wählen",
       "adjustVolume": "Passe die Lautstärke für Benachrichtigungstöne an.",
