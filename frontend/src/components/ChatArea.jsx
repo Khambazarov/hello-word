@@ -581,14 +581,21 @@ export const ChatArea = () => {
       <main className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-4">
           {/* Header Section */}
-          <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_1000ms_ease-out_1000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
+          <div className="text-center mb-4 overflow-hidden [animation:fade-out-collapse_1000ms_ease-out_2000ms_forwards] motion-reduce:[animation:none] [will-change:opacity,transform]">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">
-              {t.chat?.area?.title || "Your Conversations"}
+              {t.chat?.area?.title.replace(
+                "{user}",
+                chatroomsData?.currentUsername
+              ) || "Your Conversations"}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-              {t.chat?.area?.subtitle || "Stay connected with friends"}
+              {chatroomsData?.chatrooms.length > 0
+                ? t.chat?.area?.subtitle || "Stay connected with friends"
+                : ""}
               {isFetching && (
-                <span className="ml-2 text-xs opacity-70">(refreshing…)</span>
+                <span className="ml-2 text-xs opacity-70">
+                  {t?.common?.loading || "Refreshing…"}
+                </span>
               )}
             </p>
           </div>
