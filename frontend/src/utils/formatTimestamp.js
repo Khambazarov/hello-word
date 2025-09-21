@@ -48,7 +48,7 @@ export function formatTimestamp(timestamp, language) {
     const year = date.getFullYear();
     const hour = date.getHours().toString().padStart(2, "0");
     const minute = date.getMinutes().toString().padStart(2, "0");
-    return `${day} ${month} ${year} г. ${hour}:${minute}`;
+    return `${day} ${month} ${year} гъэм. ${hour}:${minute}`;
   }
 
   return new Intl.DateTimeFormat(language, {
