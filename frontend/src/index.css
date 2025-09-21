@@ -28,7 +28,7 @@ body {
 
   .animate-fade-out-collapse {
     overflow: hidden;
-    animation: fade-out-collapse 1000ms ease-out 1000ms forwards;
+    animation: fade-out-collapse 1000ms ease-out 2000ms forwards;
     will-change: opacity, transform;
   }
 
