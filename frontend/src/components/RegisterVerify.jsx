@@ -68,7 +68,7 @@ export const RegisterVerify = () => {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mb-6 shadow-lg">
             <img className="h-12 w-12" src={robot} alt="robot" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
+          <h1 className="text-balance text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">
             {translations.auth.verify.title || "Verify Email"}
           </h1>
         </div>
@@ -76,7 +76,7 @@ export const RegisterVerify = () => {
         {/* Verify Form */}
         <div className="backdrop-blur-lg bg-white/90 dark:bg-gray-800/90 shadow-2xl rounded-3xl border border-white/30 dark:border-gray-700/50 p-8 sm:p-10 space-y-8">
           <div className="text-center mb-8">
-            <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
+            <p className="text-balance text-gray-600 dark:text-gray-400 text-base sm:text-lg">
               {translations.auth.verify.description ||
                 "ou will receive a 6-digit code via email. Enter it here to verify your account"}
             </p>
