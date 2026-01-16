@@ -192,7 +192,7 @@
       "sendingInvitations": "Отправка приглашений...",
       "sendInvitations": "Отправить приглашения",
 
-      "owner": "Владелец",
+      "owner": "Гупыхъу",
       "admin": "Админ",
 
       "loadingGroupData": "Загрузка данных группы...",
@@ -203,7 +203,7 @@
       "groupSettings": "Настройки группы",
       "manageSettings": "Управление настройками и участниками",
       "members": "Участники",
-      "groupInformation": "Информация о группе",
+      "groupInformation": "Гуп информацэ",
       "basicGroupDetails": "Основные детали и настройки группы",
 
       "adminPrivileges": "Права администратора",
@@ -215,8 +215,8 @@
       "groupDescriptionOptional": "Описание группы (необязательно)",
       "descriptionPlaceholder": "Введите описание группы...",
 
-      "promote": "Повысить",
-      "demote": "Понизить",
+      "promote": "Ӏэтын",
+      "demote": "Еудыхын",
       "remove": "Удалить",
       "promotedToAdmin": "{user} назначен админом",
       "demotedToMember": "{user} понижен до участника",
