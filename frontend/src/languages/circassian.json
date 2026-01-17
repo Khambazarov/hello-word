@@ -159,11 +159,11 @@
 
   "group": {
     "settings": {
-      "createTitle": "Создать групповой чат",
-      "createButton": "Создать групповой чат",
+      "createTitle": "ГупыщӀэ зэгъэпэщ",
+      "createButton": "ГупыщӀэ зэгъэпэщ",
       "createGroup": "Создать группу",
-      "groupName": "Гупэщэм зэреджэр",
-      "groupDescription": "Гупэщэм зэреджэр",
+      "groupName": "ГупыщӀэм зэреджэр",
+      "groupDescription": "ГупыщӀэм зэреджэр",
       "groupNamePlaceholder": "Гупым и цӀэр тхы...",
       "groupDescriptionPlaceholder": "Введите описание группы (необязательно)...",
       "noDescriptionYet": "Описание группы отсутствует.",
